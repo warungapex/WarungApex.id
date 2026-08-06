@@ -1,5 +1,13 @@
-import Image from "next/image";
 import Link from "next/link";
+import { Advantages } from "@/components/sections/Advantages";
+import { HowItWorks } from "@/components/sections/HowItWorks";
+import { Stats } from "@/components/sections/Stats";
+import { Marquee } from "@/components/sections/Marquee";
+import { Catalog } from "@/components/sections/Catalog";
+import { Guarantee } from "@/components/sections/Guarantee";
+import { Testimonials } from "@/components/sections/Testimonials";
+import { Faq } from "@/components/sections/Faq";
+import { Cta } from "@/components/sections/Cta";
 
 export default function Home() {
   return (
@@ -68,17 +76,28 @@ export default function Home() {
             </div>
 
             <div className="flex items-center space-x-5">
-              <button className="bg-gray-900 text-white px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide hover:bg-black transition shadow-xl">
+              <Link href="/catalog" className="bg-gray-900 text-white px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide hover:bg-black transition shadow-xl">
                 View the account catalog
-              </button>
-              <button className="bg-white text-gray-900 px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide hover:bg-gray-50 transition shadow-xl border border-gray-100">
+              </Link>
+              <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" className="bg-white text-gray-900 px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide hover:bg-gray-50 transition shadow-xl border border-gray-100">
                 Sell my account
-              </button>
+              </a>
             </div>
           </div>
         </div>
       </div>
       </div>
+
+      {/* SECTIONS */}
+      <Marquee />
+      <Catalog />
+      <Advantages />
+      <Stats />
+      <HowItWorks />
+      <Guarantee />
+      <Testimonials />
+      <Faq />
+      <Cta />
 
       {/* FOOTER SECTION */}
       <footer className="w-full bg-[#08080c] text-gray-400 py-20 px-10 border-t border-white/10">
