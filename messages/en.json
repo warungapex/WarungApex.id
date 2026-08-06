@@ -1,0 +1,130 @@
+{
+  "localeSwitcher": {
+    "title": "Local Settings",
+    "region": "Region / Country",
+    "regionNote": "To change the region, you might need a valid phone number for the new region. Update phone number",
+    "language": "Language",
+    "currency": "Currency",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "hero": {
+    "title1": "PHASE INTO ACTION",
+    "title2": "MASTER THE VOID",
+    "buttonCatalog": "View the account catalog",
+    "buttonSell": "Sell my account"
+  },
+  "nav": {
+    "shop": "SHOP",
+    "men": "MEN",
+    "women": "WOMEN",
+    "trending": "TRENDING",
+    "signIn": "SIGN IN / UP"
+  },
+  "catalog": {
+    "home": "Home",
+    "catalog": "Catalog",
+    "title1": "ACCOUNT",
+    "title2": "CATALOG",
+    "desc1": "accounts available. Filter by tier & features",
+    "desc2": "to find your match.",
+    "spotlight": "Spotlight Loadout",
+    "latest": "LATEST",
+    "viewAll": "View All Accounts"
+  },
+  "advantages": {
+    "eyebrow": "Why Us",
+    "title": "WHY",
+    "accent": "WARUNG APEX",
+    "item1_title": "Competitive Prices",
+    "item1_desc": "High-tier accounts with the best prices on the market.",
+    "item2_title": "Original Accounts",
+    "item2_desc": "All accounts are genuine and guaranteed, not stolen.",
+    "item3_title": "Responsive Service",
+    "item3_desc": "Instant 24/7 support via WhatsApp & Discord."
+  },
+  "stats": {
+    "sold": "Accounts Sold",
+    "customers": "Happy Customers",
+    "support": "Support & Warranty"
+  },
+  "howItWorks": {
+    "eyebrow": "Simple Process",
+    "title": "HOW TO",
+    "accent": "BUY",
+    "step1_title": "Choose Account",
+    "step1_desc": "Browse the catalog and find an account that fits your budget & needs.",
+    "step2_title": "Contact Us",
+    "step2_desc": "Chat via WhatsApp to confirm availability and specifications.",
+    "step3_title": "Pay",
+    "step3_desc": "Secure payment via QRIS, e-wallet, or bank transfer.",
+    "step4_title": "Receive Instantly",
+    "step4_desc": "Account is delivered immediately after payment is verified."
+  },
+  "guarantee": {
+    "eyebrow": "Our Promise",
+    "title": "100%",
+    "accent": "GUARANTEE",
+    "item1_title": "Official Guarantee",
+    "item1_desc": "All accounts are fully guaranteed. Scammed? We'll cover it.",
+    "item2_title": "Verified Accounts",
+    "item2_desc": "Login data is verified one by one before being sold.",
+    "item3_title": "Instant Transfer",
+    "item3_desc": "Time-bound process, accounts delivered in minutes.",
+    "item4_title": "+500 Buyers",
+    "item4_desc": "Trusted by hundreds of buyers with a 4.9/5 rating."
+  },
+  "testimonials": {
+    "eyebrow": "Real Proof",
+    "title": "BUYER",
+    "accent": "REVIEWS",
+    "item1_q": "Bought a Predator account, delivered in under 10 minutes. Safe and guaranteed, I immediately recommended it to friends.",
+    "item1_n": "Raka Pratama",
+    "item1_r": "Predator Buyer",
+    "item2_q": "Was doubtful because of expired accounts rumors, but here it's clear and the guarantee is real.",
+    "item2_n": "Dimas Saputra",
+    "item2_r": "Diamond Buyer",
+    "item3_q": "Admin is very responsive, explains the process step by step. Totally worth it for this price.",
+    "item3_n": "Nurul Aisyah",
+    "item3_r": "Master Buyer"
+  },
+  "faq": {
+    "eyebrow": "Got Questions?",
+    "title": "FAQ",
+    "accent": "",
+    "q1": "Are the accounts sold here safe?",
+    "a1": "Yes, 100% safe. All accounts we sell go through a strict screening process and come with a lifetime anti-hackback guarantee.",
+    "q2": "How long is the transaction process?",
+    "a2": "The process is instant. As soon as payment is confirmed, you will immediately receive full access to the account.",
+    "q3": "Can I pay using E-Wallet or Bank Transfer?",
+    "a3": "Of course! We accept payments via BCA, Mandiri, GoPay, OVO, Dana, and ShopeePay.",
+    "q4": "Do you accept Trade-in?",
+    "a4": "Currently we do not accept trade-ins, we only focus on direct buying and selling for maximum security."
+  },
+  "cta": {
+    "title": "READY TO ENTER",
+    "accent": "THE ARENA?",
+    "desc": "Choose your high-tier account now. Fast, secure, and fully guaranteed process.",
+    "btnCatalog": "View Catalog",
+    "btnContact": "Contact Us"
+  },
+  "footer": {
+    "desc": "Trusted marketplace for high-tier Apex Legends accounts. Secure transactions, instant delivery, and lifetime support.",
+    "col1": "Marketplace",
+    "col1_link1": "Buy Account",
+    "col1_link2": "Sell Account",
+    "col1_link3": "Boosting Service",
+    "col1_link4": "Account Guarantee",
+    "col2": "Support",
+    "col2_link1": "FAQ / Help Center",
+    "col2_link2": "Contact Us",
+    "col2_link3": "Discord Community",
+    "col2_link4": "Report an Issue",
+    "col3": "Legal & Payment",
+    "col3_link1": "Terms & Conditions",
+    "col3_link2": "Privacy Policy",
+    "col3_link3": "Refund Policy",
+    "securePayment": "Secure Payment",
+    "copyright": "Warung Apex. All Rights Reserved. Not affiliated with EA or Respawn Entertainment."
+  }
+}

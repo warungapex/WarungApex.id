@@ -23,7 +23,15 @@ export const accounts: Account[] = [
   { id: "a8", rank: "Diamond I", tierBadge: "D1", badge: "Prestige", price: 890000, level: 301, badgesTokens: 8, coins: 90000, skins: 22, sold: false },
 ];
 
-export const formatIDR = (v: number) => v.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
+export const EXCHANGE_RATE = 15000;
+
+export const formatPrice = (priceIDR: number, locale: string) => {
+  if (locale === 'en') {
+    const usd = Math.ceil(priceIDR / EXCHANGE_RATE);
+    return usd.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+  }
+  return priceIDR.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
+};
 
 export const rankColor = (badge: string): string => {
   const colors: Record<string, string> = {

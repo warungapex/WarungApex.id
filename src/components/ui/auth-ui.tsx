@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useState, useId, useEffect } from "react";
+import { useState, useId } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -144,7 +144,7 @@ function SignUpForm() {
 
 function AuthFormContainer({ isSignIn, onToggle }: { isSignIn: boolean; onToggle: () => void; }) {
     return (
-        <div className="mx-auto grid w-[350px] gap-2">
+        <div className="mx-auto grid w-full max-w-[350px] gap-2">
             {isSignIn ? <SignInForm /> : <SignUpForm />}
             <div className="text-center text-sm">
                 {isSignIn ? "Don't have an account?" : "Already have an account?"}{" "}

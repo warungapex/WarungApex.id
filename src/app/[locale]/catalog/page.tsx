@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { accounts } from "@/lib/accounts";
 import { CatalogGrid } from "@/components/catalog/catalog-grid";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/routing";
 
 export const metadata: Metadata = {
   title: "Katalog Akun | Warung Apex",
@@ -9,23 +10,25 @@ export const metadata: Metadata = {
 };
 
 export default function CatalogPage() {
+  const t = useTranslations("catalog");
+
   return (
     <main className="min-h-screen bg-brand-dark">
       <div className="max-w-6xl mx-auto px-6 py-16">
         <nav className="text-xs text-gray-500 tracking-wide mb-8">
           <Link href="/" className="hover:text-brand-cyan transition">
-            Beranda
+            {t("home")}
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-gray-300">Katalog</span>
+          <span className="text-gray-300">{t("catalog")}</span>
         </nav>
         <div className="mb-10">
           <h1 className="text-3xl md:text-5xl font-[var(--font-display)] font-bold tracking-widest text-[#f0f2f5]">
-            KATALOG <span className="text-brand-red">AKUN</span>
+            {t("title1")} <span className="text-brand-red">{t("title2")}</span>
           </h1>
           <p className="mt-3 text-sm text-gray-400">
-            {accounts.filter((a) => !a.sold).length} akun tersedia. Filter berdasarkan tier &amp; fitur
-            untuk menemukan yang cocok.
+            {accounts.filter((a) => !a.sold).length} {t("desc1")}{" "}
+            {t("desc2")}
           </p>
         </div>
         <CatalogGrid list={accounts} />

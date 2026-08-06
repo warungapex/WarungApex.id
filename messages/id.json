@@ -1,0 +1,130 @@
+{
+  "localeSwitcher": {
+    "title": "Pengaturan Lokal",
+    "region": "Negara / Wilayah",
+    "regionNote": "Untuk mengubah negara, Anda memerlukan nomor ponsel yang valid untuk negara baru. Perbarui nomor ponsel",
+    "language": "Bahasa",
+    "currency": "Mata Uang",
+    "cancel": "Batal",
+    "save": "Simpan"
+  },
+  "hero": {
+    "title1": "MASUK KE MEDAN TEMPUR",
+    "title2": "KUASAI ARENA",
+    "buttonCatalog": "Lihat katalog akun",
+    "buttonSell": "Jual akun saya"
+  },
+  "nav": {
+    "shop": "TOKO",
+    "men": "PRIA",
+    "women": "WANITA",
+    "trending": "TREN",
+    "signIn": "MASUK / DAFTAR"
+  },
+  "catalog": {
+    "home": "Beranda",
+    "catalog": "Katalog",
+    "title1": "KATALOG",
+    "title2": "AKUN",
+    "desc1": "akun tersedia. Filter berdasarkan tier & fitur",
+    "desc2": "untuk menemukan yang cocok.",
+    "spotlight": "Spotlight Loadout",
+    "latest": "TERBARU",
+    "viewAll": "Lihat Semua Akun"
+  },
+  "advantages": {
+    "eyebrow": "Kenapa Kami",
+    "title": "KENAPA",
+    "accent": "WARUNG APEX",
+    "item1_title": "Harga Bersaing",
+    "item1_desc": "Akun tier tinggi dengan harga terbaik di pasaran.",
+    "item2_title": "Barang Original",
+    "item2_desc": "Semua akun asli dan bergaransi, bukan hasil curian.",
+    "item3_title": "Pelayanan Responsif",
+    "item3_desc": "Bantuan instan selama 24/7 via WhatsApp & Discord."
+  },
+  "stats": {
+    "sold": "Akun Terjual",
+    "customers": "Pelanggan Puas",
+    "support": "Bantuan & Garansi"
+  },
+  "howItWorks": {
+    "eyebrow": "Proses Mudah",
+    "title": "CARA",
+    "accent": "BELI",
+    "step1_title": "Pilih Akun",
+    "step1_desc": "Jelajahi katalog dan temukan akun yang sesuai budget & kebutuhan.",
+    "step2_title": "Hubungi Kami",
+    "step2_desc": "Chat via WhatsApp untuk konfirmasi ketersediaan dan spesifikasi.",
+    "step3_title": "Bayar",
+    "step3_desc": "Pembayaran aman via QRIS, e-wallet, atau transfer bank.",
+    "step4_title": "Terima Instan",
+    "step4_desc": "Akun dikirim segera setelah pembayaran terverifikasi."
+  },
+  "guarantee": {
+    "eyebrow": "Jaminan Kami",
+    "title": "GARANSI",
+    "accent": "100%",
+    "item1_title": "Garansi Resmi",
+    "item1_desc": "Semua akun bergaransi penuh. Kena scam? Kami tanggung.",
+    "item2_title": "Akun Terverifikasi",
+    "item2_desc": "Data login diverifikasi satu per satu sebelum dijual.",
+    "item3_title": "Transfer Instan",
+    "item3_desc": "Proses terikat waktu, akun terkirim dalam hitungan menit.",
+    "item4_title": "+500 Pembeli",
+    "item4_desc": "Dipercaya ratusan pembeli dengan ulasan rating 4.9/5."
+  },
+  "testimonials": {
+    "eyebrow": "Bukti Nyata",
+    "title": "KATA",
+    "accent": "PEMBELI",
+    "item1_q": "Beli akun Predator, dikirim kurang dari 10 menit. Aman dan bergaransi, langsung gue rekomendasiin ke teman.",
+    "item1_n": "Raka Pratama",
+    "item1_r": "Pembeli Predator",
+    "item2_q": "Sempat ragu karena dengar banyaknya akun kadaluarsa, tapi di sini dibilang saka jelas dan garansi beneran.",
+    "item2_n": "Dimas Saputra",
+    "item2_r": "Pembeli Diamond",
+    "item3_q": "Adminnya responsif banget, prosesnya jelasin step by step. Worth it banget buat harga segini.",
+    "item3_n": "Nurul Aisyah",
+    "item3_r": "Pembeli Master"
+  },
+  "faq": {
+    "eyebrow": "Ada Pertanyaan?",
+    "title": "FAQ",
+    "accent": "",
+    "q1": "Apakah akun yang dijual di sini aman?",
+    "a1": "Ya, 100% aman. Semua akun yang kami jual melalui proses seleksi ketat dan dilengkapi garansi seumur hidup anti hackback.",
+    "q2": "Berapa lama proses transaksinya?",
+    "a2": "Prosesnya instan. Begitu pembayaran dikonfirmasi, Anda akan langsung mendapatkan akses penuh ke akun tersebut.",
+    "q3": "Bisa bayar pakai E-Wallet atau Transfer Bank?",
+    "a3": "Tentu! Kami menerima pembayaran via BCA, Mandiri, GoPay, OVO, Dana, dan ShopeePay.",
+    "q4": "Apakah menerima Trade-in (Tukar Tambah)?",
+    "a4": "Saat ini kami tidak melayani tukar tambah, kami hanya fokus pada jual beli langsung agar keamanan maksimal."
+  },
+  "cta": {
+    "title": "SIAP MASUK",
+    "accent": "ARENA?",
+    "desc": "Pilih akun feat tier tinggimu sekarang. Proses cepat, aman, dan langsung dapat garansi.",
+    "btnCatalog": "Lihat Katalog",
+    "btnContact": "Hubungi Kami"
+  },
+  "footer": {
+    "desc": "Marketplace terpercaya untuk akun Apex Legends tier tinggi. Transaksi aman, pengiriman instan, dan support seumur hidup.",
+    "col1": "Marketplace",
+    "col1_link1": "Beli Akun",
+    "col1_link2": "Jual Akun",
+    "col1_link3": "Jasa Joki (Boost)",
+    "col1_link4": "Garansi Akun",
+    "col2": "Bantuan",
+    "col2_link1": "FAQ / Pusat Bantuan",
+    "col2_link2": "Hubungi Kami",
+    "col2_link3": "Komunitas Discord",
+    "col2_link4": "Lapor Masalah",
+    "col3": "Legal & Pembayaran",
+    "col3_link1": "Syarat & Ketentuan",
+    "col3_link2": "Kebijakan Privasi",
+    "col3_link3": "Kebijakan Pengembalian",
+    "securePayment": "Pembayaran Aman",
+    "copyright": "Warung Apex. Hak Cipta Dilindungi. Tidak berafiliasi dengan EA atau Respawn Entertainment."
+  }
+}
