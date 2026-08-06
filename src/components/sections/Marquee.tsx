@@ -1,13 +1,8 @@
-const items = [
-  "HIGH-TIER ACCOUNTS",
-  "PACED PROGRESS",
-  "TC: ORIGINAL & GARANTI",
-  "VAULT SAYA SELAMAT",
-  "PENGIRIMAN INSTAN",
-  "SUPPORT 24/7",
-];
+import { useTranslations } from "next-intl";
 
 export function Marquee() {
+  const t = useTranslations("marquee");
+  const items = t.raw("items") as string[];
   const row = [...items, ...items];
   return (
     <div className="relative w-full overflow-hidden border-y border-white/10 bg-brand-red py-5">

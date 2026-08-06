@@ -126,5 +126,15 @@
     "col3_link3": "Refund Policy",
     "securePayment": "Secure Payment",
     "copyright": "Warung Apex. All Rights Reserved. Not affiliated with EA or Respawn Entertainment."
+  },
+  "marquee": {
+    "items": [
+      "HIGH-TIER ACCOUNTS",
+      "PACED PROGRESS",
+      "TC: ORIGINAL & GUARANTEED",
+      "MY VAULT IS SAFE",
+      "INSTANT DELIVERY",
+      "24/7 SUPPORT"
+    ]
   }
 }

@@ -126,5 +126,15 @@
     "col3_link3": "Kebijakan Pengembalian",
     "securePayment": "Pembayaran Aman",
     "copyright": "Warung Apex. Hak Cipta Dilindungi. Tidak berafiliasi dengan EA atau Respawn Entertainment."
+  },
+  "marquee": {
+    "items": [
+      "HIGH-TIER ACCOUNTS",
+      "PACED PROGRESS",
+      "TC: ORIGINAL & GARANTI",
+      "VAULT SAYA SELAMAT",
+      "PENGIRIMAN INSTAN",
+      "SUPPORT 24/7"
+    ]
   }
 }
