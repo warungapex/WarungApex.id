@@ -15,10 +15,10 @@
     "buttonSell": "Sell my account"
   },
   "nav": {
-    "shop": "SHOP",
-    "men": "MEN",
-    "women": "WOMEN",
-    "trending": "TRENDING",
+    "catalog": "CATALOG",
+    "howItWorks": "HOW IT WORKS",
+    "sell": "SELL ACCOUNT",
+    "faq": "FAQ",
     "signIn": "SIGN IN / UP"
   },
   "catalog": {

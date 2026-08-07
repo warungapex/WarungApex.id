@@ -15,10 +15,10 @@
     "buttonSell": "Jual akun saya"
   },
   "nav": {
-    "shop": "TOKO",
-    "men": "PRIA",
-    "women": "WANITA",
-    "trending": "TREN",
+    "catalog": "KATALOG",
+    "howItWorks": "CARA KERJA",
+    "sell": "JUAL AKUN",
+    "faq": "FAQ",
     "signIn": "MASUK / DAFTAR"
   },
   "catalog": {

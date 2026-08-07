@@ -10,11 +10,14 @@ export const Component = () => {
 
   const [renderPos, setRenderPos] = useState({ dot: { x: 0, y: 0 }, border: { x: 0, y: 0 } });
   const [isHovering, setIsHovering] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const DOT_SMOOTHNESS = 0.2;
   const BORDER_DOT_SMOOTHNESS = 0.1;
 
   useEffect(() => {
+    setMounted(true);
+
     const handleMouseMove = (e: MouseEvent) => {
       mousePosition.current = { x: e.clientX, y: e.clientY };
     };
@@ -69,8 +72,8 @@ export const Component = () => {
     };
   }, []);
 
-  // Return null on server-side to prevent SSR issues with window/document
-  if (typeof window === "undefined") return null;
+  // Return null until mounted to prevent SSR/hydration mismatch
+  if (!mounted) return null;
 
   return (
     <div className="pointer-events-none fixed inset-0 z-50">

@@ -40,12 +40,12 @@ export default function Home() {
 
         {/* Navigation */}
         <nav className="relative flex items-start justify-between px-4 sm:px-10 pt-6">
-          {/* Left Nav */}
-          <div className="hidden lg:flex space-x-6 xl:space-x-8 text-sm font-semibold tracking-wide text-white drop-shadow-md mt-2">
-            <a href="#" className="hover:text-blue-500 transition">{tNav("shop")}</a>
-            <a href="#" className="hover:text-blue-500 transition">{tNav("men")}</a>
-            <a href="#" className="hover:text-blue-500 transition">{tNav("women")}</a>
-            <a href="#" className="hover:text-blue-500 transition">{tNav("trending")}</a>
+          {/* Left — locale switcher (mobile) / empty spacer (desktop) */}
+          <div className="flex items-center mt-1">
+            <div className="lg:hidden">
+              <LocaleSwitcherModal />
+            </div>
+            <div className="hidden lg:block invisible" aria-hidden="true" />
           </div>
 
           {/* Center Logo Area */}
@@ -58,10 +58,24 @@ export default function Home() {
             </h1>
           </div>
 
-          {/* Right Nav */}
+          {/* Right Nav — mobile: profile icon | desktop: locale + text button */}
           <div className="flex items-center gap-3 sm:gap-6 text-sm font-semibold tracking-wide text-white drop-shadow-md mt-1">
-            <LocaleSwitcherModal />
-            <Link href="/login" className="bg-white text-gray-900 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full hover:bg-gray-100 transition shadow-lg whitespace-nowrap text-xs sm:text-sm">
+            {/* Desktop only: locale switcher */}
+            <div className="hidden lg:block">
+              <LocaleSwitcherModal />
+            </div>
+            {/* Mobile: profile icon */}
+            <Link
+              href="/login"
+              className="lg:hidden flex items-center justify-center w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition shadow-lg"
+              aria-label={tNav("signIn")}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-white">
+                <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
+              </svg>
+            </Link>
+            {/* Desktop: full text button */}
+            <Link href="/login" className="hidden lg:block bg-white text-gray-900 px-6 py-2.5 rounded-full hover:bg-gray-100 transition shadow-lg whitespace-nowrap text-sm">
               {tNav("signIn")}
             </Link>
           </div>
