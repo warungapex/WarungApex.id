@@ -9,11 +9,11 @@ import { useTranslations } from "next-intl";
 import { LocaleSwitcherModal } from "@/components/ui/locale-switcher-modal";
 import { Link } from "@/i18n/routing";
 import { HowItWorks } from "@/components/ui/how-it-works";
+import { StickyFooter } from "@/components/ui/sticky-footer";
 
 export default function Home() {
   const tNav = useTranslations("nav");
   const tHero = useTranslations("hero");
-  const tFooter = useTranslations("footer");
 
   return (
     <div className="w-full selection:bg-blue-500 selection:text-white bg-[#08080c]">
@@ -102,68 +102,8 @@ export default function Home() {
       <Faq />
       <Cta />
 
-      {/* FOOTER SECTION */}
-      <footer className="w-full bg-[#08080c] text-gray-400 py-20 px-4 sm:px-10 border-t border-white/10">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-          {/* Brand/About */}
-          <div className="space-y-4">
-             <h4 className="text-white text-xl font-[var(--font-display)] font-semibold tracking-widest">WARUNG APEX</h4>
-             <p className="text-sm leading-relaxed text-gray-400">
-               {tFooter("desc")}
-             </p>
-          </div>
-
-          {/* Quick Links */}
-          <div className="space-y-4">
-             <h4 className="text-white font-semibold tracking-wide uppercase text-sm">{tFooter("col1")}</h4>
-             <ul className="space-y-2 text-sm text-gray-400">
-               <li><a href="#" className="hover:text-blue-500 transition">{tFooter("col1_link1")}</a></li>
-               <li><a href="#" className="hover:text-blue-500 transition">{tFooter("col1_link2")}</a></li>
-               <li><a href="#" className="hover:text-blue-500 transition">{tFooter("col1_link3")}</a></li>
-               <li><a href="#" className="hover:text-blue-500 transition">{tFooter("col1_link4")}</a></li>
-             </ul>
-          </div>
-
-          {/* Support */}
-          <div className="space-y-4">
-             <h4 className="text-white font-semibold tracking-wide uppercase text-sm">{tFooter("col2")}</h4>
-             <ul className="space-y-2 text-sm text-gray-400">
-               <li><a href="#" className="hover:text-blue-500 transition">{tFooter("col2_link1")}</a></li>
-               <li><a href="#" className="hover:text-blue-500 transition">{tFooter("col2_link2")}</a></li>
-               <li><a href="#" className="hover:text-blue-500 transition">{tFooter("col2_link3")}</a></li>
-               <li><a href="#" className="hover:text-blue-500 transition">{tFooter("col2_link4")}</a></li>
-             </ul>
-          </div>
-
-          {/* Legal & Payment */}
-          <div className="space-y-4">
-             <h4 className="text-white font-semibold tracking-wide uppercase text-sm">{tFooter("col3")}</h4>
-             <ul className="space-y-2 text-sm mb-6 text-gray-400">
-               <li><a href="#" className="hover:text-blue-500 transition">{tFooter("col3_link1")}</a></li>
-               <li><a href="#" className="hover:text-blue-500 transition">{tFooter("col3_link2")}</a></li>
-               <li><a href="#" className="hover:text-blue-500 transition">{tFooter("col3_link3")}</a></li>
-             </ul>
-             <div className="pt-2">
-                <p className="text-xs font-semibold uppercase tracking-wider mb-3 text-white/50">{tFooter("securePayment")}</p>
-                <div className="flex space-x-3">
-                   <div className="w-12 h-7 bg-white/10 rounded flex items-center justify-center text-[10px] font-bold text-white border border-white/5">QRIS</div>
-                   <div className="w-12 h-7 bg-white/10 rounded flex items-center justify-center text-[10px] font-bold text-white border border-white/5">BCA</div>
-                   <div className="w-12 h-7 bg-white/10 rounded flex items-center justify-center text-[10px] font-bold text-white border border-white/5">OVO</div>
-                   <div className="w-12 h-7 bg-white/10 rounded flex items-center justify-center text-[10px] font-bold text-white border border-white/5">DANA</div>
-                </div>
-             </div>
-          </div>
-        </div>
-
-        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500">
-           <p>&copy; {new Date().getFullYear()} {tFooter("copyright")}</p>
-           <div className="flex space-x-6 mt-4 md:mt-0">
-             <a href="#" className="hover:text-white transition">Twitter</a>
-             <a href="#" className="hover:text-white transition">Instagram</a>
-             <a href="#" className="hover:text-white transition">Facebook</a>
-           </div>
-        </div>
-      </footer>
+      {/* STICKY FOOTER */}
+      <StickyFooter />
     </div>
   );
 }
