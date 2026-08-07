@@ -52,19 +52,7 @@
     "customers": "Happy Customers",
     "support": "Support & Warranty"
   },
-  "howItWorks": {
-    "eyebrow": "Simple Process",
-    "title": "HOW TO",
-    "accent": "BUY",
-    "step1_title": "Choose Account",
-    "step1_desc": "Browse the catalog and find an account that fits your budget & needs.",
-    "step2_title": "Contact Us",
-    "step2_desc": "Chat via WhatsApp to confirm availability and specifications.",
-    "step3_title": "Pay",
-    "step3_desc": "Secure payment via QRIS, e-wallet, or bank transfer.",
-    "step4_title": "Receive Instantly",
-    "step4_desc": "Account is delivered immediately after payment is verified."
-  },
+  
   "guarantee": {
     "eyebrow": "Our Promise",
     "title": "100%",

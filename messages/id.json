@@ -52,19 +52,7 @@
     "customers": "Pelanggan Puas",
     "support": "Bantuan & Garansi"
   },
-  "howItWorks": {
-    "eyebrow": "Proses Mudah",
-    "title": "CARA",
-    "accent": "BELI",
-    "step1_title": "Pilih Akun",
-    "step1_desc": "Jelajahi katalog dan temukan akun yang sesuai budget & kebutuhan.",
-    "step2_title": "Hubungi Kami",
-    "step2_desc": "Chat via WhatsApp untuk konfirmasi ketersediaan dan spesifikasi.",
-    "step3_title": "Bayar",
-    "step3_desc": "Pembayaran aman via QRIS, e-wallet, atau transfer bank.",
-    "step4_title": "Terima Instan",
-    "step4_desc": "Akun dikirim segera setelah pembayaran terverifikasi."
-  },
+  
   "guarantee": {
     "eyebrow": "Jaminan Kami",
     "title": "GARANSI",

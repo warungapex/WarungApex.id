@@ -1,5 +1,4 @@
 import { Advantages } from "@/components/sections/Advantages";
-import { HowItWorks } from "@/components/sections/HowItWorks";
 import { Stats } from "@/components/sections/Stats";
 import { Marquee } from "@/components/sections/Marquee";
 import { Catalog } from "@/components/sections/Catalog";
@@ -98,7 +97,6 @@ export default function Home() {
       <Catalog />
       <Advantages />
       <Stats />
-      <HowItWorks />
       <Guarantee />
       <Testimonials />
       <Faq />
