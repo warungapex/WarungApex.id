@@ -99,7 +99,7 @@ export default function Home() {
               <Link href="/catalog" className="w-full sm:w-auto bg-gray-900 text-white px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide hover:bg-black transition shadow-xl text-center">
                 {tHero("buttonCatalog")}
               </Link>
-              <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto bg-white text-gray-900 px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide hover:bg-gray-50 transition shadow-xl border border-gray-100 text-center">
+              <a href="https://wa.me/6285167202134" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto bg-white text-gray-900 px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide hover:bg-gray-50 transition shadow-xl border border-gray-100 text-center">
                 {tHero("buttonSell")}
               </a>
             </div>

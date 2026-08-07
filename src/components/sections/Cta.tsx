@@ -23,7 +23,7 @@ export function Cta() {
             {t("btnCatalog")}
           </Link>
           <a
-            href="https://wa.me/6281234567890"
+            href="https://wa.me/6285167202134"
             target="_blank"
             rel="noopener noreferrer"
             className="w-full sm:w-auto bg-white text-gray-900 px-9 py-4 rounded-full font-semibold tracking-wide hover:bg-gray-100 transition border border-gray-100"
