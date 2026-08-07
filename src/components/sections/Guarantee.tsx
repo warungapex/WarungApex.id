@@ -1,3 +1,5 @@
+"use client";
+
 import { ShieldCheck, BadgeCheck, Timer, Users } from "lucide-react";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/reveal";

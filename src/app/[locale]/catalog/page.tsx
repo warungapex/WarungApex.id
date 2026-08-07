@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { accounts } from "@/lib/accounts";
+import { getAccounts } from "@/lib/supabase/accounts";
 import { CatalogGrid } from "@/components/catalog/catalog-grid";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 
 export const metadata: Metadata = {
@@ -9,8 +9,18 @@ export const metadata: Metadata = {
   description: "Jelajahi katalog akun Apex Legends tier tinggi di Warung Apex.",
 };
 
-export default function CatalogPage() {
-  const t = useTranslations("catalog");
+export default async function CatalogPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const [accounts, t] = await Promise.all([
+    getAccounts(),
+    getTranslations({ locale, namespace: "catalog" }),
+  ]);
+
+  const available = accounts.filter((a) => !a.sold).length;
 
   return (
     <main className="min-h-screen bg-brand-dark">
@@ -27,8 +37,7 @@ export default function CatalogPage() {
             {t("title1")} <span className="text-brand-red">{t("title2")}</span>
           </h1>
           <p className="mt-3 text-sm text-gray-400">
-            {accounts.filter((a) => !a.sold).length} {t("desc1")}{" "}
-            {t("desc2")}
+            {available} {t("desc1")} {t("desc2")}
           </p>
         </div>
         <CatalogGrid list={accounts} />

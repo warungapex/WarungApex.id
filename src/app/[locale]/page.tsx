@@ -5,16 +5,25 @@ import { Guarantee } from "@/components/sections/Guarantee";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Faq } from "@/components/sections/Faq";
 import { Cta } from "@/components/sections/Cta";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
+import { getFeaturedAccounts } from "@/lib/supabase/accounts";
 import { LocaleSwitcherModal } from "@/components/ui/locale-switcher-modal";
 import { Link } from "@/i18n/routing";
 import { HowItWorks } from "@/components/ui/how-it-works";
 import { StickyFooter } from "@/components/ui/sticky-footer";
 import { Component as CursorFollower } from "@/components/ui/cursor-follower";
 
-export default function Home() {
-  const tNav = useTranslations("nav");
-  const tHero = useTranslations("hero");
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const [tNav, tHero, spot] = await Promise.all([
+    getTranslations({ locale, namespace: "nav" }),
+    getTranslations({ locale, namespace: "hero" }),
+    getFeaturedAccounts(3),
+  ]);
 
   return (
     <div className="w-full selection:bg-blue-500 selection:text-white bg-[#08080c]">
@@ -110,7 +119,7 @@ export default function Home() {
 
       {/* SECTIONS */}
       <Marquee />
-      <Catalog />
+      <Catalog spot={spot} />
       <HowItWorks />
       <Stats />
       <Guarantee />

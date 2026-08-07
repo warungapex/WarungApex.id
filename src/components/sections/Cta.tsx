@@ -1,3 +1,5 @@
+"use client";
+
 import { Reveal } from "@/components/ui/reveal";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";

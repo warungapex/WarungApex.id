@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { ChevronDown, ChevronUp, Filter, X } from "lucide-react";
 import { GooeySearchBar } from "@/components/ui/animated-search-bar";
-import type { Account } from "@/lib/accounts";
+import type { Account } from "@/lib/supabase/accounts";
 import { ProductCard } from "@/components/ui/product-card";
 
 const RANKS = ["Apex Predator", "Master", "Diamond", "Platinum", "Gold"];

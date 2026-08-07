@@ -1,15 +1,17 @@
 import { Coins, Crown, Gamepad2, ShieldCheck } from "lucide-react";
-import type { Account } from "@/lib/accounts";
+import type { Account } from "@/lib/supabase/accounts";
 import { formatPrice, rankColor, rankTier } from "@/lib/accounts";
 import { useLocale } from "next-intl";
 import { useUsdIdrRate } from "@/components/rate-provider";
+import { Link } from "@/i18n/routing";
 
 export function ProductCard({ a }: { a: Account }) {
   const locale = useLocale();
   const rate = useUsdIdrRate();
 
   return (
-    <article className="group relative overflow-hidden rounded-2xl border border-white/10 bg-brand-surface transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-cyan/50 hover:shadow-[0_20px_50px_-12px_rgba(0,240,255,0.15)]">
+    <Link href={`/catalog/${a.id}`}>
+      <article className="group relative overflow-hidden rounded-2xl border border-white/10 bg-brand-surface transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-cyan/50 hover:shadow-[0_20px_50px_-12px_rgba(0,240,255,0.15)] cursor-pointer">
       {a.sold && (
         <span className="absolute right-3 top-3 z-10 rounded-full bg-brand-dark/80 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-gray-300 ring-1 ring-white/20 backdrop-blur">
           Sold
@@ -72,5 +74,6 @@ export function ProductCard({ a }: { a: Account }) {
         </div>
       </div>
     </article>
+    </Link>
   );
 }
