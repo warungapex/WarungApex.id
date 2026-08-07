@@ -4,8 +4,11 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/supabase/auth";
+import type { Database } from "@/lib/supabase/types";
 
-function formToAccountData(formData: FormData) {
+type AccountUpdate = Database["public"]["Tables"]["accounts"]["Update"];
+
+function formToAccountData(formData: FormData): Omit<AccountUpdate, "id"> {
   const tagsRaw = (formData.get("tags") as string) ?? "";
   const tags = tagsRaw
     .split(",")

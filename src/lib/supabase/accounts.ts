@@ -3,6 +3,8 @@ import type { AccountRow } from "@/lib/supabase/types";
 
 // Map DB snake_case → app camelCase
 export function toAccount(row: AccountRow) {
+  const images = (row.images as string[]) ?? [];
+  const mainImage = images.length > 0 ? images[0] : undefined;
   return {
     id: row.id,
     rank: row.rank,
@@ -18,6 +20,8 @@ export function toAccount(row: AccountRow) {
     platform: row.platform ?? undefined,
     description: row.description ?? undefined,
     tags: row.tags ?? [],
+    mainImage,
+    images,
   };
 }
 

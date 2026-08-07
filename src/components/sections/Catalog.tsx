@@ -95,9 +95,6 @@ function StickyCard({
   const t = useTranslations("catalog");
   const scale = useTransform(progress, range, [1, targetScale]);
 
-  const accNum = a.id.replace("a", "");
-  const hasMainImage = ["1", "2", "3"].includes(accNum);
-
   return (
     <div className="sticky top-0 flex h-screen w-full items-center justify-center px-4 sm:px-6">
       <motion.div
@@ -107,10 +104,10 @@ function StickyCard({
         {/* Left: Image */}
         <div className="w-full md:w-[40%] bg-gradient-to-br from-[#13131a] to-[#0a0a0c] relative flex items-center justify-center p-12 border-r border-white/5 overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
-          {hasMainImage ? (
+          {a.mainImage ? (
             <div className="relative z-10 w-full h-full rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(255,42,68,0.15)]">
               <img
-                src={`/account/Acc${accNum}/Main.png`}
+                src={a.mainImage}
                 alt={`${a.rank} Account`}
                 className="w-full h-full object-cover"
               />

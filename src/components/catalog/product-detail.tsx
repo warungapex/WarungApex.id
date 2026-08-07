@@ -10,50 +10,8 @@ import { formatPrice } from "@/lib/accounts";
 import { useLocale } from "next-intl";
 import { useUsdIdrRate } from "@/components/rate-provider";
 
-/* ── per-account image manifest ── */
-const ACC_IMAGES: Record<string, { file: string; ext: string }[]> = {
-  a1: [
-    { file: "Main", ext: "png" },
-    { file: "1 - 5gSsVZe", ext: "png" },
-    { file: "2 - utqCrEM", ext: "png" },
-    { file: "3 - VJ9ElOw", ext: "png" },
-    { file: "4 - I6xOHl4", ext: "png" },
-    { file: "5 - Xq7PxbZ", ext: "png" },
-    { file: "6 - 9NEtEw9", ext: "png" },
-    { file: "7 - wvTUpQm", ext: "png" },
-  ],
-  a2: [
-    { file: "Main", ext: "png" },
-    { file: "1 - 8tNntAa", ext: "jpg" },
-    { file: "2 - PVfpOaK", ext: "png" },
-    { file: "3 - HvmHWSN", ext: "png" },
-    { file: "4 - eILH6Kp", ext: "png" },
-    { file: "5 - B0aOUff", ext: "png" },
-    { file: "6 - Q9freOI", ext: "png" },
-    { file: "7 - eq0hd5P", ext: "png" },
-  ],
-  a3: [
-    { file: "Main", ext: "png" },
-    { file: "1 - 2o4N9mk", ext: "png" },
-    { file: "2 - Ib6yNpc", ext: "png" },
-    { file: "3 - bOjpgfZ", ext: "png" },
-    { file: "4 - q1pVNbv", ext: "png" },
-    { file: "5 - PcEEuvk", ext: "png" },
-    { file: "6 - 5TIAPrd", ext: "png" },
-    { file: "7 - G1FTe34", ext: "png" },
-  ],
-};
-
-function getImages(id: string): string[] {
-  const accNum = id.replace("a", "");
-  return (ACC_IMAGES[id] ?? []).map(
-    ({ file, ext }) => `/account/Acc${accNum}/${file}.${ext}`,
-  );
-}
-
-/* ── Image mosaic (fullwidth, above content) ── */
 function ImageMosaic({ product }: { product: Account }) {
-  const images = getImages(product.id);
+  const images = product.images ?? [];
   const [lightbox, setLightbox] = useState<number | null>(null);
 
   if (!images.length) {

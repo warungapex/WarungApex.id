@@ -25,7 +25,7 @@ export type Database = {
           platform: string | null;
           description: string | null;
           tags: string[];
-          images: Json;
+          images: string[];
           created_at: string;
           updated_at: string;
         };
@@ -44,7 +44,7 @@ export type Database = {
           platform?: string | null;
           description?: string | null;
           tags?: string[];
-          images?: Json;
+          images?: string[];
           created_at?: string;
           updated_at?: string;
         };
@@ -63,7 +63,7 @@ export type Database = {
           platform?: string | null;
           description?: string | null;
           tags?: string[];
-          images?: Json;
+          images?: string[];
           created_at?: string;
           updated_at?: string;
         };
@@ -75,5 +75,4 @@ export type Database = {
   };
 };
 
-// Convenience type from the Row
 export type AccountRow = Database["public"]["Tables"]["accounts"]["Row"];
