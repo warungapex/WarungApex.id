@@ -2,9 +2,11 @@ import { Coins, Crown, Gamepad2, ShieldCheck } from "lucide-react";
 import type { Account } from "@/lib/accounts";
 import { formatPrice, rankColor, rankTier } from "@/lib/accounts";
 import { useLocale } from "next-intl";
+import { useUsdIdrRate } from "@/components/rate-provider";
 
 export function ProductCard({ a }: { a: Account }) {
   const locale = useLocale();
+  const rate = useUsdIdrRate();
 
   return (
     <article className="group relative overflow-hidden rounded-2xl border border-white/10 bg-brand-surface transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-cyan/50 hover:shadow-[0_20px_50px_-12px_rgba(0,240,255,0.15)]">
@@ -63,7 +65,7 @@ export function ProductCard({ a }: { a: Account }) {
         </ul>
 
         <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-4">
-          <span className="text-lg font-bold text-[#f0f2f5]">{formatPrice(a.price, locale)}</span>
+          <span className="text-lg font-bold text-[#f0f2f5]">{formatPrice(a.price, locale, rate)}</span>
           <span className={`rounded-full px-4 py-1.5 text-xs font-semibold tracking-wide transition ${a.sold ? "cursor-not-allowed bg-white/10 text-gray-400" : "bg-brand-red text-white hover:bg-brand-red/80"}`}>
             {a.sold ? "Sold Out" : "Beli"}
           </span>

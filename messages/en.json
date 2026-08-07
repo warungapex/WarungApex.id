@@ -24,13 +24,17 @@
   "catalog": {
     "home": "Home",
     "catalog": "Catalog",
-    "title1": "ACCOUNT",
+    "title1": "AVAILABLE",
     "title2": "CATALOG",
     "desc1": "accounts available. Filter by tier & features",
     "desc2": "to find your match.",
-    "spotlight": "Spotlight Loadout",
-    "latest": "LATEST",
-    "viewAll": "View All Accounts"
+    "spotlight": "Check this out",
+    "latest": "ACCOUNT",
+    "viewAll": "View All Accounts",
+    "spotlightLabel": "LATEST SPOTLIGHT",
+    "cardDesc": "High-tier account at level {level} featuring {skins} premium skins and {coins} Apex Coins. Guaranteed safe and ready for competitive play.",
+    "fullAccess": "Full Access",
+    "viewDetails": "View Details"
   },
   "advantages": {
     "eyebrow": "Why Us",

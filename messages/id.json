@@ -24,13 +24,17 @@
   "catalog": {
     "home": "Beranda",
     "catalog": "Katalog",
-    "title1": "KATALOG",
-    "title2": "AKUN",
-    "desc1": "akun tersedia. Filter berdasarkan tier & fitur",
-    "desc2": "untuk menemukan yang cocok.",
-    "spotlight": "Spotlight Loadout",
-    "latest": "TERBARU",
-    "viewAll": "Lihat Semua Akun"
+    "title1": "AKUN",
+    "title2": "KATALOG",
+    "desc1": "akun tersedia. Filter rank & fitur",
+    "desc2": "sesuai kebutuhanmu.",
+    "spotlight": "Cek yang ini",
+    "latest": "TERSEDIA",
+    "viewAll": "Lihat Semua Akun",
+    "spotlightLabel": "SOROTAN TERBARU",
+    "cardDesc": "Akun tier tinggi level {level} dengan {skins} skin premium dan {coins} Apex Coins. Dijamin aman dan siap untuk gameplay kompetitif.",
+    "fullAccess": "Full Access",
+    "viewDetails": "Lihat Detail"
   },
   "advantages": {
     "eyebrow": "Kenapa Kami",

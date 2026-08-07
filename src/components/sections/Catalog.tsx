@@ -1,97 +1,171 @@
-import { accounts } from "@/lib/accounts";
-import { formatPrice } from "@/lib/accounts";
-import { Crosshair, ChevronRight } from "lucide-react";
+"use client";
+
+import { accounts, formatPrice } from "@/lib/accounts";
+import { ChevronRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { Reveal, Stagger, StaggerItem } from "@/components/ui/reveal";
+import { Reveal } from "@/components/ui/reveal";
+import { useUsdIdrRate } from "@/components/rate-provider";
+import { motion, useScroll, useTransform } from "framer-motion";
+import ReactLenis from "lenis/react";
+import { useRef } from "react";
 
 const spot = accounts.filter((a) => !a.sold).slice(0, 3);
 
 export function Catalog() {
   const locale = useLocale();
   const t = useTranslations("catalog");
+  const container = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: container,
+    offset: ["start start", "end end"],
+  });
 
   return (
-    <section id="katalog" className="relative w-full bg-brand-dark py-28 overflow-hidden">
-      <div className="absolute top-0 right-0 w-[500px] h-[300px] bg-brand-red/10 blur-[130px] rounded-full pointer-events-none" />
+    <ReactLenis root>
+      <section
+        id="katalog"
+        ref={container}
+        className="relative w-full bg-brand-dark pb-[10vh]"
+      >
+        <div className="absolute top-0 right-0 w-[500px] h-[300px] bg-brand-red/10 blur-[130px] rounded-full pointer-events-none" />
 
-      <div className="relative max-w-6xl mx-auto px-6">
-        <Reveal>
-          <SectionHeading eyebrow={t("spotlight")} title={t("title1")} accent={t("latest")} />
-        </Reveal>
+        {/* Header */}
+        <div className="relative max-w-6xl mx-auto px-6 pt-32 pb-8">
+          <Reveal>
+            <SectionHeading title={t("title1")} accent={t("latest")} />
+          </Reveal>
+        </div>
 
-        <Stagger className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-5 max-lg:max-w-md max-lg:mx-auto">
-          {spot.map((a, i) => (
-            <StaggerItem key={a.id}>
-              <div className="group relative h-full bg-brand-surface">
-                {/* HUD top frame */}
-                <div className="relative flex h-36 items-end bg-gradient-to-b from-brand-surface to-black/60 overflow-hidden">
-                  {/* scanline sweep */}
-                  <div className="absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-brand-cyan/10 to-transparent skew-x-[-20deg] translate-x-[-200%] group-hover:translate-x-[400%] transition-transform duration-1000 ease-out" />
-                  {/* corner brackets */}
-                  <div className="pointer-events-none absolute left-3 top-3 h-5 w-5 border-l-2 border-t-2 border-brand-red/70" />
-                  <div className="pointer-events-none absolute right-3 top-3 h-5 w-5 border-r-2 border-t-2 border-brand-red/70" />
-                  <div className="pointer-events-none absolute left-3 bottom-3 h-5 w-5 border-l-2 border-b-2 border-brand-red/70" />
-                  <div className="pointer-events-none absolute right-3 bottom-3 h-5 w-5 border-r-2 border-b-2 border-brand-red/70" />
+        {/* Stacking Cards Container */}
+        <div className="relative w-full flex flex-col items-center">
+          {spot.map((a, i) => {
+            const targetScale = Math.max(0.75, 1 - (spot.length - i - 1) * 0.05);
+            return (
+              <StickyCard
+                key={a.id}
+                i={i}
+                a={a}
+                progress={scrollYProgress}
+                range={[i * (1 / spot.length), 1]}
+                targetScale={targetScale}
+                locale={locale}
+              />
+            );
+          })}
+        </div>
 
-                  <div className="relative z-10 flex w-full items-end justify-between px-8 pb-4">
-                    <div>
-                      <div className="flex items-center gap-2 text-cyan-300">
-                        <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-brand-cyan">Target du Code</span>
-                        <Crosshair className="h-3.5 w-3.5" />
-                        <span className="font-[var(--font-display)] text-sm text-brand-cyan">0{i + 1}</span>
-                      </div>
-                      <h3 className="font-[var(--font-display)] text-4xl font-black text-[#dfeaf6] tracking-[0.08em]">
-                        {a.rank.toUpperCase()}
-                      </h3>
-                      <p className="text-[11px] uppercase tracking-[0.35em] text-gray-500">{a.badge}</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-[var(--font-display)] text-2xl font-black leading-none text-brand-red">{a.tierBadge}</div>
-                      <div className="mt-1 flex items-center gap-1 text-brand-cyan">
-                        <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-brand-cyan" />
-                        <span className="text-[9px] uppercase tracking-[0.3em]">Ready</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* HUD readout */}
-                <dl className="space-y-3 px-6 py-5">
-                  {[
-                    ["LEVEL", String(a.level)],
-                    ["AC / COINS", a.coins.toLocaleString("id-ID")],
-                    ["SKINS", String(a.skins)],
-                  ].map(([k, v]) => (
-                    <div key={k} className="flex items-center justify-between border-b border-white/5 pb-2">
-                      <dt className="text-[10px] uppercase tracking-[0.3em] text-gray-500">{k}</dt>
-                      <dd className="font-mono text-sm text-[#dfeaf6]">{v}</dd>
-                    </div>
-                  ))}
-                  <div className="flex items-center justify-between pt-1">
-                    <dt className="text-[10px] uppercase tracking-[0.3em] text-gray-500">PRICE</dt>
-                    <dd className="font-[var(--font-display)] text-lg font-bold text-brand-red">{formatPrice(a.price, locale)}</dd>
-                  </div>
-                  <span className="mt-3 flex w-full items-center justify-center gap-2 border border-brand-red/60 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-white transition group-hover:bg-brand-red group-hover:shadow-[0_0_30px_-6px_rgba(255,42,68,0.8)]">
-                    Claim
-                    <ChevronRight className="h-4 w-4" />
-                  </span>
-                </dl>
-              </div>
-            </StaggerItem>
-          ))}
-        </Stagger>
-
-        <Reveal className="mt-12 text-center">
+        {/* CTA */}
+        <div className="py-24 text-center">
           <Link
             href="/catalog"
             className="inline-block border border-brand-cyan/40 text-brand-cyan px-10 py-3.5 rounded-full text-sm font-semibold tracking-wide hover:bg-brand-cyan/10 transition"
           >
             {t("viewAll")}
           </Link>
-        </Reveal>
-      </div>
-    </section>
+        </div>
+      </section>
+    </ReactLenis>
+  );
+}
+
+/* ─── Animated Sticky Card Component ─── */
+function StickyCard({
+  i,
+  a,
+  progress,
+  range,
+  targetScale,
+  locale,
+}: {
+  i: number;
+  a: (typeof spot)[0];
+  progress: any;
+  range: [number, number];
+  targetScale: number;
+  locale: string;
+}) {
+  const rate = useUsdIdrRate();
+  const t = useTranslations("catalog");
+  const scale = useTransform(progress, range, [1, targetScale]);
+
+  return (
+    <div className="sticky top-0 flex h-screen w-full items-center justify-center px-4 sm:px-6">
+      <motion.div
+        style={{
+          scale,
+          top: `calc(${i * 20}px)`,
+        }}
+        className="relative origin-top flex flex-col md:flex-row overflow-hidden rounded-[2rem] bg-[#0c0c10] border border-white/10 shadow-[0_30px_100px_-20px_rgba(0,0,0,1)] w-full max-w-5xl md:h-[500px]"
+      >
+        {/* Left: Netflix-like Logo Area */}
+        <div className="w-full md:w-[40%] bg-gradient-to-br from-[#13131a] to-[#0a0a0c] relative flex items-center justify-center p-12 border-r border-white/5 overflow-hidden">
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+
+          {["a1", "a2", "a3"].includes(a.id) ? (
+            <div className="relative z-10 w-full h-full rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(255,42,68,0.15)] transition-transform duration-700 group-hover:scale-105">
+              <img
+                src={`/account/Acc${a.id.replace('a', '')}/Main.png`}
+                alt={`${a.rank} Account`}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ) : (
+            <div className="relative z-10 w-40 h-40 md:w-56 md:h-56 rounded-[2rem] bg-gradient-to-br from-brand-red/20 to-brand-cyan/20 flex items-center justify-center border border-white/10 shadow-[0_0_80px_rgba(255,42,68,0.15)] transition-transform duration-700 group-hover:scale-105">
+              <span className="font-[var(--font-display)] text-6xl md:text-8xl font-black text-brand-red drop-shadow-lg">{a.tierBadge}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Right: Content Area */}
+        <div className="w-full md:w-[60%] p-8 md:p-16 flex flex-col justify-center bg-[#0a0a0c]">
+          <div className="flex items-center gap-4 text-xs font-semibold tracking-[0.2em] text-brand-cyan mb-4 md:mb-6">
+            <span>{t("spotlightLabel")}</span>
+            <span className="text-white/20">/</span>
+            <span>0{i + 1}</span>
+          </div>
+
+          <h3 className="font-[var(--font-display)] text-4xl md:text-6xl font-black text-white tracking-wide mb-4 md:mb-6">
+            {a.rank}
+          </h3>
+
+          <p className="text-gray-400 text-sm md:text-lg leading-relaxed mb-8 md:mb-10 max-w-lg">
+            {t("cardDesc", {
+              level: a.level,
+              skins: a.skins,
+              coins: a.coins.toLocaleString(locale),
+            })}
+          </p>
+
+          <div className="flex flex-wrap gap-2 md:gap-3 mb-8 md:mb-12">
+            {(a.tags || [a.badge, `Level ${a.level}`, t("fullAccess")]).map((tag, idx) => (
+              <span 
+                key={idx} 
+                className={`px-4 py-1.5 md:px-5 md:py-2 rounded-full border text-xs font-medium ${
+                  idx === 0 && a.tags 
+                    ? "bg-white/5 border-white/10 text-gray-300" // Kept styling generic or specific if needed
+                    : idx === 2 && !a.tags
+                    ? "bg-brand-cyan/10 border-brand-cyan/20 text-brand-cyan" 
+                    : "bg-white/5 border-white/10 text-gray-300"
+                }`}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          <div className="flex items-center justify-between mt-auto pt-6 md:pt-8 border-t border-white/5">
+            <div className="font-[var(--font-display)] text-2xl md:text-4xl font-bold text-white">
+              {formatPrice(a.price, locale, rate)}
+            </div>
+            <Link href="/catalog" className="group flex items-center gap-2 md:gap-3 text-sm md:text-base font-semibold text-brand-cyan hover:text-white transition-colors">
+              {t("viewDetails")}
+              <ChevronRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        </div>
+      </motion.div>
+    </div>
   );
 }

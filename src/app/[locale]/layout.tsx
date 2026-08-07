@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Orbitron } from "next/font/google";
 import "../globals.css";
 import { SmoothScroll } from "@/components/smooth-scroll";
+import { RateProvider } from "@/components/rate-provider";
+import { getUsdIdrRate } from "@/lib/exchange";
 import {NextIntlClientProvider} from 'next-intl';
 import {getMessages, setRequestLocale} from 'next-intl/server';
 import {routing} from '@/i18n/routing';
@@ -42,6 +44,7 @@ export default async function RootLayout({
   
   setRequestLocale(locale);
   const messages = await getMessages();
+  const rate = await getUsdIdrRate();
 
   return (
     <html
@@ -51,7 +54,7 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col bg-brand-dark text-[#f0f2f5]">
         <NextIntlClientProvider messages={messages}>
           <SmoothScroll />
-          {children}
+          <RateProvider rate={rate}>{children}</RateProvider>
         </NextIntlClientProvider>
       </body>
     </html>
