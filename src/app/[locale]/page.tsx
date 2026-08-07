@@ -10,6 +10,7 @@ import { LocaleSwitcherModal } from "@/components/ui/locale-switcher-modal";
 import { Link } from "@/i18n/routing";
 import { HowItWorks } from "@/components/ui/how-it-works";
 import { StickyFooter } from "@/components/ui/sticky-footer";
+import { Component as CursorFollower } from "@/components/ui/cursor-follower";
 
 export default function Home() {
   const tNav = useTranslations("nav");
@@ -17,6 +18,7 @@ export default function Home() {
 
   return (
     <div className="w-full selection:bg-blue-500 selection:text-white bg-[#08080c]">
+      <CursorFollower />
       {/* HERO SECTION */}
       <div className="relative min-h-screen w-full overflow-hidden">
         {/* Background Video */}
