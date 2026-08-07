@@ -36,16 +36,26 @@
     "fullAccess": "Full Access",
     "viewDetails": "View Details"
   },
-  "advantages": {
-    "eyebrow": "Why Us",
-    "title": "WHY",
-    "accent": "WARUNG APEX",
-    "item1_title": "Competitive Prices",
-    "item1_desc": "High-tier accounts with the best prices on the market.",
-    "item2_title": "Original Accounts",
-    "item2_desc": "All accounts are genuine and guaranteed, not stolen.",
-    "item3_title": "Responsive Service",
-    "item3_desc": "Instant 24/7 support via WhatsApp & Discord."
+  "howItWorks": {
+    "eyebrow": "Simple Process",
+    "title": "HOW IT",
+    "accent": "WORKS",
+    "subtitle": "From choosing a high-tier Apex account to instant delivery — a fast and secure 3-step process.",
+    "step1_title": "Choose Account",
+    "step1_desc": "Browse the catalog and find an account that fits your budget & needs.",
+    "step1_b1": "Browse hundreds of verified high-tier accounts",
+    "step1_b2": "Filter by rank, level & budget",
+    "step1_b3": "Detailed info on each account",
+    "step2_title": "Pick the Best Offer",
+    "step2_desc": "Compare price, security and availability, then choose the best option.",
+    "step2_b1": "Sort by price, rank and rating",
+    "step2_b2": "Filter by verification & account origin",
+    "step2_b3": "Full transparency on every listing",
+    "step3_title": "Receive Instantly",
+    "step3_desc": "Get your account delivered immediately after secure payment is confirmed.",
+    "step3_b1": "Direct contact via WhatsApp",
+    "step3_b2": "Instant delivery of account access",
+    "step3_b3": "Lifetime anti-hackback guarantee"
   },
   "stats": {
     "sold": "Accounts Sold",

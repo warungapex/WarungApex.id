@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
+import { useSyncExternalStore } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/routing";
 import { X } from "lucide-react";
@@ -13,11 +14,7 @@ export function LocaleSwitcherModal() {
   const t = useTranslations("localeSwitcher");
 
   const [isOpen, setIsOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
 
   // Local state for the form before saving
   const [selectedLanguage, setSelectedLanguage] = useState(locale);

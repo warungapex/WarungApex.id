@@ -1,4 +1,3 @@
-import { Advantages } from "@/components/sections/Advantages";
 import { Stats } from "@/components/sections/Stats";
 import { Marquee } from "@/components/sections/Marquee";
 import { Catalog } from "@/components/sections/Catalog";
@@ -9,6 +8,7 @@ import { Cta } from "@/components/sections/Cta";
 import { useTranslations } from "next-intl";
 import { LocaleSwitcherModal } from "@/components/ui/locale-switcher-modal";
 import { Link } from "@/i18n/routing";
+import { HowItWorks } from "@/components/ui/how-it-works";
 
 export default function Home() {
   const tNav = useTranslations("nav");
@@ -95,7 +95,7 @@ export default function Home() {
       {/* SECTIONS */}
       <Marquee />
       <Catalog />
-      <Advantages />
+      <HowItWorks />
       <Stats />
       <Guarantee />
       <Testimonials />

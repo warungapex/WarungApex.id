@@ -36,16 +36,26 @@
     "fullAccess": "Full Access",
     "viewDetails": "Lihat Detail"
   },
-  "advantages": {
-    "eyebrow": "Kenapa Kami",
-    "title": "KENAPA",
-    "accent": "WARUNG APEX",
-    "item1_title": "Harga Bersaing",
-    "item1_desc": "Akun tier tinggi dengan harga terbaik di pasaran.",
-    "item2_title": "Barang Original",
-    "item2_desc": "Semua akun asli dan bergaransi, bukan hasil curian.",
-    "item3_title": "Pelayanan Responsif",
-    "item3_desc": "Bantuan instan selama 24/7 via WhatsApp & Discord."
+  "howItWorks": {
+    "eyebrow": "Proses Mudah",
+    "title": "CARA",
+    "accent": "KERJA",
+    "subtitle": "Mulai dari memilih akun Apex tier tinggi hingga pengiriman instan — proses 3 langkah yang cepat dan aman.",
+    "step1_title": "Pilih Akun",
+    "step1_desc": "Jelajahi katalog dan temukan akun yang sesuai budget & kebutuhanmu.",
+    "step1_b1": "Telusuri ratusan akun tier tinggi terverifikasi",
+    "step1_b2": "Filter berdasarkan rank, level & budget",
+    "step1_b3": "Info detail untuk setiap akun",
+    "step2_title": "Pilih Penawaran Terbaik",
+    "step2_desc": "Bandingkan harga, keamanan dan garansi, lalu pilih opsi terbaik.",
+    "step2_b1": "Urutkan berdasarkan harga, rank & rating",
+    "step2_b2": "Filter berdasarkan verifikasi & asal akun",
+    "step2_b3": "Transparansi penuh di setiap listing",
+    "step3_title": "Terima Instan",
+    "step3_desc": "Akun dikirim segera setelah pembayaran aman terverifikasi.",
+    "step3_b1": "Kontak langsung via WhatsApp",
+    "step3_b2": "Kirim akses akun secara instan",
+    "step3_b3": "Garansi anti-hackback seumur hidup"
   },
   "stats": {
     "sold": "Akun Terjual",

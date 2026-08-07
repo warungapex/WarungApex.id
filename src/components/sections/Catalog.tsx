@@ -7,7 +7,7 @@ import { Link } from "@/i18n/routing";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal } from "@/components/ui/reveal";
 import { useUsdIdrRate } from "@/components/rate-provider";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import ReactLenis from "lenis/react";
 import { useRef } from "react";
 
@@ -81,7 +81,7 @@ function StickyCard({
 }: {
   i: number;
   a: (typeof spot)[0];
-  progress: any;
+  progress: MotionValue<number>;
   range: [number, number];
   targetScale: number;
   locale: string;
