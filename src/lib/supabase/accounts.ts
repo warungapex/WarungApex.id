@@ -92,7 +92,8 @@ export async function getAccountIds(): Promise<string[]> {
       .select("id");
 
     if (error) return [];
-    return (data ?? []).map((r) => r.id);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (data ?? []).map((r: any) => r.id as string);
   } catch {
     return [];
   }

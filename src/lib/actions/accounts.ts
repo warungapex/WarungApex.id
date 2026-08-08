@@ -4,9 +4,6 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/supabase/auth";
-import type { Database } from "@/lib/supabase/types";
-
-type AccountUpdate = Database["public"]["Tables"]["accounts"]["Update"];
 
 function rankToTierBadge(rank: string): string {
   const r = rank.toLowerCase();
@@ -28,7 +25,6 @@ function rankToTierBadge(rank: string): string {
   if (r.includes("silver iii")) return "S3";
   if (r.includes("silver ii")) return "S2";
   if (r.includes("silver i")) return "S1";
-  if (r.includes("bronze i") && !r.includes("ii") && !r.includes("iii") && !r.includes("iv")) return "B1";
   if (r.includes("bronze iv")) return "B4";
   if (r.includes("bronze iii")) return "B3";
   if (r.includes("bronze ii")) return "B2";
@@ -40,12 +36,14 @@ function rankToTierBadge(rank: string): string {
   return "ROOK";
 }
 
-function formToAccountData(formData: FormData): Omit<AccountUpdate, "id"> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function formToAccountData(formData: FormData): Record<string, any> {
   const tagsRaw = (formData.get("tags") as string) ?? "";
   const tags = tagsRaw.split(",").map((t) => t.trim()).filter(Boolean);
 
   const imagesRaw = (formData.get("images") as string) ?? "";
   const images = imagesRaw.split(",").map((i) => i.trim()).filter(Boolean);
+
   const rank = formData.get("rank") as string;
 
   return {
@@ -57,9 +55,7 @@ function formToAccountData(formData: FormData): Omit<AccountUpdate, "id"> {
     crafting_materials: parseInt((formData.get("crafting_materials") as string) || "0"),
     crafting_materials_legends: parseInt((formData.get("crafting_materials_legends") as string) || "0"),
     coins: parseInt(formData.get("coins") as string),
-    legendary_skins: parseInt(formData.get("legendary_skins") as string),
-    featured: formData.get("featured") === "true",
-    sold: formData.get("sold") === "true",
+    legendary_skins: parseInt((formData.get("legendary_skins") as string) || "0"),
     platform: (formData.get("platform") as string) || null,
     description: (formData.get("description") as string) || null,
     tags,
@@ -74,11 +70,12 @@ export async function createAccount(formData: FormData) {
   if (!id) return { error: "ID wajib diisi" };
 
   const supabase = await createServerSupabaseClient();
-  const { error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
     .from("accounts")
     .insert({ id, ...formToAccountData(formData) });
 
-  if (error) return { error: error.message };
+  if (error) return { error: (error as { message: string }).message };
 
   revalidatePath("/admin");
   revalidatePath("/catalog");
@@ -90,12 +87,13 @@ export async function updateAccount(id: string, formData: FormData) {
   await requireAdmin();
 
   const supabase = await createServerSupabaseClient();
-  const { error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
     .from("accounts")
     .update(formToAccountData(formData))
     .eq("id", id);
 
-  if (error) return { error: error.message };
+  if (error) return { error: (error as { message: string }).message };
 
   revalidatePath("/admin");
   revalidatePath(`/catalog/${id}`);
@@ -108,9 +106,13 @@ export async function deleteAccount(id: string) {
   await requireAdmin();
 
   const supabase = await createServerSupabaseClient();
-  const { error } = await supabase.from("accounts").delete().eq("id", id);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
+    .from("accounts")
+    .delete()
+    .eq("id", id);
 
-  if (error) return { error: error.message };
+  if (error) return { error: (error as { message: string }).message };
 
   revalidatePath("/admin");
   revalidatePath("/catalog");
@@ -121,12 +123,13 @@ export async function toggleSold(id: string, sold: boolean) {
   await requireAdmin();
 
   const supabase = await createServerSupabaseClient();
-  const { error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
     .from("accounts")
     .update({ sold })
     .eq("id", id);
 
-  if (error) return { error: error.message };
+  if (error) return { error: (error as { message: string }).message };
 
   revalidatePath("/admin");
   revalidatePath("/catalog");
@@ -137,12 +140,13 @@ export async function toggleFeatured(id: string, featured: boolean) {
   await requireAdmin();
 
   const supabase = await createServerSupabaseClient();
-  const { error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
     .from("accounts")
     .update({ featured })
     .eq("id", id);
 
-  if (error) return { error: error.message };
+  if (error) return { error: (error as { message: string }).message };
 
   revalidatePath("/admin");
   revalidatePath("/");
