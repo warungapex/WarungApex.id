@@ -136,7 +136,7 @@ function StickyCard({
           <p className="text-gray-400 text-sm md:text-lg leading-relaxed mb-8 md:mb-10 max-lg">
             {t("cardDesc", {
               level: a.level,
-              skins: a.skins,
+              skins: a.legendarySkins,
               coins: a.coins.toLocaleString(locale),
             })}
           </p>

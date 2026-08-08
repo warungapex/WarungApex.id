@@ -8,27 +8,62 @@ import type { Database } from "@/lib/supabase/types";
 
 type AccountUpdate = Database["public"]["Tables"]["accounts"]["Update"];
 
+function rankToTierBadge(rank: string): string {
+  const r = rank.toLowerCase();
+  if (r.includes("predator")) return "PRED";
+  if (r.includes("master")) return "MAST";
+  if (r.includes("diamond iv")) return "D4";
+  if (r.includes("diamond iii")) return "D3";
+  if (r.includes("diamond ii")) return "D2";
+  if (r.includes("diamond i")) return "D1";
+  if (r.includes("platinum iv")) return "P4";
+  if (r.includes("platinum iii")) return "P3";
+  if (r.includes("platinum ii")) return "P2";
+  if (r.includes("platinum i")) return "P1";
+  if (r.includes("gold iv")) return "G4";
+  if (r.includes("gold iii")) return "G3";
+  if (r.includes("gold ii")) return "G2";
+  if (r.includes("gold i")) return "G1";
+  if (r.includes("silver iv")) return "S4";
+  if (r.includes("silver iii")) return "S3";
+  if (r.includes("silver ii")) return "S2";
+  if (r.includes("silver i")) return "S1";
+  if (r.includes("bronze i") && !r.includes("ii") && !r.includes("iii") && !r.includes("iv")) return "B1";
+  if (r.includes("bronze iv")) return "B4";
+  if (r.includes("bronze iii")) return "B3";
+  if (r.includes("bronze ii")) return "B2";
+  if (r.includes("bronze i")) return "B1";
+  if (r.includes("rookie iv")) return "R4";
+  if (r.includes("rookie iii")) return "R3";
+  if (r.includes("rookie ii")) return "R2";
+  if (r.includes("rookie")) return "R1";
+  return "ROOK";
+}
+
 function formToAccountData(formData: FormData): Omit<AccountUpdate, "id"> {
   const tagsRaw = (formData.get("tags") as string) ?? "";
-  const tags = tagsRaw
-    .split(",")
-    .map((t) => t.trim())
-    .filter(Boolean);
+  const tags = tagsRaw.split(",").map((t) => t.trim()).filter(Boolean);
+
+  const imagesRaw = (formData.get("images") as string) ?? "";
+  const images = imagesRaw.split(",").map((i) => i.trim()).filter(Boolean);
+  const rank = formData.get("rank") as string;
 
   return {
-    rank: formData.get("rank") as string,
-    tier_badge: formData.get("tier_badge") as string,
+    rank,
+    tier_badge: rankToTierBadge(rank),
     badge: formData.get("badge") as string,
     price: parseInt(formData.get("price") as string),
     level: parseInt(formData.get("level") as string),
-    badges_tokens: parseInt((formData.get("badges_tokens") as string) || "0"),
+    crafting_materials: parseInt((formData.get("crafting_materials") as string) || "0"),
+    crafting_materials_legends: parseInt((formData.get("crafting_materials_legends") as string) || "0"),
     coins: parseInt(formData.get("coins") as string),
-    skins: parseInt(formData.get("skins") as string),
+    legendary_skins: parseInt(formData.get("legendary_skins") as string),
     featured: formData.get("featured") === "true",
     sold: formData.get("sold") === "true",
     platform: (formData.get("platform") as string) || null,
     description: (formData.get("description") as string) || null,
     tags,
+    images,
   };
 }
 
@@ -96,4 +131,19 @@ export async function toggleSold(id: string, sold: boolean) {
   revalidatePath("/admin");
   revalidatePath("/catalog");
   revalidatePath(`/catalog/${id}`);
+}
+
+export async function toggleFeatured(id: string, featured: boolean) {
+  await requireAdmin();
+
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase
+    .from("accounts")
+    .update({ featured })
+    .eq("id", id);
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/admin");
+  revalidatePath("/");
 }

@@ -228,9 +228,14 @@ export function CatalogGrid({ list }: { list: Account[] }) {
         selectedHeirlooms.length === 0 ||
         selectedHeirlooms.some((h) => a.badge.toLowerCase().includes(h.toLowerCase()));
       const okBudget = budget === 0 || a.price <= budget;
-      return okQ && okRank && okHeirloom && okBudget;
+      const okPlatform =
+        selectedPlatforms.length === 0 ||
+        selectedPlatforms.some((p) =>
+          (a.platform ?? "").toLowerCase().includes(p.toLowerCase()),
+        );
+      return okQ && okRank && okHeirloom && okBudget && okPlatform;
     });
-  }, [q, selectedRanks, selectedHeirlooms, budget, list]);
+  }, [q, selectedRanks, selectedHeirlooms, selectedPlatforms, budget, list]);
 
   const sorted = useMemo(() => {
     const arr = [...filtered];

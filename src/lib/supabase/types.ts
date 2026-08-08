@@ -17,9 +17,10 @@ export type Database = {
           badge: string;
           price: number;
           level: number;
-          badges_tokens: number;
+          crafting_materials: number;
+          crafting_materials_legends: number;
           coins: number;
-          skins: number;
+          legendary_skins: number;
           featured: boolean;
           sold: boolean;
           platform: string | null;
@@ -36,9 +37,10 @@ export type Database = {
           badge: string;
           price: number;
           level: number;
-          badges_tokens?: number;
+          crafting_materials?: number;
+          crafting_materials_legends?: number;
           coins?: number;
-          skins?: number;
+          legendary_skins?: number;
           featured?: boolean;
           sold?: boolean;
           platform?: string | null;
@@ -55,9 +57,10 @@ export type Database = {
           badge?: string;
           price?: number;
           level?: number;
-          badges_tokens?: number;
+          crafting_materials?: number;
+          crafting_materials_legends?: number;
           coins?: number;
-          skins?: number;
+          legendary_skins?: number;
           featured?: boolean;
           sold?: boolean;
           platform?: string | null;

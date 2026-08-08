@@ -60,9 +60,9 @@ export function ProductCard({ a }: { a: Account }) {
           </li>
           <li className="flex items-center justify-between">
             <span className="flex items-center gap-1.5">
-              <ShieldCheck className="h-3.5 w-3.5" /> Skins
+              <ShieldCheck className="h-3.5 w-3.5" /> Skin Legendary
             </span>
-            <span className="text-gray-200">{a.skins}</span>
+            <span className="text-gray-200">{a.legendarySkins}</span>
           </li>
         </ul>
 

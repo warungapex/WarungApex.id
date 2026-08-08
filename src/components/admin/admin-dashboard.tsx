@@ -2,14 +2,14 @@
 
 import { useState, useTransition } from "react";
 import type { Account } from "@/lib/supabase/accounts";
-import { deleteAccount, toggleSold } from "@/lib/actions/accounts";
+import { deleteAccount, toggleSold, toggleFeatured } from "@/lib/actions/accounts";
 import { logoutAction } from "@/lib/actions/auth";
 import Link from "next/link";
 import {
   LayoutDashboard, Package, Settings, LogOut,
   ExternalLink, Plus, Pencil, Trash2,
   TrendingUp, ShoppingBag, CheckCircle2, Clock,
-  Search, Bell, ChevronRight, MoreHorizontal,
+  Search, Bell, ChevronRight, MoreHorizontal, Star, Eye, EyeOff,
 } from "lucide-react";
 
 /* ── Sidebar ── */
@@ -118,6 +118,12 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
     });
   };
 
+  const handleToggleFeatured = (id: string, currentFeatured: boolean) => {
+    startTransition(async () => {
+      await toggleFeatured(id, !currentFeatured);
+    });
+  };
+
   // revenue from sold accounts
   const revenue = accounts.filter((a) => a.sold).reduce((s, a) => s + a.price, 0);
 
@@ -192,6 +198,9 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
                       <th className="text-left px-5 py-3.5 text-xs text-gray-500 font-semibold">Rank</th>
                       <th className="text-right px-5 py-3.5 text-xs text-gray-500 font-semibold">Harga</th>
                       <th className="text-center px-5 py-3.5 text-xs text-gray-500 font-semibold">Status</th>
+                      <th className="text-center px-5 py-3.5 text-xs text-gray-500 font-semibold">
+                        <Star className="w-3.5 h-3.5 mx-auto" />
+                      </th>
                       <th className="text-right px-4 py-3.5 text-xs text-gray-500 font-semibold"></th>
                     </tr>
                   </thead>
@@ -212,7 +221,7 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
                             </div>
                             <div>
                               <p className="font-semibold text-white text-[13px] leading-tight">{a.badge}</p>
-                              <p className="text-[11px] text-gray-500">Lv.{a.level} · {a.skins} skins</p>
+                              <p className="text-[11px] text-gray-500">Lv.{a.level} · {a.legendarySkins} skins</p>
                             </div>
                           </div>
                         </td>
@@ -227,13 +236,30 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
                         <td className="px-5 py-4 text-center">
                           <button
                             onClick={() => handleToggleSold(a.id, a.sold)}
+                            title={a.sold ? "Tandai Tersedia" : "Tandai Terjual"}
                             className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold transition ${
                               a.sold
                                 ? "bg-red-400/10 text-red-400 hover:bg-red-400/20"
                                 : "bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20"
                             }`}
                           >
-                            {a.sold ? "Terjual" : "Tersedia"}
+                            {a.sold
+                              ? <><EyeOff className="w-3 h-3" /> Terjual</>
+                              : <><Eye className="w-3 h-3" /> Tersedia</>}
+                          </button>
+                        </td>
+                        {/* Featured star */}
+                        <td className="px-5 py-4 text-center">
+                          <button
+                            onClick={() => handleToggleFeatured(a.id, a.featured)}
+                            title={a.featured ? "Hapus dari homepage" : "Tampilkan di homepage"}
+                            className={`p-1.5 rounded-lg transition ${
+                              a.featured
+                                ? "text-yellow-400 bg-yellow-400/10 hover:bg-yellow-400/20"
+                                : "text-gray-600 hover:text-yellow-400 hover:bg-yellow-400/10"
+                            }`}
+                          >
+                            <Star className={`w-4 h-4 ${a.featured ? "fill-yellow-400" : ""}`} />
                           </button>
                         </td>
                         <td className="px-4 py-4">

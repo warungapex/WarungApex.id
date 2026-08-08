@@ -10,8 +10,45 @@ import { formatPrice } from "@/lib/accounts";
 import { useLocale } from "next-intl";
 import { useUsdIdrRate } from "@/components/rate-provider";
 
+/* ── Fallback images dari filesystem lokal per akun ── */
+const LOCAL_IMAGES: Record<string, string[]> = {
+  a1: [
+    "/account/Acc1/Main.png",
+    "/account/Acc1/1 - 5gSsVZe.png",
+    "/account/Acc1/2 - utqCrEM.png",
+    "/account/Acc1/3 - VJ9ElOw.png",
+    "/account/Acc1/4 - I6xOHl4.png",
+    "/account/Acc1/5 - Xq7PxbZ.png",
+    "/account/Acc1/6 - 9NEtEw9.png",
+    "/account/Acc1/7 - wvTUpQm.png",
+  ],
+  a2: [
+    "/account/Acc2/Main.png",
+    "/account/Acc2/1 - 8tNntAa.jpg",
+    "/account/Acc2/2 - PVfpOaK.png",
+    "/account/Acc2/3 - HvmHWSN.png",
+    "/account/Acc2/4 - eILH6Kp.png",
+    "/account/Acc2/5 - B0aOUff.png",
+    "/account/Acc2/6 - Q9freOI.png",
+    "/account/Acc2/7 - eq0hd5P.png",
+  ],
+  a3: [
+    "/account/Acc3/Main.png",
+    "/account/Acc3/1 - 2o4N9mk.png",
+    "/account/Acc3/2 - Ib6yNpc.png",
+    "/account/Acc3/3 - bOjpgfZ.png",
+    "/account/Acc3/4 - q1pVNbv.png",
+    "/account/Acc3/5 - PcEEuvk.png",
+    "/account/Acc3/6 - 5TIAPrd.png",
+    "/account/Acc3/7 - G1FTe34.png",
+  ],
+};
+
 function ImageMosaic({ product }: { product: Account }) {
-  const images = product.images ?? [];
+  // Prefer images from DB, fallback to local filesystem mapping
+  const images = (product.images && product.images.length > 0)
+    ? product.images
+    : (LOCAL_IMAGES[product.id] ?? []);
   const [lightbox, setLightbox] = useState<number | null>(null);
 
   if (!images.length) {
@@ -179,7 +216,8 @@ export function ProductDetail({ product }: { product: Account }) {
       `• Rank: ${product.rank}\n` +
       `• Level: ${product.level}\n` +
       `• Coins: ${product.coins.toLocaleString("id-ID")}\n` +
-      `• Skins: ${product.skins}\n` +
+      `• Skin Legendary: ${product.legendarySkins}\n` +
+      `• Crafting Materials: ${product.craftingMaterials ?? 0}\n` +
       `• Harga: ${formatPrice(product.price, locale, rate)}\n\n` +
       `Apakah masih available?`;
     window.open(`https://wa.me/6285167202134?text=${encodeURIComponent(msg)}`, "_blank");
@@ -212,9 +250,13 @@ export function ProductDetail({ product }: { product: Account }) {
               <div className="px-5"><StatCell label="Rank" value={product.rank} /></div>
             </div>
             <div className="grid grid-cols-3 divide-x divide-white/8">
-              <div className="px-5"><StatCell label="Skins" value={product.skins} /></div>
+              <div className="px-5"><StatCell label="Skin Legendary" value={product.legendarySkins} /></div>
               <div className="px-5"><StatCell label="Level" value={product.level} /></div>
               <div className="px-5"><StatCell label="Apex Coins" value={product.coins.toLocaleString("id-ID")} /></div>
+            </div>
+            <div className="grid grid-cols-2 divide-x divide-white/8">
+              <div className="px-5"><StatCell label="Crafting Materials" value={product.craftingMaterials ?? 0} /></div>
+              <div className="px-5"><StatCell label="Green Shard" value={product.craftingMaterialsLegends ?? 0} /></div>
             </div>
           </div>
 
