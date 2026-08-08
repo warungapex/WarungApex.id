@@ -298,12 +298,12 @@ export function NeuralLogin() {
       <main className="auth-container">
         <header className="header">
           <span className="brand-id">System Node: WARUNG_APEX</span>
-          <h1>NEURAL<br/>ACCESS</h1>
+          <h1>WELCOME<br/>BACK</h1>
         </header>
 
         <form onSubmit={handleSubmit} autoComplete="off">
           <div className="form-group">
-            <label>User Identity</label>
+            <label>Email</label>
             <input 
               name="email"
               type="email" 
@@ -315,7 +315,7 @@ export function NeuralLogin() {
           </div>
 
           <div className="form-group">
-            <label>Sequence Key</label>
+            <label>Password</label>
             <input 
               name="password"
               type="password" 
@@ -335,7 +335,7 @@ export function NeuralLogin() {
           <div className="submit-wrap">
             <div className="mercury-drop"></div>
             <button type="submit" className="btn-base" disabled={loading}>
-              {loading ? "INITIALIZING..." : "Initialize Stream"}
+              {loading ? "LOGGING IN..." : "Login"}
             </button>
           </div>
         </form>
