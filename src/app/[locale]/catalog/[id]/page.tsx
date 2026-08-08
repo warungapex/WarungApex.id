@@ -6,6 +6,9 @@ import { ProductDetail } from "@/components/catalog/product-detail";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 
+// Allow dynamic IDs not in generateStaticParams
+export const dynamicParams = true;
+
 export const metadata: Metadata = {
   title: "Detail Akun | Warung Apex",
   description: "Detail akun Apex Legends di Warung Apex.",
@@ -28,8 +31,12 @@ export default async function ProductPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
+
+  // Normalize ID — handle both "A1" and "a1"
+  const normalizedId = id.toLowerCase();
+
   const [product, t] = await Promise.all([
-    getAccount(id),
+    getAccount(normalizedId),
     getTranslations({ locale, namespace: "catalog" }),
   ]);
 

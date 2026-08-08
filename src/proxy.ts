@@ -15,11 +15,19 @@ export async function proxy(request: NextRequest) {
 
   // All other /admin routes — check session
   if (pathname.startsWith("/admin")) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+    // If env vars missing, allow through (will fail gracefully on the page)
+    if (!supabaseUrl || !supabaseKey) {
+      return NextResponse.next();
+    }
+
     const response = NextResponse.next();
 
     const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+      supabaseUrl,
+      supabaseKey,
       {
         cookies: {
           getAll() { return request.cookies.getAll(); },
@@ -46,8 +54,7 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/",
-    "/(id|en)/:path*",
-    "/admin/:path*",
+    // next-intl — exclude /admin, /_next, /api, static files
+    "/((?!admin|_next|api|.*\\..*).*)",
   ],
 };
