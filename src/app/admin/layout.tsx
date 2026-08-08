@@ -1,9 +1,20 @@
-import type { ReactNode } from "react";
+import type { Metadata } from "next";
+import { Inter, Orbitron } from "next/font/google";
+import "../globals.css";
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
+const inter = Inter({ variable: "--font-sans", subsets: ["latin"] });
+const orbitron = Orbitron({ variable: "--font-display", subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Admin — Warung Apex",
+};
+
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#08080c] text-white">
-      {children}
-    </div>
+    <html lang="id" className={`${inter.variable} ${orbitron.variable} h-full antialiased`}>
+      <body className="min-h-full bg-[#08080c] text-white">
+        {children}
+      </body>
+    </html>
   );
 }

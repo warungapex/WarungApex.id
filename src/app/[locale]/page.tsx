@@ -67,27 +67,12 @@ export default async function Home({
             </h1>
           </div>
 
-          {/* Right Nav — mobile: profile icon | desktop: locale + text button */}
-          <div className="flex items-center gap-3 sm:gap-6 text-sm font-semibold tracking-wide text-white drop-shadow-md mt-1">
-            {/* Desktop only: locale switcher */}
-            <div className="hidden lg:block">
-              <LocaleSwitcherModal />
-            </div>
-            {/* Mobile: profile icon */}
-            <Link
-              href="/login"
-              className="lg:hidden flex items-center justify-center w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition shadow-lg"
-              aria-label={tNav("signIn")}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-white">
-                <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
-              </svg>
-            </Link>
-            {/* Desktop: full text button */}
-            <Link href="/login" className="hidden lg:block bg-white text-gray-900 px-6 py-2.5 rounded-full hover:bg-gray-100 transition shadow-lg whitespace-nowrap text-sm">
-              {tNav("signIn")}
-            </Link>
-          </div>
+           {/* Right Nav — locale switcher only */}
+           <div className="flex items-center gap-3 sm:gap-6 text-sm font-semibold tracking-wide text-white drop-shadow-md mt-1">
+             <div className="hidden lg:block">
+               <LocaleSwitcherModal />
+             </div>
+           </div>
         </nav>
 
         {/* Bottom Section */}
