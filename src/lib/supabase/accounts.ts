@@ -3,7 +3,7 @@ import type { AccountRow } from "@/lib/supabase/types";
 
 // Map DB snake_case → app camelCase
 export function toAccount(row: AccountRow) {
-  const images = (row.images as string[]) ?? [];
+  const images = Array.isArray(row.images) ? row.images as string[] : [];
   const mainImage = images.length > 0 ? images[0] : undefined;
   return {
     id: row.id,
@@ -12,14 +12,14 @@ export function toAccount(row: AccountRow) {
     badge: row.badge,
     price: row.price,
     level: row.level,
-    badgesTokens: row.crafting_materials, // backward compat alias
-    craftingMaterials: row.crafting_materials,
-    craftingMaterialsLegends: row.crafting_materials_legends,
-    coins: row.coins,
-    skins: row.legendary_skins,
-    legendarySkins: row.legendary_skins,
-    featured: row.featured,
-    sold: row.sold,
+    badgesTokens: row.crafting_materials ?? 0,
+    craftingMaterials: row.crafting_materials ?? 0,
+    craftingMaterialsLegends: row.crafting_materials_legends ?? 0,
+    coins: row.coins ?? 0,
+    skins: row.legendary_skins ?? 0,
+    legendarySkins: row.legendary_skins ?? 0,
+    featured: row.featured ?? false,
+    sold: row.sold ?? false,
     platform: row.platform ?? undefined,
     description: row.description ?? undefined,
     tags: row.tags ?? [],
@@ -76,9 +76,10 @@ export async function getAccount(id: string): Promise<Account | null> {
       .eq("id", id)
       .single();
 
-    if (error) return null;
+    if (error || !data) return null;
     return toAccount(data);
-  } catch {
+  } catch (e) {
+    console.error("[getAccount] error:", e);
     return null;
   }
 }
