@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import clsx from "clsx";
 
@@ -288,7 +288,12 @@ export const GooeySearchBar = ({
   });
 
   const debouncedSearchText = useDebounce(state.searchText, 500);
-  const isUnsupported = useMemo(() => isUnsupportedBrowser(), []);
+  const [isUnsupported, setIsUnsupported] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsUnsupported(isUnsupportedBrowser());
+  }, []);
 
   const handleButtonClick = () => {
     setState((prevState) => ({ ...prevState, step: 2 }));

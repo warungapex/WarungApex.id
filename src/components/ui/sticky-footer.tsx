@@ -38,12 +38,12 @@ export function StickyFooter({ className, ...props }: StickyFooterProps) {
 
 	return (
 		<footer
-			className={cn("relative h-[480px] w-full", className)}
+			className={cn("relative h-[600px] sm:h-[520px] md:h-[480px] w-full", className)}
 			style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
 			{...props}
 		>
-			<div className="fixed bottom-0 h-[480px] w-full">
-				<div className="sticky top-[calc(100vh-480px)] h-full">
+			<div className="fixed bottom-0 h-[600px] sm:h-[520px] md:h-[480px] w-full">
+				<div className="sticky top-[calc(100vh-600px)] sm:top-[calc(100vh-520px)] md:top-[calc(100vh-480px)] h-full">
 					{/* Subtle ambient background */}
 					<div className="flex size-full items-end justify-center px-4 pb-8 pt-4 md:px-8">
 						<AnimatedContainer className="w-full max-w-7xl">
