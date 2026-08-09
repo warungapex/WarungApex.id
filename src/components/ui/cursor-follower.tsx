@@ -16,8 +16,11 @@ export const Component = () => {
   const BORDER_DOT_SMOOTHNESS = 0.1;
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
+  }, []);
 
+  useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       mousePosition.current = { x: e.clientX, y: e.clientY };
     };

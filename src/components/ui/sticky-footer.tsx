@@ -151,12 +151,6 @@ export function StickyFooter({ className, ...props }: StickyFooterProps) {
 
 // ─── Social Icons (custom SVG) ────────────────────────────────────────────────
 
-const XIcon = (props: React.SVGProps<SVGSVGElement>) => (
-	<svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-		<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-	</svg>
-);
-
 const TelegramIcon = (props: React.SVGProps<SVGSVGElement>) => (
 	<svg viewBox="0 0 24 24" fill="currentColor" {...props}>
 		<path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 13.568l-2.95-.924c-.64-.204-.654-.64.135-.954l11.566-4.458c.537-.194 1.006.131.663.989z" />
@@ -190,7 +184,10 @@ type AnimatedContainerProps = React.ComponentProps<typeof motion.div> & {
 
 function useMounted() {
 	const [mounted, setMounted] = useState(false);
-	useEffect(() => setMounted(true), []);
+	useEffect(() => {
+		// eslint-disable-next-line react-hooks/set-state-in-effect
+		setMounted(true);
+	}, []);
 	return mounted;
 }
 

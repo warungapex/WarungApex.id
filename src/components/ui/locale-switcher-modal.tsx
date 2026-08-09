@@ -6,6 +6,7 @@ import { useSyncExternalStore } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/routing";
 import { X } from "lucide-react";
+import Image from "next/image";
 
 export function LocaleSwitcherModal() {
   const locale = useLocale();
@@ -32,9 +33,11 @@ export function LocaleSwitcherModal() {
         onClick={() => setIsOpen(true)}
         className="flex items-center gap-2 hover:bg-white/10 px-3 py-2 rounded-full transition"
       >
-        <img 
+        <Image 
           src={locale === "id" ? "https://flagcdn.com/w40/id.png" : "https://flagcdn.com/w40/us.png"} 
           alt={locale === "id" ? "ID Flag" : "US Flag"} 
+          width={20}
+          height={14}
           className="w-5 h-3.5 rounded-[2px] object-cover shadow-sm" 
         />
         <span className="hidden sm:inline font-semibold text-sm tracking-wide uppercase text-white">
@@ -60,9 +63,11 @@ export function LocaleSwitcherModal() {
               <div className="flex flex-col gap-2 border-b border-white/10 pb-4">
                 <label className="text-sm text-gray-400">{t("region")}</label>
                 <div className="flex items-center gap-2 text-white font-medium">
-                  <img 
+                  <Image 
                     src={selectedLanguage === "id" ? "https://flagcdn.com/w40/id.png" : "https://flagcdn.com/w40/us.png"} 
                     alt={selectedLanguage === "id" ? "ID Flag" : "US Flag"} 
+                    width={24}
+                    height={16}
                     className="w-6 h-4 rounded-[2px] object-cover shadow-sm" 
                   />
                   <span>{selectedLanguage === "id" ? "Indonesia" : "United States"}</span>

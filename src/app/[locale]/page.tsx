@@ -19,8 +19,7 @@ export default async function Home({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const [tNav, tHero, spot] = await Promise.all([
-    getTranslations({ locale, namespace: "nav" }),
+  const [tHero, spot] = await Promise.all([
     getTranslations({ locale, namespace: "hero" }),
     getFeaturedAccounts(3),
   ]);

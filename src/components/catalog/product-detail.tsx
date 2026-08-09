@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { useState } from "react";
 import {
   ShieldCheck, Zap, Headphones, CheckCircle2,
@@ -72,10 +74,13 @@ function ImageMosaic({ product }: { product: Account }) {
           onClick={() => setLightbox(0)}
           className="relative overflow-hidden bg-black group"
         >
-          <img
+          <Image
             src={main}
             alt={product.badge}
-            className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+            fill
+            sizes="(max-width: 640px) 100vw, 60vw"
+            className="object-cover group-hover:scale-105 transition duration-500"
+            unoptimized
           />
         </button>
 
@@ -89,10 +94,13 @@ function ImageMosaic({ product }: { product: Account }) {
                 onClick={() => setLightbox(i + 1)}
                 className="relative flex-1 overflow-hidden bg-black group"
               >
-                <img
+                <Image
                   src={src}
                   alt=""
-                  className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                  fill
+                  sizes="(max-width: 640px) 100vw, 180px"
+                  className="object-cover group-hover:scale-105 transition duration-500"
+                  unoptimized
                 />
                 {isLast && remaining > 0 && (
                   <div className="absolute inset-0 bg-black/60 flex items-center justify-center gap-2 text-white text-sm font-semibold">
@@ -113,10 +121,14 @@ function ImageMosaic({ product }: { product: Account }) {
           onClick={() => setLightbox(null)}
         >
           <div className="relative max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
-            <img
+            <Image
               src={images[lightbox]}
               alt=""
+              sizes="(max-width: 1280px) 100vw, 60vw"
+              width={1200}
+              height={800}
               className="w-full max-h-[80vh] object-contain rounded-xl"
+              unoptimized
             />
             {/* nav */}
             <button
@@ -140,11 +152,11 @@ function ImageMosaic({ product }: { product: Account }) {
                 <button
                   key={i}
                   onClick={() => setLightbox(i)}
-                  className={`shrink-0 w-14 h-10 rounded-md overflow-hidden border-2 transition ${
+                  className={`relative shrink-0 w-14 h-10 rounded-md overflow-hidden border-2 transition ${
                     i === lightbox ? "border-brand-cyan" : "border-white/20 hover:border-white/50"
                   }`}
                 >
-                  <img src={src} alt="" className="w-full h-full object-cover" />
+                  <Image src={src} alt="" fill sizes="56px" className="object-cover" unoptimized />
                 </button>
               ))}
             </div>

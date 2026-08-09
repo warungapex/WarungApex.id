@@ -6,6 +6,7 @@ import { formatPrice } from "@/lib/accounts";
 import { useLocale } from "next-intl";
 import { useUsdIdrRate } from "@/components/rate-provider";
 import { Link } from "@/i18n/routing";
+import Image from "next/image";
 
 /* Fallback main images for seeded accounts */
 const MAIN_IMAGES: Record<string, string> = {
@@ -40,10 +41,13 @@ export function ProductCard({ a }: { a: Account }) {
         {/* Banner — Main image if available, fallback to rank gradient */}
         {mainImage ? (
           <div className="relative h-40 overflow-hidden">
-            <img
+            <Image
               src={mainImage}
               alt={a.badge}
-              className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+              fill
+              sizes="(max-width: 640px) 100vw, 33vw"
+              className="object-cover group-hover:scale-105 transition duration-500"
+              unoptimized
             />
           </div>
         ) : (

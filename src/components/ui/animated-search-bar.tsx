@@ -325,6 +325,8 @@ export const GooeySearchBar = ({
     if (state.step === 2) {
       inputRef.current?.focus();
     } else {
+      // Reset the search state whenever the gooey step transitions out of step 2
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setState((prevState) => ({
         ...prevState,
         searchText: "",
@@ -338,6 +340,7 @@ export const GooeySearchBar = ({
     let isCancelled = false;
 
     if (debouncedSearchText) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setState((prevState) => ({ ...prevState, isLoading: true }));
 
       const fetchData = async () => {

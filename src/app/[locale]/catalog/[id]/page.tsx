@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { getAccount, getAccountIds } from "@/lib/supabase/accounts";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
@@ -35,41 +34,36 @@ export default async function ProductPage({
 }) {
   const { locale, id } = await params;
 
-  try {
-    const [product, t] = await Promise.all([
-      getAccount(id),
-      getTranslations({ locale, namespace: "catalog" }),
-    ]);
+  const [product, t] = await Promise.all([
+    getAccount(id),
+    getTranslations({ locale, namespace: "catalog" }),
+  ]);
 
-    if (!product) {
-      console.warn(`[ProductPage] Product not found for id: ${id}`);
-      notFound();
-    }
-
-    return (
-      <main className="min-h-screen bg-brand-dark">
-        <div className="max-w-7xl mx-auto px-6 py-16">
-          <div className="flex items-center justify-between mb-8">
-            <nav className="text-xs text-gray-500 tracking-wide">
-              <Link href="/" className="hover:text-brand-cyan transition">
-                {t("home")}
-              </Link>
-              <span className="mx-2">/</span>
-              <Link href="/catalog" className="hover:text-brand-cyan transition">
-                {t("catalog")}
-              </Link>
-              <span className="mx-2">/</span>
-              <span className="text-gray-300">{product.badge}</span>
-            </nav>
-            <LocaleSwitcherModal />
-          </div>
-
-          <ProductDetail product={product} />
-        </div>
-      </main>
-    );
-  } catch (e) {
-    console.error(`[ProductPage] Error loading product ${id}:`, e);
+  if (!product) {
+    console.warn(`[ProductPage] Product not found for id: ${id}`);
     notFound();
   }
+
+  return (
+    <main className="min-h-screen bg-brand-dark">
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        <div className="flex items-center justify-between mb-8">
+          <nav className="text-xs text-gray-500 tracking-wide">
+            <Link href="/" className="hover:text-brand-cyan transition">
+              {t("home")}
+            </Link>
+            <span className="mx-2">/</span>
+            <Link href="/catalog" className="hover:text-brand-cyan transition">
+              {t("catalog")}
+            </Link>
+            <span className="mx-2">/</span>
+            <span className="text-gray-300">{product.badge}</span>
+          </nav>
+          <LocaleSwitcherModal />
+        </div>
+
+        <ProductDetail product={product} />
+      </div>
+    </main>
+  );
 }

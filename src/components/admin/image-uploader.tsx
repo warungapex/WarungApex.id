@@ -3,11 +3,7 @@
 import { useState, useRef } from "react";
 import { uploadImage } from "@/lib/actions/upload";
 import { Upload, X, ImageIcon, Loader2, Star } from "lucide-react";
-
-interface UploadedImage {
-  url: string;
-  slot: "main" | number;
-}
+import Image from "next/image";
 
 export function ImageUploader({
   accountId,
@@ -106,7 +102,7 @@ export function ImageUploader({
 
         {main ? (
           <div className="relative rounded-xl overflow-hidden border border-white/10 bg-black group w-full aspect-video max-w-sm">
-            <img src={main} alt="main" className="w-full h-full object-cover" />
+            <Image src={main} alt="main" fill sizes="384px" className="object-cover" unoptimized />
             <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-2">
               <button
                 type="button"
@@ -188,7 +184,7 @@ export function ImageUploader({
           <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-3">
             {shots.map((url, i) => (
               <div key={i} className="relative rounded-lg overflow-hidden border border-white/10 bg-black group aspect-video">
-                <img src={url} alt={`screenshot ${i + 1}`} className="w-full h-full object-cover" />
+                <Image src={url} alt={`screenshot ${i + 1}`} fill sizes="200px" className="object-cover" unoptimized />
                 <button
                   type="button"
                   onClick={() => removeShot(i)}

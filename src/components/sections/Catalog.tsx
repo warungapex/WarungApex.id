@@ -3,6 +3,7 @@
 import { formatPrice } from "@/lib/accounts";
 import type { Account } from "@/lib/supabase/accounts";
 import { ChevronRight } from "lucide-react";
+import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -106,10 +107,13 @@ function StickyCard({
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
           {a.mainImage ? (
             <div className="relative z-10 w-full h-full rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(255,42,68,0.15)]">
-              <img
+              <Image
                 src={a.mainImage}
                 alt={`${a.rank} Account`}
-                className="w-full h-full object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 40vw"
+                className="object-cover"
+                unoptimized
               />
             </div>
           ) : (
