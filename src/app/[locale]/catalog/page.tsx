@@ -3,6 +3,7 @@ import { getAccounts } from "@/lib/supabase/accounts";
 import { CatalogGrid } from "@/components/catalog/catalog-grid";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
+import { LocaleSwitcherModal } from "@/components/ui/locale-switcher-modal";
 
 export const metadata: Metadata = {
   title: "Katalog Akun | Warung Apex",
@@ -25,13 +26,16 @@ export default async function CatalogPage({
   return (
     <main className="min-h-screen bg-brand-dark">
       <div className="max-w-6xl mx-auto px-6 py-16">
-        <nav className="text-xs text-gray-500 tracking-wide mb-8">
-          <Link href="/" className="hover:text-brand-cyan transition">
-            {t("home")}
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-gray-300">{t("catalog")}</span>
-        </nav>
+        <div className="flex items-center justify-between mb-8">
+          <nav className="text-xs text-gray-500 tracking-wide">
+            <Link href="/" className="hover:text-brand-cyan transition">
+              {t("home")}
+            </Link>
+            <span className="mx-2">/</span>
+            <span className="text-gray-300">{t("catalog")}</span>
+          </nav>
+          <LocaleSwitcherModal />
+        </div>
         <div className="mb-10">
           <h1 className="text-3xl md:text-5xl font-[var(--font-display)] font-bold tracking-widest text-[#f0f2f5]">
             {t("title1")} <span className="text-brand-red">{t("title2")}</span>

@@ -5,6 +5,7 @@ import { Link } from "@/i18n/routing";
 import { ProductDetail } from "@/components/catalog/product-detail";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { LocaleSwitcherModal } from "@/components/ui/locale-switcher-modal";
 
 // Allow dynamic IDs not in generateStaticParams
 export const dynamicParams = true;
@@ -48,17 +49,20 @@ export default async function ProductPage({
     return (
       <main className="min-h-screen bg-brand-dark">
         <div className="max-w-7xl mx-auto px-6 py-16">
-          <nav className="text-xs text-gray-500 tracking-wide mb-8">
-            <Link href="/" className="hover:text-brand-cyan transition">
-              {t("home")}
-            </Link>
-            <span className="mx-2">/</span>
-            <Link href="/catalog" className="hover:text-brand-cyan transition">
-              {t("catalog")}
-            </Link>
-            <span className="mx-2">/</span>
-            <span className="text-gray-300">{product.badge}</span>
-          </nav>
+          <div className="flex items-center justify-between mb-8">
+            <nav className="text-xs text-gray-500 tracking-wide">
+              <Link href="/" className="hover:text-brand-cyan transition">
+                {t("home")}
+              </Link>
+              <span className="mx-2">/</span>
+              <Link href="/catalog" className="hover:text-brand-cyan transition">
+                {t("catalog")}
+              </Link>
+              <span className="mx-2">/</span>
+              <span className="text-gray-300">{product.badge}</span>
+            </nav>
+            <LocaleSwitcherModal />
+          </div>
 
           <ProductDetail product={product} />
         </div>
