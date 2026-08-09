@@ -7,6 +7,11 @@ const orbitron = Orbitron({ variable: "--font-display", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Admin — Warung Apex",
+  icons: {
+    icon: "/logo/white/white warpex no background.svg",
+    shortcut: "/logo/white/white warpex.png",
+    apple: "/logo/white/white warpex.png",
+  },
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

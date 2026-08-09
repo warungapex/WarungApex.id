@@ -23,6 +23,11 @@ export const metadata: Metadata = {
   title: "Warung Apex - High-Tier Apex Legends Accounts",
   description:
     "Buy high-tier Apex Legends accounts with verified rank, badges, and lifetime support.",
+  icons: {
+    icon: "/logo/white/white warpex no background.svg",
+    shortcut: "/logo/white/white warpex.png",
+    apple: "/logo/white/white warpex.png",
+  },
 };
 
 export function generateStaticParams() {
