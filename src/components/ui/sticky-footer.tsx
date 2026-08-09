@@ -2,6 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -54,22 +55,14 @@ export function StickyFooter({ className, ...props }: StickyFooterProps) {
 									<div className="w-full shrink-0 space-y-4 md:max-w-[240px]">
 										{/* Logo mark */}
 										<div className="flex items-center gap-2.5">
-											<div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#e84043]">
-												<svg
-													width="17"
-													height="17"
-													viewBox="0 0 24 24"
-													fill="none"
-													className="text-white"
-												>
-													<path
-														d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-														stroke="currentColor"
-														strokeWidth="2.5"
-														strokeLinecap="round"
-														strokeLinejoin="round"
-													/>
-												</svg>
+											<div className="flex size-9 shrink-0 items-center justify-center overflow-hidden">
+												<Image
+													src="/logo/white/white warpex no background.svg"
+													alt="Warung Apex"
+													width={36}
+													height={36}
+													className="size-full object-contain"
+												/>
 											</div>
 											<span className="text-[15px] font-semibold tracking-wide text-white">
 												Warung Apex

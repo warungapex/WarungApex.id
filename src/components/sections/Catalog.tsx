@@ -3,7 +3,6 @@
 import { formatPrice } from "@/lib/accounts";
 import type { Account } from "@/lib/supabase/accounts";
 import { ChevronRight } from "lucide-react";
-import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -103,22 +102,19 @@ function StickyCard({
         className="relative origin-top flex flex-col md:flex-row overflow-hidden rounded-[2rem] bg-[#0c0c10] border border-white/10 shadow-[0_30px_100px_-20px_rgba(0,0,0,1)] w-full max-w-5xl md:h-[500px]"
       >
         {/* Left: Image */}
-        <div className="w-full md:w-[40%] bg-gradient-to-br from-[#13131a] to-[#0a0a0c] relative flex items-center justify-center p-12 border-r border-white/5 overflow-hidden">
+        <div className="w-full md:w-[40%] bg-gradient-to-br from-[#13131a] to-[#0a0a0c] relative flex items-center justify-center p-6 md:p-12 border-b md:border-b-0 md:border-r border-white/5 overflow-hidden min-h-[220px] md:min-h-0">
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
           {a.mainImage ? (
-            <div className="relative z-10 w-full h-full rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(255,42,68,0.15)]">
-              <Image
+            <div className="relative z-10 w-full h-full min-h-[180px] md:min-h-0 rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(255,42,68,0.15)]">
+              <img
                 src={a.mainImage}
                 alt={`${a.rank} Account`}
-                fill
-                sizes="(max-width: 768px) 100vw, 40vw"
-                className="object-cover"
-                unoptimized
+                className="w-full h-full object-cover"
               />
             </div>
           ) : (
-            <div className="relative z-10 w-40 h-40 md:w-56 md:h-56 rounded-[2rem] bg-gradient-to-br from-brand-red/20 to-brand-cyan/20 flex items-center justify-center border border-white/10">
-              <span className="font-[var(--font-display)] text-6xl md:text-8xl font-black text-brand-red drop-shadow-lg">
+            <div className="relative z-10 w-36 h-36 md:w-56 md:h-56 rounded-[2rem] bg-gradient-to-br from-brand-red/20 to-brand-cyan/20 flex items-center justify-center border border-white/10">
+              <span className="font-[var(--font-display)] text-5xl md:text-8xl font-black text-brand-red drop-shadow-lg">
                 {a.tierBadge}
               </span>
             </div>

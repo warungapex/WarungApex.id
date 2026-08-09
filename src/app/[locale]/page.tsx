@@ -48,11 +48,8 @@ export default async function Home({
 
         {/* Navigation */}
         <nav className="relative flex items-start justify-between px-4 sm:px-10 pt-6">
-          {/* Left — locale switcher (mobile) / empty spacer (desktop) */}
+          {/* Left — empty spacer */}
           <div className="flex items-center mt-1">
-            <div className="lg:hidden">
-              <LocaleSwitcherModal />
-            </div>
             <div className="hidden lg:block invisible" aria-hidden="true" />
           </div>
 
@@ -66,8 +63,13 @@ export default async function Home({
             </h1>
           </div>
 
-           {/* Right Nav — locale switcher only */}
+           {/* Right Nav — locale switcher */}
            <div className="flex items-center gap-3 sm:gap-6 text-sm font-semibold tracking-wide text-white drop-shadow-md mt-1">
+             {/* Mobile */}
+             <div className="lg:hidden">
+               <LocaleSwitcherModal />
+             </div>
+             {/* Desktop */}
              <div className="hidden lg:block">
                <LocaleSwitcherModal />
              </div>

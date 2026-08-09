@@ -66,7 +66,7 @@ function AnimatedNumber({
 }
 
 const stats = [
-  { end: 500, decimals: 0, suffix: "+", key: "sold" },
+  { end: 50, decimals: 0, suffix: "+", key: "sold" },
   { end: 4.9, decimals: 1, suffix: "/5", key: "customers" },
   { end: 24, decimals: 0, suffix: "/7", key: "support" },
 ];
