@@ -5,22 +5,34 @@ import type { Account } from "@/lib/supabase/accounts";
 import { deleteAccount, toggleSold, toggleFeatured } from "@/lib/actions/accounts";
 import { logoutAction } from "@/lib/actions/auth";
 import Link from "next/link";
+import Image from "next/image";
 import {
   LayoutDashboard, Package, Settings, LogOut,
   ExternalLink, Plus, Pencil, Trash2,
-  TrendingUp, ShoppingBag, CheckCircle2, Clock,
-  Search, Bell, ChevronRight, MoreHorizontal, Star, Eye, EyeOff,
+  TrendingUp, ShoppingBag, CheckCircle2,
+  Search, Bell, ChevronRight, MoreHorizontal, Star, Eye, EyeOff, Menu, X,
 } from "lucide-react";
 
 /* ── Sidebar ── */
-function Sidebar() {
+function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   return (
-    <aside className="w-56 shrink-0 flex flex-col bg-[#0f0f14] border-r border-white/8 min-h-screen">
+    <>
+      {open && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
+          onClick={onClose}
+        />
+      )}
+      <aside className={`fixed md:static w-56 shrink-0 flex flex-col bg-[#0f0f14] border-r border-white/8 min-h-screen z-50 transition-transform duration-300 md:translate-x-0 ${
+        open ? "translate-x-0" : "-translate-x-full"
+      }`}>
       {/* Logo */}
       <div className="px-5 py-5 border-b border-white/8">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-brand-red flex items-center justify-center text-white font-black text-sm">W</div>
-          <span className="font-bold text-white text-sm tracking-wide">Warung Apex</span>
+        <div className="flex items-center justify-between">
+          <p className="font-bold text-white text-lg tracking-wide">Warung Apex</p>
+          <button onClick={onClose} className="md:hidden text-gray-400 hover:text-white">
+            <X className="w-5 h-5" />
+          </button>
         </div>
       </div>
 
@@ -30,32 +42,19 @@ function Sidebar() {
         <NavItem icon={<LayoutDashboard className="w-4 h-4" />} label="Dashboard" active />
         <NavItem icon={<Package className="w-4 h-4" />} label="Akun" href="/admin/accounts/new" />
         <NavItem icon={<Settings className="w-4 h-4" />} label="Settings" />
+      </nav>
 
-        <p className="text-[10px] text-gray-600 font-semibold uppercase tracking-widest px-3 mb-2 mt-6">Lainnya</p>
-        <a href="/" target="_blank">
-          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition text-sm cursor-pointer">
-            <ExternalLink className="w-4 h-4" />
-            <span>Lihat Toko</span>
-          </div>
-        </a>
+      {/* Bottom card */}
+      <div className="m-3 rounded-2xl p-4">
         <form action={logoutAction}>
-          <button type="submit" className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-red-400 hover:bg-red-400/5 transition text-sm">
+          <button type="submit" className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-brand-red/15 text-red-400 hover:text-red-300 hover:bg-red-400/20 transition text-sm font-semibold border border-brand-red/30">
             <LogOut className="w-4 h-4" />
             <span>Keluar</span>
           </button>
         </form>
-      </nav>
-
-      {/* Bottom card */}
-      <div className="m-3 rounded-2xl bg-brand-red/20 border border-brand-red/30 p-4">
-        <p className="text-xs font-bold text-white mb-1">Warung Apex</p>
-        <p className="text-[11px] text-gray-400 mb-3">Admin Panel v1.0</p>
-        <a href="https://wa.me/6285167202134" target="_blank"
-          className="block w-full text-center py-1.5 rounded-lg bg-brand-red text-white text-xs font-semibold hover:bg-brand-red/80 transition">
-          WhatsApp
-        </a>
       </div>
     </aside>
+    </>
   );
 }
 
@@ -94,6 +93,7 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
   const [, startTransition] = useTransition();
   const [deleting, setDeleting] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const available = accounts.filter((a) => !a.sold).length;
   const sold = accounts.filter((a) => a.sold).length;
@@ -129,12 +129,18 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
 
   return (
     <div className="flex min-h-screen bg-[#0a0a0f] text-white">
-      <Sidebar />
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top header */}
-        <header className="flex items-center justify-between px-8 py-4 border-b border-white/8 bg-[#0a0a0f]">
-          <div className="relative w-64">
+        <header className="flex items-center gap-3 px-4 md:px-8 py-4 border-b border-white/8 bg-[#0a0a0f]">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="md:hidden shrink-0 w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition"
+          >
+            <Menu className="w-4 h-4 text-gray-400" />
+          </button>
+          <div className="relative flex-1 md:flex-none md:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
             <input
               value={search}
@@ -143,13 +149,15 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
               className="w-full pl-9 pr-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-brand-red/50 transition"
             />
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 md:gap-4">
             <button className="relative w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition">
               <Bell className="w-4 h-4 text-gray-400" />
             </button>
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-brand-red flex items-center justify-center text-white font-bold text-xs">A</div>
-              <div className="text-xs">
+              <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden">
+                <Image src="/logo/white/white warpex.png" alt="Admin" width={40} height={40} className="w-full h-full object-contain" />
+              </div>
+              <div className="hidden md:block text-xs">
                 <p className="font-semibold text-white">Admin</p>
                 <p className="text-gray-500">warungapex.id</p>
               </div>
@@ -157,9 +165,9 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
           </div>
         </header>
 
-        <main className="flex-1 px-8 py-8 overflow-auto">
+        <main className="flex-1 px-4 md:px-8 py-6 md:py-8 overflow-auto">
           {/* Page title + actions */}
-          <div className="flex items-start justify-between mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
             <div>
               <h1 className="text-2xl font-bold text-white">Dashboard</h1>
               <p className="text-sm text-gray-500 mt-0.5">Kelola katalog akun Apex Legends kamu.</p>
@@ -173,7 +181,7 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
           </div>
 
           {/* Stat cards */}
-          <div className="grid grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <StatCard label="Total Akun" value={accounts.length} sub="Semua akun" accent />
             <StatCard label="Tersedia" value={available} sub="Siap dijual" />
             <StatCard label="Terjual" value={sold} sub="Sudah sold out" />
@@ -181,7 +189,7 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
           </div>
 
           {/* Two-col layout */}
-          <div className="grid grid-cols-[1fr_280px] gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
 
             {/* Left — table */}
             <div>
@@ -191,7 +199,8 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
               </div>
 
               <div className="border border-white/8 rounded-2xl overflow-hidden">
-                <table className="w-full text-sm">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-white/[0.03] border-b border-white/8">
                       <th className="text-left px-5 py-3.5 text-xs text-gray-500 font-semibold">Akun</th>
@@ -282,7 +291,8 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
                       </tr>
                     ))}
                   </tbody>
-                </table>
+                  </table>
+                </div>
               </div>
             </div>
 
@@ -374,19 +384,6 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
                     </div>
                   ))}
                 </div>
-              </div>
-
-              {/* Timer-style card — last online indicator */}
-              <div className="border border-white/8 rounded-2xl p-5 bg-gradient-to-br from-brand-red/20 to-transparent">
-                <div className="flex items-center gap-2 mb-2">
-                  <Clock className="w-4 h-4 text-brand-red" />
-                  <p className="text-xs font-semibold text-gray-300">Status Toko</p>
-                </div>
-                <div className="flex items-center gap-2 mt-3">
-                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-sm font-bold text-white">Online & Aktif</span>
-                </div>
-                <p className="text-[11px] text-gray-500 mt-1">Storefront berjalan normal</p>
               </div>
             </div>
           </div>
