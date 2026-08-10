@@ -1,8 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ChevronDown, ChevronUp, Filter, X } from "lucide-react";
-import { GooeySearchBar } from "@/components/ui/animated-search-bar";
+import { ChevronDown, ChevronUp, Filter, Search, X } from "lucide-react";
 import type { Account } from "@/lib/supabase/accounts";
 import { ProductCard } from "@/components/ui/product-card";
 
@@ -324,11 +323,12 @@ export function CatalogGrid({ list }: { list: Account[] }) {
 
           {/* Search */}
           <div className="relative flex-1 min-w-48">
-            <GooeySearchBar
-              data={list.map((a) => a.badge)}
-              placeholder="Type to filter..."
-              onSearch={(text) => setQ(text)}
-              onSelect={(item) => setQ(item)}
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" />
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Cari akun..."
+              className="w-full rounded-full border border-white/10 bg-brand-surface py-2.5 pl-10 pr-4 text-sm text-gray-300 placeholder:text-gray-600 focus:outline-none focus:border-brand-cyan/40 focus:text-white transition"
             />
           </div>
 

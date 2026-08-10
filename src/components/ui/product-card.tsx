@@ -33,7 +33,7 @@ export function ProductCard({ a }: { a: Account }) {
           </span>
         )}
         {a.featured && !a.sold && (
-          <span className="absolute right-3 top-3 z-10 rounded-full bg-brand-red px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-lg">
+          <span className="absolute right-3 top-3 z-10 hidden rounded-full bg-brand-red px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-lg sm:block">
             Featured
           </span>
         )}
