@@ -8,10 +8,11 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   LayoutDashboard, Package, Settings, LogOut,
-  ExternalLink, Plus, Pencil, Trash2,
+  Plus, Pencil, Trash2,
   TrendingUp, ShoppingBag, CheckCircle2,
-  Search, Bell, ChevronRight, MoreHorizontal, Star, Eye, EyeOff, Menu, X,
+  Search, Bell, MoreHorizontal, Star, Eye, EyeOff, Menu, X, Loader2,
 } from "lucide-react";
+import { rankColor } from "@/lib/accounts";
 
 /* ── Sidebar ── */
 function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -69,7 +70,7 @@ function NavItem({ icon, label, href, active }: { icon: React.ReactNode; label: 
 }
 
 /* ── Stat Card ── */
-function StatCard({ label, value, sub, accent }: { label: string; value: number; sub?: string; accent?: boolean }) {
+function StatCard({ label, value, sub, accent }: { label: string; value: string | number; sub?: string; accent?: boolean }) {
   return (
     <div className={`rounded-2xl p-5 border ${accent ? "bg-brand-red text-white border-brand-red" : "bg-white/[0.03] border-white/10 text-white"}`}>
       <div className="flex items-start justify-between mb-3">
@@ -92,12 +93,36 @@ function StatCard({ label, value, sub, accent }: { label: string; value: number;
 export function AdminDashboard({ accounts }: { accounts: Account[] }) {
   const [, startTransition] = useTransition();
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [toggling, setToggling] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const available = accounts.filter((a) => !a.sold).length;
   const sold = accounts.filter((a) => a.sold).length;
   const featured = accounts.filter((a) => a.featured).length;
+
+  const recent = [...accounts].sort((a, b) => (b.created_at ?? "").localeCompare(a.created_at ?? ""));
+  const inventory = accounts.filter((a) => !a.sold).reduce((s, a) => s + a.price, 0);
+  const saleRate = accounts.length ? Math.round((sold / accounts.length) * 100) : 0;
+
+  const rankOrder = ["Master", "Diamond", "Platinum", "Gold", "Silver", "Bronze", "Apex Predator"];
+  const rankBreakdown = accounts.reduce<{ rank: string; tierBadge: string; count: number; value: number }[]>(
+    (list, a) => {
+      const found = list.find((r) => r.rank === a.rank);
+      if (found) {
+        found.count++;
+        if (!a.sold) found.value += a.price;
+      } else {
+        list.push({ rank: a.rank, tierBadge: a.tierBadge, count: 1, value: a.sold ? 0 : a.price });
+      }
+      return list;
+    },
+    []
+  ).sort(
+    (a, b) =>
+      (rankOrder.indexOf(a.rank) === -1 ? rankOrder.length : rankOrder.indexOf(a.rank)) -
+      (rankOrder.indexOf(b.rank) === -1 ? rankOrder.length : rankOrder.indexOf(b.rank))
+  );
 
   const filtered = accounts.filter((a) =>
     `${a.badge} ${a.rank} ${a.id}`.toLowerCase().includes(search.toLowerCase())
@@ -113,14 +138,18 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
   };
 
   const handleToggleSold = (id: string, currentSold: boolean) => {
+    setToggling(id);
     startTransition(async () => {
       await toggleSold(id, !currentSold);
+      setToggling(null);
     });
   };
 
   const handleToggleFeatured = (id: string, currentFeatured: boolean) => {
+    setToggling(id);
     startTransition(async () => {
       await toggleFeatured(id, !currentFeatured);
+      setToggling(null);
     });
   };
 
@@ -181,10 +210,11 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
           </div>
 
           {/* Stat cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
             <StatCard label="Total Akun" value={accounts.length} sub="Semua akun" accent />
+            <StatCard label="Nilai Inventori" value={`Rp ${(inventory / 1000000).toFixed(1)}jt`} sub="Stok tersedia" />
             <StatCard label="Tersedia" value={available} sub="Siap dijual" />
-            <StatCard label="Terjual" value={sold} sub="Sudah sold out" />
+            <StatCard label="Terjual" value={sold} sub={`${saleRate}% terjual`} />
             <StatCard label="Featured" value={featured} sub="Di homepage" />
           </div>
 
@@ -246,15 +276,19 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
                           <button
                             onClick={() => handleToggleSold(a.id, a.sold)}
                             title={a.sold ? "Tandai Tersedia" : "Tandai Terjual"}
-                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold transition ${
+                            disabled={toggling === a.id}
+                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold transition disabled:opacity-50 disabled:cursor-wait ${
                               a.sold
                                 ? "bg-red-400/10 text-red-400 hover:bg-red-400/20"
                                 : "bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20"
                             }`}
                           >
-                            {a.sold
-                              ? <><EyeOff className="w-3 h-3" /> Terjual</>
-                              : <><Eye className="w-3 h-3" /> Tersedia</>}
+                            {toggling === a.id
+                              ? <Loader2 className="w-3 h-3 animate-spin" />
+                              : a.sold
+                                ? <EyeOff className="w-3 h-3" />
+                                : <Eye className="w-3 h-3" />}
+                            {a.sold ? "Terjual" : "Tersedia"}
                           </button>
                         </td>
                         {/* Featured star */}
@@ -262,17 +296,24 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
                           <button
                             onClick={() => handleToggleFeatured(a.id, a.featured)}
                             title={a.featured ? "Hapus dari homepage" : "Tampilkan di homepage"}
+                            disabled={toggling === a.id}
                             className={`p-1.5 rounded-lg transition ${
-                              a.featured
-                                ? "text-yellow-400 bg-yellow-400/10 hover:bg-yellow-400/20"
-                                : "text-gray-600 hover:text-yellow-400 hover:bg-yellow-400/10"
+                              toggling === a.id
+                                ? "opacity-50"
+                                : a.featured
+                                  ? "text-yellow-400 bg-yellow-400/10 hover:bg-yellow-400/20"
+                                  : "text-gray-600 hover:text-yellow-400 hover:bg-yellow-400/10"
                             }`}
                           >
-                            <Star className={`w-4 h-4 ${a.featured ? "fill-yellow-400" : ""}`} />
+                            {toggling === a.id ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Star className={`w-4 h-4 ${a.featured ? "fill-yellow-400" : ""}`} />
+                            )}
                           </button>
                         </td>
                         <td className="px-4 py-4">
-                          <div className="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition">
+                          <div className="flex items-center justify-end gap-1.5 lg:opacity-0 lg:group-hover:opacity-100 transition">
                             <Link
                               href={`/admin/accounts/${a.id}/edit`}
                               className="p-1.5 rounded-lg bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition"
@@ -310,29 +351,6 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
                 <p className="text-[11px] text-gray-500">Dari {sold} akun terjual</p>
               </div>
 
-              {/* Quick actions */}
-              <div className="border border-white/8 rounded-2xl p-5 bg-white/[0.02]">
-                <p className="text-xs font-semibold text-gray-400 mb-3">Quick Actions</p>
-                <div className="space-y-2">
-                  <Link href="/admin/accounts/new"
-                    className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] transition border border-white/8 group">
-                    <div className="flex items-center gap-2.5">
-                      <Plus className="w-4 h-4 text-brand-red" />
-                      <span className="text-xs text-gray-300 font-medium">Tambah Akun Baru</span>
-                    </div>
-                    <ChevronRight className="w-3.5 h-3.5 text-gray-600 group-hover:text-gray-400 transition" />
-                  </Link>
-                  <a href="/" target="_blank"
-                    className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] transition border border-white/8 group">
-                    <div className="flex items-center gap-2.5">
-                      <ExternalLink className="w-4 h-4 text-brand-red" />
-                      <span className="text-xs text-gray-300 font-medium">Lihat Storefront</span>
-                    </div>
-                    <ChevronRight className="w-3.5 h-3.5 text-gray-600 group-hover:text-gray-400 transition" />
-                  </a>
-                </div>
-              </div>
-
               {/* Recent activity */}
               <div className="border border-white/8 rounded-2xl p-5 bg-white/[0.02]">
                 <div className="flex items-center justify-between mb-4">
@@ -340,7 +358,7 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
                   <MoreHorizontal className="w-4 h-4 text-gray-600" />
                 </div>
                 <div className="space-y-3">
-                  {accounts.slice(0, 4).map((a) => (
+                  {recent.slice(0, 4).map((a) => (
                     <div key={a.id} className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-lg bg-brand-red/10 border border-brand-red/20 flex items-center justify-center shrink-0">
                         <span className="text-[9px] font-black text-brand-red">{a.tierBadge}</span>
@@ -383,6 +401,36 @@ export function AdminDashboard({ accounts }: { accounts: Account[] }) {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+
+              {/* Rank composition */}
+              <div className="border border-white/8 rounded-2xl p-5 bg-white/[0.02]">
+                <p className="text-xs font-semibold text-gray-400 mb-4">Komposisi Rank</p>
+                <div className="space-y-3">
+                  {rankBreakdown.map((r) => (
+                    <div key={r.rank}>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-2 h-2 rounded-full bg-gradient-to-b ${rankColor(r.tierBadge)}`} />
+                          <span className="text-xs text-gray-400">{r.rank}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] text-gray-600">Rp {(r.value / 1000000).toFixed(1)}jt</span>
+                          <span className="text-xs font-semibold text-white">{r.count}</span>
+                        </div>
+                      </div>
+                      <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full bg-gradient-to-r ${rankColor(r.tierBadge)} transition-all duration-500`}
+                          style={{ width: accounts.length ? `${(r.count / accounts.length) * 100}%` : "0%" }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                  {rankBreakdown.length === 0 && (
+                    <p className="text-xs text-gray-600 text-center py-2">Belum ada akun</p>
+                  )}
                 </div>
               </div>
             </div>

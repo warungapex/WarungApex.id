@@ -7,6 +7,7 @@ export function toAccount(row: AccountRow) {
   const mainImage = images.length > 0 ? images[0] : undefined;
   return {
     id: row.id,
+    created_at: row.created_at,
     rank: row.rank,
     tierBadge: row.tier_badge,
     badge: row.badge,
