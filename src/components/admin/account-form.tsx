@@ -78,7 +78,12 @@ function RankSelect({ defaultValue }: { defaultValue?: string }) {
       </button>
 
       {open && (
-        <div className="absolute z-50 mt-1.5 w-full rounded-xl border border-white/10 bg-[#16161f] shadow-2xl shadow-black/60 overflow-hidden">
+        <>
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+            onClick={() => setOpen(false)}
+          />
+          <div className="fixed inset-x-3 bottom-4 z-50 rounded-2xl border border-white/10 bg-[#16161f] shadow-2xl shadow-black/60 overflow-hidden md:absolute md:inset-x-auto md:bottom-auto md:mt-1.5 md:w-full md:rounded-xl">
           {/* Tier grid — 3 columns */}
           <div className="p-1.5 grid grid-cols-3 gap-1">
             {RANK_TIERS.map((t) => (
@@ -99,7 +104,7 @@ function RankSelect({ defaultValue }: { defaultValue?: string }) {
 
           {/* Division row */}
           {tierObj.divisions && (
-            <div className="border-t border-white/8 px-3 py-2.5 flex gap-2">
+            <div className="border-t border-white/8 px-3 py-2.5 flex gap-2 pb-4 md:pb-2.5">
               {DIVISIONS.map((d) => (
                 <button
                   key={d}
@@ -116,7 +121,8 @@ function RankSelect({ defaultValue }: { defaultValue?: string }) {
               ))}
             </div>
           )}
-        </div>
+          </div>
+        </>
       )}
     </div>
   );
@@ -255,14 +261,18 @@ function Divider({ label }: { label: string }) {
 /* ─────────────────────────────────────────
    Main Form
 ───────────────────────────────────────── */
-interface Props { account?: Account; }
+interface Props { account?: Account; existingIds?: string[]; }
 
-export function AccountForm({ account }: Props) {
+export function AccountForm({ account, existingIds = [] }: Props) {
   const isEdit = !!account;
   const [, startTransition] = useTransition();
   const [error, setError] = useState("");
   const [accountId, setAccountId] = useState(account?.id ?? "");
   const [images, setImages] = useState<string[]>(account?.images ?? []);
+
+  const idTaken = !isEdit
+    && accountId.trim() !== ""
+    && existingIds.some((id) => id.toLowerCase() === accountId.trim().toLowerCase());
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -312,8 +322,11 @@ export function AccountForm({ account }: Props) {
                 name="id" required placeholder="a4"
                 value={accountId}
                 onChange={(e) => setAccountId(e.target.value)}
-                className={inputCls}
+                className={`${inputCls} ${idTaken ? "border-red-400/50" : ""}`}
               />
+              {idTaken && (
+                <p className="text-[11px] text-red-400 mt-1.5">ID sudah digunakan, ganti yang lain.</p>
+              )}
             </Field>
           )}
 
@@ -386,8 +399,8 @@ export function AccountForm({ account }: Props) {
           )}
 
           <div className="pt-2">
-            <button type="submit"
-              className="px-7 py-3 rounded-xl bg-brand-red text-white font-semibold text-sm hover:bg-brand-red/80 transition shadow-lg shadow-brand-red/20">
+            <button type="submit" disabled={idTaken}
+              className="px-7 py-3 rounded-xl bg-brand-red text-white font-semibold text-sm hover:bg-brand-red/80 transition shadow-lg shadow-brand-red/20 disabled:opacity-40 disabled:cursor-not-allowed">
               {isEdit ? "Simpan Perubahan" : "Tambah Akun"}
             </button>
           </div>

@@ -1,10 +1,12 @@
 import { requireAdmin } from "@/lib/supabase/auth";
+import { getAccountIds } from "@/lib/supabase/accounts";
 import { AccountForm } from "@/components/admin/account-form";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export default async function NewAccountPage() {
   await requireAdmin();
+  const existingIds = await getAccountIds();
   return (
     <div className="max-w-6xl mx-auto px-8 py-10">
       <div className="flex items-center justify-between mb-10">
@@ -20,7 +22,7 @@ export default async function NewAccountPage() {
           Kembali
         </Link>
       </div>
-      <AccountForm />
+      <AccountForm existingIds={existingIds} />
     </div>
   );
 }

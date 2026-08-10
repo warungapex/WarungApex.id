@@ -75,7 +75,12 @@ export async function createAccount(formData: FormData) {
     .from("accounts")
     .insert({ id, ...formToAccountData(formData) });
 
-  if (error) return { error: (error as { message: string }).message };
+  if (error) {
+    if ((error as { code?: string }).code === "23505") {
+      return { error: "ID sudah digunakan. Gunakan ID lain." };
+    }
+    return { error: (error as { message: string }).message };
+  }
 
   revalidatePath("/admin");
   revalidatePath("/catalog");
