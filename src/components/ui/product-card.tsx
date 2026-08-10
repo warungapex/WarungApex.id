@@ -41,9 +41,10 @@ export function ProductCard({ a }: { a: Account }) {
               src={mainImage}
               alt={a.badge}
               fill
-              sizes="(max-width: 640px) 100vw, 33vw"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-cover group-hover:scale-105 transition duration-500"
-              unoptimized
+              loading="lazy"
+              quality={75}
             />
           </div>
         ) : (

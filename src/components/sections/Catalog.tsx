@@ -3,6 +3,7 @@
 import { formatPrice } from "@/lib/accounts";
 import type { Account } from "@/lib/supabase/accounts";
 import { ChevronRight } from "lucide-react";
+import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -103,13 +104,17 @@ function StickyCard({
       >
         {/* Left: Image */}
         <div className="w-full md:w-[40%] bg-gradient-to-br from-[#13131a] to-[#0a0a0c] relative flex items-center justify-center p-6 md:p-12 border-b md:border-b-0 md:border-r border-white/5 overflow-hidden min-h-[220px] md:min-h-0">
-          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
+          <div className="absolute inset-0 opacity-10 mix-blend-overlay" style={{backgroundImage:"url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"}} />
           {a.mainImage ? (
             <div className="relative z-10 w-full h-full min-h-[180px] md:min-h-0 rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(255,42,68,0.15)]">
-              <img
+              <Image
                 src={a.mainImage}
                 alt={`${a.rank} Account`}
-                className="w-full h-full object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 40vw"
+                className="object-cover"
+                quality={80}
+                loading="lazy"
               />
             </div>
           ) : (

@@ -36,6 +36,7 @@ export default async function Home({
           loop
           muted
           playsInline
+          preload="none"
           className="absolute min-w-full min-h-full object-cover"
         >
           <source src="/video/Wraith.mp4" type="video/mp4" />
