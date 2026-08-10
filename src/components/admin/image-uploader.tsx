@@ -83,12 +83,16 @@ export function ImageUploader({
 
   if (!accountId) {
     return (
-      <p className="text-xs text-gray-500 italic">
-        Isi ID Akun terlebih dahulu sebelum upload gambar.
-      </p>
+      <div className="space-y-3">
+        <div className="flex items-center gap-2 p-4 rounded-xl border border-yellow-400/20 bg-yellow-400/5">
+          <span className="text-yellow-400 text-lg">⚠️</span>
+          <p className="text-xs text-yellow-400 font-medium">
+            Isi <strong>ID Akun</strong> terlebih dahulu sebelum upload gambar
+          </p>
+        </div>
+      </div>
     );
   }
-
   return (
     <div className="space-y-6">
 

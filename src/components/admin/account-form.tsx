@@ -306,6 +306,7 @@ export function AccountForm({ account, existingIds = [] }: Props) {
         {/* LEFT — Images sticky */}
         <div className="lg:sticky lg:top-24 space-y-6">
           <ImageUploader
+            key={accountId || "new"}
             accountId={accountId}
             initialMain={images[0]}
             initialScreenshots={images.slice(1)}
@@ -321,7 +322,7 @@ export function AccountForm({ account, existingIds = [] }: Props) {
               <input
                 name="id" required placeholder="a4"
                 value={accountId}
-                onChange={(e) => setAccountId(e.target.value)}
+                onChange={(e) => setAccountId(e.target.value.toLowerCase().trim())}
                 className={`${inputCls} ${idTaken ? "border-red-400/50" : ""}`}
               />
               {idTaken && (

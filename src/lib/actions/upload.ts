@@ -14,6 +14,10 @@ export async function uploadImage(
 
   const file = formData.get("file") as File | null;
   if (!file || file.size === 0) return { error: "File tidak ditemukan" };
+  if (!accountId || accountId.trim() === "") return { error: "ID Akun wajib diisi sebelum upload gambar" };
+
+  // Normalize to lowercase — DB IDs are always lowercase
+  const normalizedId = accountId.trim().toLowerCase();
 
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
   const allowed = ["jpg", "jpeg", "png", "webp"];
@@ -22,8 +26,8 @@ export async function uploadImage(
 
   const filename =
     slot === "main"
-      ? `${accountId}/main.${ext}`
-      : `${accountId}/${slot}.${ext}`;
+      ? `${normalizedId}/main.${ext}`
+      : `${normalizedId}/${slot}.${ext}`;
 
   const supabase = await createServerSupabaseClient();
 
