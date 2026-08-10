@@ -24,7 +24,7 @@ export function ProductCard({ a }: { a: Account }) {
 
   return (
     <Link href={`/catalog/${a.id}`}>
-      <article className="group relative overflow-hidden rounded-2xl border border-white/10 bg-brand-surface transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-cyan/50 hover:shadow-[0_20px_50px_-12px_rgba(0,240,255,0.15)] cursor-pointer">
+      <article className="group relative overflow-hidden rounded-2xl border border-white/10 bg-brand-surface transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-cyan/50 hover:shadow-[0_20px_50px_-12px_rgba(0,240,255,0.15)] cursor-pointer h-full flex flex-col">
 
         {/* Status badges */}
         {a.sold && (
@@ -32,11 +32,7 @@ export function ProductCard({ a }: { a: Account }) {
             Sold
           </span>
         )}
-        {a.featured && !a.sold && (
-          <span className="absolute right-3 top-3 z-10 hidden rounded-full bg-brand-red px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-lg sm:block">
-            Featured
-          </span>
-        )}
+
 
         {/* Banner — Main image if available, fallback to rank gradient */}
         {mainImage ? (
@@ -63,13 +59,13 @@ export function ProductCard({ a }: { a: Account }) {
           </div>
         )}
 
-        <div className="p-5">
-          {/* Account name */}
-          <p className="text-sm font-semibold text-white mb-4 leading-snug">
+        <div className="p-5 flex flex-col flex-1">
+          {/* Account name — fixed height 2 lines */}
+          <p className="text-sm font-semibold text-white mb-4 leading-snug line-clamp-2 min-h-[2.5rem]">
             {a.badge}
           </p>
 
-          <ul className="space-y-2 text-xs text-gray-400">
+          <ul className="space-y-2 text-xs text-gray-400 mb-4">
             <li className="flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <Gamepad2 className="h-3.5 w-3.5" /> Level
@@ -90,7 +86,7 @@ export function ProductCard({ a }: { a: Account }) {
             </li>
           </ul>
 
-          <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-4">
+          <div className="mt-auto border-t border-white/5 pt-5 flex items-center justify-between">
             <span className="text-lg font-bold text-[#f0f2f5]">
               {formatPrice(a.price, locale, rate)}
             </span>

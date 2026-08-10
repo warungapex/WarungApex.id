@@ -123,14 +123,8 @@ function StickyCard({
 
         {/* Right: Content */}
         <div className="w-full md:w-[60%] p-8 md:p-16 flex flex-col justify-center bg-[#0a0a0c]">
-          <div className="flex items-center gap-4 text-xs font-semibold tracking-[0.2em] text-brand-cyan mb-4 md:mb-6">
-            <span>{t("spotlightLabel")}</span>
-            <span className="text-white/20">/</span>
-            <span>0{i + 1}</span>
-          </div>
-
-          <h3 className="font-[var(--font-display)] text-4xl md:text-6xl font-black text-white tracking-wide mb-4 md:mb-6">
-            {a.rank}
+          <h3 className="font-[var(--font-display)] text-2xl md:text-4xl font-black text-white tracking-wide mb-4 md:mb-6">
+            {a.badge}
           </h3>
 
           <p className="text-gray-400 text-sm md:text-lg leading-relaxed mb-8 md:mb-10 max-lg">
