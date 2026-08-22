@@ -2,6 +2,7 @@ import { getAccount, getAccountIds } from "@/lib/supabase/accounts";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { ProductDetail } from "@/components/catalog/product-detail";
+import { UserMenu } from "@/components/auth/user-menu";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { LocaleSwitcherModal } from "@/components/ui/locale-switcher-modal";
@@ -73,10 +74,21 @@ export default async function ProductPage({
             <span className="mx-2">/</span>
             <span className="text-gray-300">{product.badge}</span>
           </nav>
-          <LocaleSwitcherModal />
+          <div className="flex items-center gap-3">
+            <UserMenu />
+            <LocaleSwitcherModal />
+          </div>
         </div>
 
-        <ProductDetail product={product} />
+        <ProductDetail
+          product={product}
+          snapUrl={
+            process.env.MIDTRANS_IS_PRODUCTION === "true"
+              ? "https://app.midtrans.com/snap/snap.js"
+              : "https://app.sandbox.midtrans.com/snap/snap.js"
+          }
+          snapClientKey={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY ?? ""}
+        />
       </div>
     </main>
   );

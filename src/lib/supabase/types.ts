@@ -70,6 +70,57 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
+      };
+      orders: {
+        Row: {
+          id: string;
+          user_id: string;
+          account_id: string;
+          snap_token: string | null;
+          order_id_midtrans: string;
+          status: string;
+          total_amount: number;
+          credential_email: string | null;
+          credential_password: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          account_id: string;
+          snap_token?: string | null;
+          order_id_midtrans: string;
+          status?: string;
+          total_amount: number;
+          credential_email?: string | null;
+          credential_password?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          account_id?: string;
+          snap_token?: string | null;
+          order_id_midtrans?: string;
+          status?: string;
+          total_amount?: number;
+          credential_email?: string | null;
+          credential_password?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "orders_account_id_fkey";
+            columns: ["account_id"];
+            isOneToOne: false;
+            referencedRelation: "accounts";
+            referencedColumns: ["id"];
+          },
+        ];
       };
     };
     Views: Record<string, never>;

@@ -1,16 +1,19 @@
 "use client";
 
 import Image from "next/image";
+import Script from "next/script";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ShieldCheck, Zap, Headphones, CheckCircle2,
-  ChevronDown, ChevronUp, MessageCircle, Images,
+  ChevronDown, ChevronUp, CreditCard, Images,
 } from "lucide-react";
 import type { Account } from "@/lib/supabase/accounts";
 import { formatPrice } from "@/lib/accounts";
 import { useLocale, useTranslations } from "next-intl";
 import { useUsdIdrRate } from "@/components/rate-provider";
+import { usePathname, useRouter } from "@/i18n/routing";
+import { createClient } from "@/lib/supabase/client";
 
 /* ── Fallback images dari filesystem lokal per akun ── */
 const LOCAL_IMAGES: Record<string, string[]> = {
@@ -218,28 +221,121 @@ function ProtectionPanel() {
 }
 
 /* ── Main ── */
-export function ProductDetail({ product }: { product: Account }) {
+type ToastKind = "info" | "error" | "success";
+type Toast = { msg: string; kind: ToastKind } | null;
+
+export function ProductDetail({
+  product,
+  snapUrl,
+  snapClientKey,
+}: {
+  product: Account;
+  snapUrl: string;
+  snapClientKey: string;
+}) {
   const locale = useLocale();
   const t = useTranslations("product");
+  const tc = useTranslations("checkout");
   const rate = useUsdIdrRate();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const [buying, setBuying] = useState(false);
+  const [toast, setToast] = useState<Toast>(null);
+  const [checkout, setCheckout] = useState<{ token: string } | null>(null);
 
   const numberLocale = locale === "en" ? "en-US" : "id-ID";
   const formatStat = (n: number) =>
     n.toLocaleString(numberLocale, { maximumFractionDigits: 0 });
 
-  const handleBuy = () => {
-    const msg = t("whatsapp.template", {
-      badge: product.badge,
-      tierBadge: product.tierBadge,
-      rank: product.rank,
-      level: product.level,
-      coins: formatStat(product.coins),
-      legendarySkins: product.legendarySkins,
-      craftingMaterials: product.craftingMaterials ?? 0,
-      price: formatPrice(product.price, locale, rate),
+  function showToast(msg: string, kind: ToastKind) {
+    setToast({ msg, kind });
+    setTimeout(() => setToast(null), 5000);
+  }
+
+  function closeCheckout() {
+    try {
+      window.snap?.hide();
+    } catch {
+      // snap mungkin belum selesai mount — aman diabaikan
+    }
+    setCheckout(null);
+  }
+
+  // Render Snap embed ke dalam modal begitu token tersedia
+  useEffect(() => {
+    if (!checkout || !window.snap) return;
+    window.snap.embed(checkout.token, {
+      embedId: "wa-snap-embed",
+      onSuccess: () => {
+        closeCheckout();
+        showToast(tc("success"), "success");
+        router.push("/dashboard/orders");
+      },
+      onPending: () => {
+        closeCheckout();
+        showToast(tc("pending"), "info");
+      },
+      onError: () => {
+        closeCheckout();
+        showToast(tc("error"), "error");
+      },
+      onClose: () => {
+        setCheckout(null);
+        showToast(tc("closed"), "info");
+      },
     });
-    window.open(`https://wa.me/6285167202134?text=${encodeURIComponent(msg)}`, "_blank");
-  };
+    return () => {
+      try {
+        window.snap?.hide();
+      } catch {
+        // abaikan
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- cukup re-embed saat token berubah; callback memakai setter yang stabil
+  }, [checkout]);
+
+  async function handleBuy() {
+    if (product.sold || buying) return;
+    setBuying(true);
+
+    try {
+      // snap.js harus sudah termuat sebelum modal dibuka
+      if (!window.snap) {
+        showToast(tc("error"), "error");
+        return;
+      }
+
+      // Cek sesi Supabase Auth — jika belum login, redirect ke /login
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        showToast(tc("loginRequired"), "error");
+        router.push(`/login?redirectTo=${encodeURIComponent(pathname)}`);
+        return;
+      }
+
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ account_id: product.id }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        showToast(data.error ?? tc("error"), "error");
+        router.refresh(); // sinkronkan status sold terbaru
+        return;
+      }
+
+      // Buka modal embed — status final ditangani webhook server-side
+      setCheckout({ token: data.snap_token });
+    } catch {
+      showToast(tc("error"), "error");
+    } finally {
+      setBuying(false);
+    }
+  }
 
   const heirloomTags = (product.tags ?? []).filter((t) =>
     t.toLowerCase().includes("heirloom"),
@@ -334,11 +430,11 @@ export function ProductDetail({ product }: { product: Account }) {
               className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-base transition ${
                 product.sold
                   ? "bg-white/10 text-gray-400 cursor-not-allowed"
-                  : "bg-[#25D366] text-white hover:bg-[#20bd5a] hover:shadow-[0_0_24px_rgba(37,211,102,0.3)]"
+                  : "bg-brand-cyan text-black hover:bg-brand-cyan/80 hover:shadow-[0_0_24px_rgba(0,240,255,0.35)]"
               }`}
             >
-              <MessageCircle className="w-5 h-5" />
-              {product.sold ? t("cta.soldOut") : t("cta.buyViaWhatsApp")}
+              <CreditCard className="w-5 h-5" />
+              {product.sold ? t("cta.soldOut") : buying ? tc("processing") : tc("buyNow")}
             </button>
 
             {/* Trust row */}
@@ -363,6 +459,68 @@ export function ProductDetail({ product }: { product: Account }) {
           <ProtectionPanel />
         </div>
       </div>
+
+      {/* Midtrans Snap embed */}
+      {snapClientKey && (
+        <Script src={snapUrl} data-client-key={snapClientKey} strategy="afterInteractive" />
+      )}
+
+      {/* Checkout modal — Snap embed dengan frame brand Warung Apex */}
+      {checkout && (
+        <div
+          className="fixed inset-0 z-[60] overflow-y-auto bg-black/85 flex items-center justify-center p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeCheckout();
+          }}
+        >
+          <div className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#101018] shadow-[0_0_60px_rgba(0,240,255,0.08)] overflow-hidden">
+            {/* Header branded */}
+            <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-white/8 bg-gradient-to-r from-brand-cyan/10 via-transparent to-transparent">
+              <div className="min-w-0">
+                <p className="text-xs font-bold uppercase tracking-widest text-brand-cyan">
+                  {tc("modalTitle")}
+                </p>
+                <p className="text-sm font-semibold text-white truncate mt-0.5">
+                  {product.badge}
+                </p>
+              </div>
+              <div className="flex items-center gap-3 shrink-0">
+                <span className="text-sm font-bold text-white whitespace-nowrap">
+                  {formatPrice(product.price, locale, rate)}
+                </span>
+                <button
+                  onClick={closeCheckout}
+                  aria-label={tc("close")}
+                  className="w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition flex items-center justify-center text-lg leading-none"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+
+            {/* Snap iframe container */}
+            <div
+              id="wa-snap-embed"
+              className="relative w-full h-[70vh] min-h-[520px] bg-white [&_iframe]:h-full [&_iframe]:w-full [&_iframe]:border-0"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Toast notification */}
+      {toast && (
+        <div
+          className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] px-5 py-3 rounded-xl border text-sm font-semibold shadow-2xl ${
+            toast.kind === "error"
+              ? "bg-red-500/15 border-red-400/40 text-red-200"
+              : toast.kind === "success"
+                ? "bg-emerald-500/15 border-emerald-400/40 text-emerald-200"
+                : "bg-cyan-500/15 border-cyan-400/40 text-cyan-100"
+          }`}
+        >
+          {toast.msg}
+        </div>
+      )}
     </div>
   );
 }

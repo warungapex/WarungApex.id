@@ -78,7 +78,6 @@
     "customers": "Pelanggan Puas",
     "support": "Bantuan & Garansi"
   },
-  
   "guarantee": {
     "eyebrow": "Jaminan Kami",
     "title": "GARANSI",
@@ -179,7 +178,7 @@
     "group4_10": "Berita",
     "copyright": "Warung Apex. Hak Cipta Dilindungi. Tidak berafiliasi dengan EA atau Respawn Entertainment."
   },
-"marquee": {
+  "marquee": {
     "items": [
       "HIGH-TIER ACCOUNTS",
       "PACED PROGRESS",
@@ -238,5 +237,62 @@
     "whatsapp": {
       "template": "Halo, saya ingin membeli akun:\n\n• {badge} ({tierBadge})\n• Rank: {rank}\n• Level: {level}\n• Coins: {coins}\n• Legendary Skins: {legendarySkins}\n• Crafting Materials: {craftingMaterials}\n• Harga: {price}\n\nApakah masih available?"
     }
+  },
+  "auth": {
+    "loginTitle": "Masuk ke Akun",
+    "registerTitle": "Daftar Akun Baru",
+    "subtitle": "Belanja akun Apex Legends dengan aman",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Masuk",
+    "signUp": "Daftar",
+    "loading": "Memproses...",
+    "noAccount": "Belum punya akun?",
+    "haveAccount": "Sudah punya akun?",
+    "goRegister": "Daftar",
+    "goLogin": "Masuk",
+    "checkEmail": "Pendaftaran berhasil! Silakan cek email untuk verifikasi sebelum login.",
+    "signInShort": "MASUK / DAFTAR",
+    "myOrders": "Pesanan Saya",
+    "signOut": "Keluar"
+  },
+  "checkout": {
+    "buyNow": "Beli Sekarang",
+    "loginRequired": "Silakan login terlebih dahulu untuk melanjutkan pembelian",
+    "processing": "Memproses...",
+    "success": "Pembayaran berhasil! Klaim kredensial di halaman pesanan.",
+    "pending": "Menunggu pembayaran. Selesaikan pembayaranmu.",
+    "error": "Terjadi kesalahan. Coba lagi atau hubungi admin.",
+    "closed": "Checkout ditutup sebelum selesai.",
+    "modalTitle": "Selesaikan Pembayaran",
+    "close": "Tutup"
+  },
+  "orders": {
+    "title": "Pesanan Saya",
+    "empty": "Belum ada pesanan. Jelajahi katalog untuk memulai.",
+    "colOrder": "ID Pesanan",
+    "colAccount": "Nama Akun",
+    "colDate": "Tanggal",
+    "colTotal": "Total Bayar",
+    "colStatus": "Status",
+    "statusPending": "Pending",
+    "statusSettlement": "Settlement",
+    "statusFailed": "Failed",
+    "statusCancel": "Cancel",
+    "statusExpire": "Expire",
+    "claim": "Claim Kredensial & Panduan Ganti Email",
+    "claimTitle": "Kredensial & Panduan Ganti Email",
+    "credentials": "Kredensial Akun (sementara)",
+    "credentialEmail": "Email akun Apex/EA",
+    "credentialPassword": "Password",
+    "credentialPending": "Akan dikirim admin setelah verifikasi",
+    "show": "Lihat",
+    "hide": "Sembunyikan",
+    "stepsTitle": "Checklist serah terima:",
+    "step1": "Login ke EA App dengan kredensial di atas",
+    "step2": "Input kode OTP yang dikirim ke email lama (hubungi admin jika OTP tidak masuk)",
+    "step3": "Ubah email akun ke email pribadimu",
+    "step4": "Aktifkan 2FA (Two-Factor Authentication)",
+    "support": "Bantuan Admin / WhatsApp Support"
   }
 }

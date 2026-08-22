@@ -78,7 +78,6 @@
     "customers": "Happy Customers",
     "support": "Support & Warranty"
   },
-  
   "guarantee": {
     "eyebrow": "Our Promise",
     "title": "100%",
@@ -238,5 +237,62 @@
     "whatsapp": {
       "template": "Hello, I want to buy this account:\n\n• {badge} ({tierBadge})\n• Rank: {rank}\n• Level: {level}\n• Coins: {coins}\n• Legendary Skins: {legendarySkins}\n• Crafting Materials: {craftingMaterials}\n• Price: {price}\n\nIs this still available?"
     }
+  },
+  "auth": {
+    "loginTitle": "Sign In",
+    "registerTitle": "Create Account",
+    "subtitle": "Shop Apex Legends accounts safely",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "loading": "Processing...",
+    "noAccount": "No account yet?",
+    "haveAccount": "Already have an account?",
+    "goRegister": "Sign Up",
+    "goLogin": "Sign In",
+    "checkEmail": "Registration successful! Check your email to verify before signing in.",
+    "signInShort": "SIGN IN / UP",
+    "myOrders": "My Orders",
+    "signOut": "Sign Out"
+  },
+  "checkout": {
+    "buyNow": "Buy Now",
+    "loginRequired": "Please sign in first to continue your purchase",
+    "processing": "Processing...",
+    "success": "Payment successful! Claim credentials on the orders page.",
+    "pending": "Waiting for payment. Please complete your payment.",
+    "error": "Something went wrong. Try again or contact admin.",
+    "closed": "Checkout closed before completion.",
+    "modalTitle": "Complete Payment",
+    "close": "Close"
+  },
+  "orders": {
+    "title": "My Orders",
+    "empty": "No orders yet. Browse the catalog to get started.",
+    "colOrder": "Order ID",
+    "colAccount": "Account Name",
+    "colDate": "Date",
+    "colTotal": "Total",
+    "colStatus": "Status",
+    "statusPending": "Pending",
+    "statusSettlement": "Settlement",
+    "statusFailed": "Failed",
+    "statusCancel": "Cancel",
+    "statusExpire": "Expired",
+    "claim": "Claim Credentials & Email Guide",
+    "claimTitle": "Credentials & Email Change Guide",
+    "credentials": "Temporary Account Credentials",
+    "credentialEmail": "Apex/EA account email",
+    "credentialPassword": "Password",
+    "credentialPending": "Will be sent by admin after verification",
+    "show": "Show",
+    "hide": "Hide",
+    "stepsTitle": "Handover checklist:",
+    "step1": "Log in to EA App with the credentials above",
+    "step2": "Enter the OTP code sent to the old email (contact admin if OTP doesn't arrive)",
+    "step3": "Change the account email to your personal email",
+    "step4": "Enable 2FA (Two-Factor Authentication)",
+    "support": "Admin Help / WhatsApp Support"
   }
 }
