@@ -6,6 +6,12 @@
       "sourceType": "github",
       "skillPath": "skills/frontend-design/SKILL.md",
       "computedHash": "93f53fd1c0352d3d7ec17b8f73d7351bf76f4821e55d123c9d2abc2c53ba48e4"
+    },
+    "mayar-v2": {
+      "source": "mayarid/skills",
+      "sourceType": "github",
+      "skillPath": "skills/mayar-v2/SKILL.md",
+      "computedHash": "dfcb351e2cbb0d97093e2bc49eb9692a5079423c2d43af09f840b2fbeab7a9da"
     }
   }
 }
