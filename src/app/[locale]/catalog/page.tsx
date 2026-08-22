@@ -5,10 +5,24 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { LocaleSwitcherModal } from "@/components/ui/locale-switcher-modal";
 
-export const metadata: Metadata = {
-  title: "Katalog Akun | Warung Apex",
-  description: "Jelajahi katalog akun Apex Legends tier tinggi di Warung Apex.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const [accounts, t] = await Promise.all([
+    getAccounts(),
+    getTranslations({ locale, namespace: "catalog" }),
+  ]);
+
+  const available = accounts.filter((a) => !a.sold).length;
+
+  return {
+    title: t("metaList") as string,
+    description: t("metaListDesc") as string,
+  };
+}
 
 export default async function CatalogPage({
   params,

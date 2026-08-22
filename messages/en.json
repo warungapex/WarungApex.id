@@ -28,13 +28,29 @@
     "title2": "CATALOG",
     "desc1": "accounts available. Filter by tier & features",
     "desc2": "to find your match.",
+    "metaList": "Catalog — Warung Apex",
+    "metaListDesc": "Browse high-tier Apex Legends accounts at Warung Apex.",
+    "metaDetail": "Account Detail | Warung Apex",
     "spotlight": "Check this out",
     "latest": "ACCOUNT",
     "viewAll": "View All Accounts",
     "spotlightLabel": "LATEST SPOTLIGHT",
     "cardDesc": "High-tier account at level {level} featuring {skins} premium skins and {coins} Apex Coins. Guaranteed safe and ready for competitive play.",
     "fullAccess": "Full Access",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "searchPlaceholder": "Search accounts...",
+    "sort": {
+      "recommended": "Recommended",
+      "lowestPrice": "Lowest Price",
+      "highestPrice": "Highest Price",
+      "newest": "Newest",
+      "sortBy": "Sort by:"
+    },
+    "empty": "No accounts match these filters.",
+    "results": {
+      "prefix": "About",
+      "suffix": "results"
+    }
   },
   "howItWorks": {
     "eyebrow": "Simple Process",
@@ -172,5 +188,55 @@
       "INSTANT DELIVERY",
       "24/7 SUPPORT"
     ]
+  },
+  "product": {
+    "stats": {
+      "platform": "Platform",
+      "heirloom": "Heirloom",
+      "rank": "Rank",
+      "legendarySkins": "Legendary Skins",
+      "level": "Level",
+      "apexCoins": "Apex Coins",
+      "craftingMaterials": "Crafting Materials",
+      "greenShard": "Green Shard"
+    },
+    "badges": {
+      "fullEmailAccess": "Full Email Access",
+      "warranty5Days": "5-Day Warranty",
+      "fastDelivery": "Fast Delivery"
+    },
+    "description": "Seller's Description",
+    "cta": {
+      "buyViaWhatsApp": "Buy via WhatsApp",
+      "soldOut": "Sold Out"
+    },
+    "trust": {
+      "moneyBackGuarantee": "Money-Back Guarantee",
+      "moneyBackSub": "Protected by TradeShield",
+      "quickCheckout": "Quick Checkout",
+      "quickCheckoutSub": "Transfer & QRIS available",
+      "support247": "24/7 Support",
+      "support247Sub": "We're always here to help"
+    },
+    "protection": {
+      "title": "How We Protect Your Purchase",
+      "items": [
+        {
+          "title": "Verified Seller",
+          "desc": "Sellers must verify identity before listing."
+        },
+        {
+          "title": "Payment Held Until Delivery Confirmed",
+          "desc": "Seller receives payment only after you confirm receipt."
+        },
+        {
+          "title": "Free Guarantee Included",
+          "desc": "If account doesn't match description, you're entitled to a replacement."
+        }
+      ]
+    },
+    "whatsapp": {
+      "template": "Hello, I want to buy this account:\n\n• {badge} ({tierBadge})\n• Rank: {rank}\n• Level: {level}\n• Coins: {coins}\n• Legendary Skins: {legendarySkins}\n• Crafting Materials: {craftingMaterials}\n• Price: {price}\n\nIs this still available?"
+    }
   }
 }

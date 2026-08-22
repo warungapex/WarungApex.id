@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import type { Account } from "@/lib/supabase/accounts";
 import { formatPrice } from "@/lib/accounts";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useUsdIdrRate } from "@/components/rate-provider";
 
 /* ── Fallback images dari filesystem lokal per akun ── */
@@ -179,11 +179,12 @@ function StatCell({ label, value }: { label: string; value: string | number }) {
 
 /* ── Protection panel ── */
 function ProtectionPanel() {
+  const t = useTranslations("product.protection");
   const [open, setOpen] = useState(true);
   const items = [
-    { title: "Penjual Terverifikasi", desc: "Penjual harus konfirmasi identitas sebelum bisa berjualan." },
-    { title: "Pembayaran ditahan sampai pengiriman dikonfirmasi", desc: "Penjual menerima uang hanya setelah kamu menandai pesanan diterima." },
-    { title: "Garansi gratis disertakan", desc: "Jika akun tidak sesuai deskripsi, kamu berhak mendapat penggantian." },
+    { title: t("items.0.title"), desc: t("items.0.desc") },
+    { title: t("items.1.title"), desc: t("items.1.desc") },
+    { title: t("items.2.title"), desc: t("items.2.desc") },
   ];
   return (
     <div className="border border-white/10 rounded-2xl overflow-hidden bg-white/[0.03]">
@@ -193,7 +194,7 @@ function ProtectionPanel() {
       >
         <div className="flex items-center gap-2.5">
           <ShieldCheck className="w-4 h-4 text-brand-cyan" />
-          Bagaimana kami melindungi pembelianmu
+          {t("title")}
         </div>
         {open
           ? <ChevronUp className="w-4 h-4 text-gray-400" />
@@ -219,19 +220,24 @@ function ProtectionPanel() {
 /* ── Main ── */
 export function ProductDetail({ product }: { product: Account }) {
   const locale = useLocale();
+  const t = useTranslations("product");
   const rate = useUsdIdrRate();
 
+  const numberLocale = locale === "en" ? "en-US" : "id-ID";
+  const formatStat = (n: number) =>
+    n.toLocaleString(numberLocale, { maximumFractionDigits: 0 });
+
   const handleBuy = () => {
-    const msg =
-      `Halo, saya ingin membeli akun:\n\n` +
-      `• ${product.badge} (${product.tierBadge})\n` +
-      `• Rank: ${product.rank}\n` +
-      `• Level: ${product.level}\n` +
-      `• Coins: ${product.coins.toLocaleString("id-ID")}\n` +
-      `• Skin Legendary: ${product.legendarySkins}\n` +
-      `• Crafting Materials: ${product.craftingMaterials ?? 0}\n` +
-      `• Harga: ${formatPrice(product.price, locale, rate)}\n\n` +
-      `Apakah masih available?`;
+    const msg = t("whatsapp.template", {
+      badge: product.badge,
+      tierBadge: product.tierBadge,
+      rank: product.rank,
+      level: product.level,
+      coins: formatStat(product.coins),
+      legendarySkins: product.legendarySkins,
+      craftingMaterials: product.craftingMaterials ?? 0,
+      price: formatPrice(product.price, locale, rate),
+    });
     window.open(`https://wa.me/6285167202134?text=${encodeURIComponent(msg)}`, "_blank");
   };
 
@@ -257,27 +263,27 @@ export function ProductDetail({ product }: { product: Account }) {
           {/* Stats table */}
           <div className="border border-white/10 rounded-2xl overflow-hidden divide-y divide-white/8">
             <div className="grid grid-cols-3 divide-x divide-white/8">
-              <div className="px-5"><StatCell label="Platform" value={product.platform ?? "PC / PS4 / Xbox"} /></div>
-              <div className="px-5"><StatCell label="Heirloom" value={heirloomTags.length > 0 ? String(heirloomTags.length) : "—"} /></div>
-              <div className="px-5"><StatCell label="Rank" value={product.rank} /></div>
+              <div className="px-5"><StatCell label={t("stats.platform")} value={product.platform ?? "PC / PS4 / Xbox"} /></div>
+              <div className="px-5"><StatCell label={t("stats.heirloom")} value={heirloomTags.length > 0 ? String(heirloomTags.length) : "—"} /></div>
+              <div className="px-5"><StatCell label={t("stats.rank")} value={product.rank} /></div>
             </div>
             <div className="grid grid-cols-3 divide-x divide-white/8">
-              <div className="px-5"><StatCell label="Skin Legendary" value={product.legendarySkins} /></div>
-              <div className="px-5"><StatCell label="Level" value={product.level} /></div>
-              <div className="px-5"><StatCell label="Apex Coins" value={product.coins.toLocaleString("id-ID")} /></div>
+              <div className="px-5"><StatCell label={t("stats.legendarySkins")} value={product.legendarySkins} /></div>
+              <div className="px-5"><StatCell label={t("stats.level")} value={product.level} /></div>
+              <div className="px-5"><StatCell label={t("stats.apexCoins")} value={formatStat(product.coins)} /></div>
             </div>
             <div className="grid grid-cols-2 divide-x divide-white/8">
-              <div className="px-5"><StatCell label="Crafting Materials" value={product.craftingMaterials ?? 0} /></div>
-              <div className="px-5"><StatCell label="Green Shard" value={product.craftingMaterialsLegends ?? 0} /></div>
+              <div className="px-5"><StatCell label={t("stats.craftingMaterials")} value={formatStat(product.craftingMaterials ?? 0)} /></div>
+              <div className="px-5"><StatCell label={t("stats.greenShard")} value={formatStat(product.craftingMaterialsLegends ?? 0)} /></div>
             </div>
           </div>
 
           {/* Feature badges */}
           <div className="flex flex-wrap gap-3">
             {[
-              { icon: <CheckCircle2 className="w-4 h-4" />, label: "Full Email Access" },
-              { icon: <ShieldCheck className="w-4 h-4" />, label: "Garansi 5 Hari" },
-              { icon: <Zap className="w-4 h-4" />, label: "Pengiriman Cepat" },
+              { icon: <CheckCircle2 className="w-4 h-4" />, label: t("badges.fullEmailAccess") },
+              { icon: <ShieldCheck className="w-4 h-4" />, label: t("badges.warranty5Days") },
+              { icon: <Zap className="w-4 h-4" />, label: t("badges.fastDelivery") },
             ].map((b) => (
               <span
                 key={b.label}
@@ -292,7 +298,7 @@ export function ProductDetail({ product }: { product: Account }) {
           {/* Description */}
           {product.description && (
             <div className="space-y-2">
-              <h2 className="text-sm font-bold text-white">Deskripsi dari penjual</h2>
+              <h2 className="text-sm font-bold text-white">{t("description")}</h2>
               <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-line">
                 {product.description}
               </p>
@@ -332,15 +338,15 @@ export function ProductDetail({ product }: { product: Account }) {
               }`}
             >
               <MessageCircle className="w-5 h-5" />
-              {product.sold ? "Sold Out" : "Beli via WhatsApp"}
+              {product.sold ? t("cta.soldOut") : t("cta.buyViaWhatsApp")}
             </button>
 
             {/* Trust row */}
             <div className="space-y-3 pt-1 border-t border-white/8">
               {[
-                { icon: <ShieldCheck className="w-4 h-4 text-brand-cyan" />, title: "Garansi Uang Kembali", sub: "Dilindungi oleh TradeShield" },
-                { icon: <Zap className="w-4 h-4 text-yellow-400" />, title: "Checkout Cepat", sub: "Transfer & QRIS tersedia" },
-                { icon: <Headphones className="w-4 h-4 text-brand-cyan" />, title: "Dukungan 24/7", sub: "Kami selalu siap membantu" },
+                { icon: <ShieldCheck className="w-4 h-4 text-brand-cyan" />, title: t("trust.moneyBackGuarantee"), sub: t("trust.moneyBackSub") },
+                { icon: <Zap className="w-4 h-4 text-yellow-400" />, title: t("trust.quickCheckout"), sub: t("trust.quickCheckoutSub") },
+                { icon: <Headphones className="w-4 h-4 text-brand-cyan" />, title: t("trust.support247"), sub: t("trust.support247Sub") },
               ].map((item) => (
                 <div key={item.title} className="flex items-center gap-3">
                   <span className="shrink-0">{item.icon}</span>

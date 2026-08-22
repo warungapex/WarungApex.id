@@ -28,13 +28,29 @@
     "title2": "KATALOG",
     "desc1": "akun tersedia. Filter rank & fitur",
     "desc2": "sesuai kebutuhanmu.",
+    "metaList": "Katalog Akun | Warung Apex",
+    "metaListDesc": "Jelajahi katalog akun Apex Legends tier tinggi di Warung Apex.",
+    "metaDetail": "Detail Akun | Warung Apex",
     "spotlight": "Cek yang ini",
     "latest": "TERSEDIA",
     "viewAll": "Lihat Semua Akun",
     "spotlightLabel": "SOROTAN TERBARU",
     "cardDesc": "Akun tier tinggi level {level} dengan {skins} skin premium dan {coins} Apex Coins. Dijamin aman dan siap untuk gameplay kompetitif.",
     "fullAccess": "Full Access",
-    "viewDetails": "Lihat Detail"
+    "viewDetails": "Lihat Detail",
+    "searchPlaceholder": "Cari akun...",
+    "sort": {
+      "recommended": "Rekomendasi",
+      "lowestPrice": "Harga Terendah",
+      "highestPrice": "Harga Tertinggi",
+      "newest": "Terbaru",
+      "sortBy": "Urutkan:"
+    },
+    "empty": "Tidak ada akun yang cocok dengan filter ini.",
+    "results": {
+      "prefix": "Sekitar",
+      "suffix": "hasil"
+    }
   },
   "howItWorks": {
     "eyebrow": "Proses Mudah",
@@ -163,7 +179,7 @@
     "group4_10": "Berita",
     "copyright": "Warung Apex. Hak Cipta Dilindungi. Tidak berafiliasi dengan EA atau Respawn Entertainment."
   },
-  "marquee": {
+"marquee": {
     "items": [
       "HIGH-TIER ACCOUNTS",
       "PACED PROGRESS",
@@ -172,5 +188,55 @@
       "PENGIRIMAN INSTAN",
       "SUPPORT 24/7"
     ]
+  },
+  "product": {
+    "stats": {
+      "platform": "Platform",
+      "heirloom": "Heirloom",
+      "rank": "Rank",
+      "legendarySkins": "Legendary Skins",
+      "level": "Level",
+      "apexCoins": "Apex Coins",
+      "craftingMaterials": "Bahan Pembuatan",
+      "greenShard": "Green Shard"
+    },
+    "badges": {
+      "fullEmailAccess": "Akses Email Lengkap",
+      "warranty5Days": "Jaminan 5 Hari",
+      "fastDelivery": "Pengiriman Cepat"
+    },
+    "description": "Deskripsi dari Penjual",
+    "cta": {
+      "buyViaWhatsApp": "Beli via WhatsApp",
+      "soldOut": "Habis"
+    },
+    "trust": {
+      "moneyBackGuarantee": "Garansi Uang Kembali",
+      "moneyBackSub": "Dilindungi oleh TradeShield",
+      "quickCheckout": "Checkout Cepat",
+      "quickCheckoutSub": "Transfer & QRIS tersedia",
+      "support247": "Dukungan 24/7",
+      "support247Sub": "Kami selalu siap membantu"
+    },
+    "protection": {
+      "title": "Bagaimana Kami Melindungi Pembelianmu",
+      "items": [
+        {
+          "title": "Penjual Terverifikasi",
+          "desc": "Penjual harus konfirmasi identitas sebelum bisa berjualan."
+        },
+        {
+          "title": "Pembayaran ditahan sampai pengiriman dikonfirmasi",
+          "desc": "Penjual menerima uang hanya setelah kamu menandai pesanan diterima."
+        },
+        {
+          "title": "Garansi gratis disertakan",
+          "desc": "Jika akun tidak sesuai deskripsi, kamu berhak mendapat penggantian."
+        }
+      ]
+    },
+    "whatsapp": {
+      "template": "Halo, saya ingin membeli akun:\n\n• {badge} ({tierBadge})\n• Rank: {rank}\n• Level: {level}\n• Coins: {coins}\n• Legendary Skins: {legendarySkins}\n• Crafting Materials: {craftingMaterials}\n• Harga: {price}\n\nApakah masih available?"
+    }
   }
 }

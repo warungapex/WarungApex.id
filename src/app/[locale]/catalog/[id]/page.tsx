@@ -5,16 +5,30 @@ import { ProductDetail } from "@/components/catalog/product-detail";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { LocaleSwitcherModal } from "@/components/ui/locale-switcher-modal";
+import type { Metadata } from "next";
 
-// Allow dynamic IDs not in generateStaticParams
-export const dynamicParams = true;
-// Data comes from Supabase via cookies() — render per request, not statically
-export const dynamic = "force-dynamic";
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string }>;
+}) {
+  const { locale, id } = await params;
+  const [product, t] = await Promise.all([
+    getAccount(id),
+    getTranslations({ locale, namespace: "catalog" }),
+  ]);
 
-export const metadata = {
-  title: "Detail Akun | Warung Apex",
-  description: "Detail akun Apex Legends di Warung Apex.",
-};
+  if (!product) {
+    return {
+      title: "Not Found",
+    };
+  }
+
+  return {
+    title: `${product.badge} | ${t("metaDetail")}`,
+    description: `${product.badge} - High-tier Apex Legends account at Warung Apex.`,
+  };
+}
 
 export async function generateStaticParams() {
   const ids = await getAccountIds();

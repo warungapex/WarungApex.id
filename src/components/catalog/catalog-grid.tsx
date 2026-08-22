@@ -4,11 +4,12 @@ import { useMemo, useState } from "react";
 import { ChevronDown, ChevronUp, Filter, Search, X } from "lucide-react";
 import type { Account } from "@/lib/supabase/accounts";
 import { ProductCard } from "@/components/ui/product-card";
+import { useTranslations, useLocale } from "next-intl";
 
 const RANKS = ["Apex Predator", "Master", "Diamond", "Platinum", "Gold"];
 const HEIRLOOMS = ["Wraith", "Bloodhound", "Gibraltar", "Lifeline", "Pathfinder", "Octane", "Mirage", "Caustic", "Bangalore", "Wattson", "Crypto", "Revenant", "Loba", "Rampart", "Horizon", "Fuse", "Valkyrie", "Seer", "Ash", "Mad Maggie", "Newcastle", "Vantage", "Catalyst", "Ballistic"];
 const PLATFORMS = ["PC", "PlayStation 4", "Xbox One"];
-const SORT_OPTIONS = ["Recommended", "Harga Terendah", "Harga Tertinggi", "Terbaru"];
+const SORT_KEYS = ["recommended", "lowestPrice", "highestPrice", "newest"] as const;
 
 /* ─── Collapsible filter section ─── */
 function FilterSection({
@@ -111,6 +112,8 @@ function FilterPanel({
   maxPrice: number;
   onClear: () => void;
 }) {
+  const locale = useLocale();
+  const numberLocale = locale === "en" ? "en-US" : "id-ID";
   const toggleRank = (r: string) =>
     setRanks(ranks.includes(r) ? ranks.filter((x) => x !== r) : [...ranks, r]);
   const toggleHeirloom = (h: string) =>
@@ -188,7 +191,7 @@ function FilterPanel({
           <div className="flex items-center justify-between text-xs text-gray-400">
             <span>Rp 0</span>
             <span className="text-brand-red font-semibold">
-              Rp {budget.toLocaleString("id-ID")}
+              Rp {budget.toLocaleString(numberLocale)}
             </span>
           </div>
         </div>
@@ -199,13 +202,16 @@ function FilterPanel({
 
 /* ─── Main CatalogGrid ─── */
 export function CatalogGrid({ list }: { list: Account[] }) {
+  const t = useTranslations("catalog");
+  const locale = useLocale();
+  const numberLocale = locale === "en" ? "en-US" : "id-ID";
   const [q, setQ] = useState("");
   const [selectedRanks, setSelectedRanks] = useState<string[]>([]);
   const [selectedHeirlooms, setSelectedHeirlooms] = useState<string[]>([]);
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const maxPrice = Math.max(...list.map((a) => a.price));
   const [budget, setBudget] = useState(0);
-  const [sort, setSort] = useState("Recommended");
+  const [sort, setSort] = useState<(typeof SORT_KEYS)[number]>("recommended");
   const [openSort, setOpenSort] = useState(false);
   const [showMobileFilter, setShowMobileFilter] = useState(false);
 
@@ -238,9 +244,9 @@ export function CatalogGrid({ list }: { list: Account[] }) {
 
   const sorted = useMemo(() => {
     const arr = [...filtered];
-    if (sort === "Harga Terendah") arr.sort((a, b) => a.price - b.price);
-    if (sort === "Harga Tertinggi") arr.sort((a, b) => b.price - a.price);
-    if (sort === "Terbaru") arr.reverse();
+    if (sort === "lowestPrice") arr.sort((a, b) => a.price - b.price);
+    if (sort === "highestPrice") arr.sort((a, b) => b.price - a.price);
+    if (sort === "newest") arr.reverse();
     return arr;
   }, [filtered, sort]);
 
@@ -258,7 +264,7 @@ export function CatalogGrid({ list }: { list: Account[] }) {
       remove: () => setSelectedPlatforms((prev) => prev.filter((x) => x !== p)),
     })),
     ...(budget > 0
-      ? [{ label: `≤ Rp ${budget.toLocaleString("id-ID")}`, remove: () => setBudget(0) }]
+      ? [{ label: `≤ Rp ${budget.toLocaleString(numberLocale)}`, remove: () => setBudget(0) }]
       : []),
   ];
 
@@ -327,7 +333,7 @@ export function CatalogGrid({ list }: { list: Account[] }) {
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Cari akun..."
+              placeholder={t("searchPlaceholder")}
               className="w-full rounded-full border border-white/10 bg-brand-surface py-2.5 pl-10 pr-4 text-sm text-gray-300 placeholder:text-gray-600 focus:outline-none focus:border-brand-cyan/40 focus:text-white transition"
             />
           </div>
@@ -338,12 +344,12 @@ export function CatalogGrid({ list }: { list: Account[] }) {
               onClick={() => setOpenSort(!openSort)}
               className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/10 bg-brand-surface text-sm text-gray-300 hover:text-white hover:border-brand-cyan/40 transition"
             >
-              Sort by: <span className="font-semibold text-white">{sort}</span>
+               {t("sort.sortBy")} <span className="font-semibold text-white">{t(`sort.${sort}`)}</span>
               <ChevronDown className={`h-4 w-4 transition-transform ${openSort ? "rotate-180" : ""}`} />
             </button>
             {openSort && (
               <div className="absolute right-0 mt-2 w-52 bg-[#0c0c10] border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden">
-                {SORT_OPTIONS.map((opt) => (
+                {SORT_KEYS.map((opt) => (
                   <button
                     key={opt}
                     onClick={() => {
@@ -356,7 +362,7 @@ export function CatalogGrid({ list }: { list: Account[] }) {
                         : "text-gray-300 hover:text-white hover:bg-white/5"
                     }`}
                   >
-                    {opt}
+                    {t(`sort.${opt}`)}
                   </button>
                 ))}
               </div>
@@ -364,7 +370,7 @@ export function CatalogGrid({ list }: { list: Account[] }) {
           </div>
         </div>
 
-        {/* Active filter chips */}
+          {/* Active filter chips */}
         {activeChips.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
             {activeChips.map((chip) => (
@@ -375,13 +381,13 @@ export function CatalogGrid({ list }: { list: Account[] }) {
 
         {/* Result count */}
         <p className="mb-5 text-sm text-gray-400">
-          About <span className="font-semibold text-white">{sorted.length.toLocaleString()}</span> results
+          {t("results.prefix")} <span className="font-semibold text-white">{sorted.length.toLocaleString()}</span> {t("results.suffix")}
         </p>
 
         {/* Grid */}
         {sorted.length === 0 ? (
           <p className="mt-16 text-center text-sm text-gray-500">
-            Tidak ada akun yang cocok dengan filter ini.
+            {t("empty")}
           </p>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
