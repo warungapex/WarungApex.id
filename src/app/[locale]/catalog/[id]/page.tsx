@@ -6,6 +6,8 @@ import { UserMenu } from "@/components/auth/user-menu";
 import { notFound } from "next/navigation";
 import { LocaleSwitcherModal } from "@/components/ui/locale-switcher-modal";
 import type { Metadata } from "next";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function generateMetadata({
   params,
@@ -40,6 +42,24 @@ export default async function ProductPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
+
+  // Buyer yang keluar dari Snap tanpa bayar tidak boleh terus mengunci akun:
+  // batalkan order pending milik viewer ini (trigger SQL melepas accounts.sold).
+  // Kalau ternyata dia sempat membayar, webhook settlement menjual-ulang akun.
+  try {
+    const supabase = await createServerSupabaseClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      await createAdminClient()
+        .from("orders")
+        .update({ status: "cancel" })
+        .eq("user_id", user.id)
+        .eq("account_id", id)
+        .eq("status", "pending");
+    }
+  } catch (e) {
+    console.warn("[ProductPage] release own pending gagal (abaikan):", e);
+  }
 
   const [product, t] = await Promise.all([
     getAccount(id),

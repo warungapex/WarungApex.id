@@ -131,6 +131,7 @@ export async function DELETE(request: Request) {
     }
 
     const admin = createAdminClient();
+    console.info("[checkout/close] cek order pending:", user.id, account_id);
     const { data: order } = await admin
       .from("orders")
       .select("id")
@@ -143,9 +144,11 @@ export async function DELETE(request: Request) {
 
     // Tidak ada order pending (sudah dibayar / memang tidak ada) — tidak ada yang dilepas
     if (!order) {
+      console.info("[checkout/close] tidak ada order pending untuk dilepas");
       return NextResponse.json({ released: false });
     }
 
+    console.info("[checkout/close] membatalkan order:", order.id);
     const { error } = await admin
       .from("orders")
       .update({ status: "cancel" })

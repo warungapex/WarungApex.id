@@ -279,7 +279,7 @@ export function ProductDetail({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ account_id: product.id }),
         });
-        if (!res.ok) console.warn("[checkout] gagal melepas klaim:", res.status);
+        if (!res.ok) console.warn("[snap] gagal melepas klaim:", res.status);
       } catch {
         // gagal jaring — klaim tetap lepas sendiri via expiry 30 menit + webhook expire
       }
