@@ -274,11 +274,12 @@ export function ProductDetail({
      *  batalkan order pending supaya akun tidak nyangkut "terjual". */
     async function releaseClaim() {
       try {
-        await fetch("/api/checkout", {
+        const res = await fetch("/api/checkout", {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ account_id: product.id }),
         });
+        if (!res.ok) console.warn("[checkout] gagal melepas klaim:", res.status);
       } catch {
         // gagal jaring — klaim tetap lepas sendiri via expiry 30 menit + webhook expire
       }

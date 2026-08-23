@@ -22,19 +22,34 @@ export async function POST(request: Request) {
     // 2. Klaim akun secara atomik — gagal jika sudah terjual / diklaim user lain.
     // Pakai service role: update accounts dikunci RLS khusus admin, tapi klaim
     // checkout adalah aksi sistem yang sah (identitas user sudah diverifikasi di atas).
-    const { data: claimed, error: claimError } = await admin
-      .from("accounts")
-      .update({ sold: true })
-      .eq("id", account_id)
-      .eq("sold", false)
-      .select("id, badge, price")
-      .single();
+    const tryClaim = () =>
+      admin
+        .from("accounts")
+        .update({ sold: true })
+        .eq("id", account_id)
+        .eq("sold", false)
+        .select("id, badge, price")
+        .single();
 
-    if (claimError) {
-      console.error("[checkout] claim failed:", claimError);
-    }
+    let claimed = (await tryClaim()).data;
+
     if (!claimed) {
-      return NextResponse.json({ error: "Akun sudah terjual" }, { status: 409 });
+      // Klaim gagal. Jika penghalangnya order pending milik USER INI sendiri
+      // (dia keluar dari Snap dan onClose tidak sempat terkirim), batalkan
+      // order pending-nya lalu klaim ulang — user tidak boleh terkunci oleh
+      // sisa percobaannya sendiri. Order pending milik user lain tetap mengunci
+      // sampai settlement/expiry webhook melepasnya.
+      await admin
+        .from("orders")
+        .update({ status: "cancel" })
+        .eq("user_id", user.id)
+        .eq("account_id", account_id)
+        .eq("status", "pending");
+
+      claimed = (await tryClaim()).data;
+      if (!claimed) {
+        return NextResponse.json({ error: "Akun sudah terjual" }, { status: 409 });
+      }
     }
 
     // 3. Buat transaksi Snap + simpan order. Gagal di tahap ini = klaim dilepas,
