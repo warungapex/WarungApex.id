@@ -1,6 +1,6 @@
 "use client";
 
-import { Coins, Gamepad2, ShieldCheck } from "lucide-react";
+import { Gamepad2 } from "lucide-react";
 import type { Account } from "@/lib/supabase/accounts";
 import { formatPrice } from "@/lib/accounts";
 import { useLocale } from "next-intl";
@@ -24,81 +24,61 @@ export function ProductCard({ a }: { a: Account }) {
 
   return (
     <Link href={`/catalog/${a.id}`}>
-      <article className="group relative overflow-hidden rounded-2xl border border-white/10 bg-brand-surface transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-cyan/50 hover:shadow-[0_20px_50px_-12px_rgba(0,240,255,0.15)] cursor-pointer h-full flex flex-col">
+      <article className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-white/10 bg-brand-surface transition-all duration-200 hover:-translate-y-0.5 hover:border-white/25 hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.6)]">
 
-        {/* Status badges */}
-        {a.sold && (
-          <span className="absolute right-3 top-3 z-10 rounded-full bg-brand-dark/80 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-gray-300 ring-1 ring-white/20 backdrop-blur">
-            Sold
-          </span>
-        )}
-
-
-        {/* Banner — Main image if available, fallback to rank gradient */}
-        {mainImage ? (
-          <div className="relative h-40 overflow-hidden">
+        {/* Banner */}
+        <div className="relative aspect-video overflow-hidden bg-[#13131a]">
+          {mainImage ? (
             <Image
               src={mainImage}
               alt={a.badge}
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover group-hover:scale-105 transition duration-500"
+              sizes="(max-width: 640px) 50vw, (max-width: 1280px) 50vw, 33vw"
+              className={`object-cover transition duration-500 group-hover:scale-105 ${a.sold ? "opacity-40 grayscale" : ""}`}
               loading="lazy"
               quality={75}
             />
-          </div>
-        ) : (
-          <div className="relative flex h-40 items-center justify-center bg-gradient-to-br from-brand-red/30 to-brand-red/10 border-b border-white/5">
-            <div className="text-center">
-              <p className="font-[var(--font-display)] text-3xl font-black tracking-widest text-white drop-shadow">
+          ) : (
+            <div className="flex h-full items-center justify-center bg-gradient-to-br from-brand-red/30 to-brand-red/10">
+              <span className="font-display text-4xl font-black tracking-widest text-white drop-shadow">
                 {a.tierBadge}
-              </p>
-              <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70">
-                {a.rank}
-              </p>
+              </span>
             </div>
-          </div>
-        )}
+          )}
 
-        <div className="p-5 flex flex-col flex-1">
-          {/* Account name — fixed height 2 lines */}
-          <p className="text-sm font-semibold text-white mb-4 leading-snug line-clamp-2 min-h-[2.5rem]">
+          {a.sold && (
+            <span className="absolute inset-0 flex items-center justify-center">
+              <span className="rounded-lg bg-black/70 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-gray-200 ring-1 ring-white/20 backdrop-blur">
+                Sold Out
+              </span>
+            </span>
+          )}
+        </div>
+
+        {/* Body */}
+        <div className="flex flex-1 flex-col gap-1.5 p-3 sm:p-4">
+          {/* Title — fixed height 2 lines */}
+          <p className="min-h-[2.5rem] text-sm font-medium leading-snug text-white line-clamp-2">
             {a.badge}
           </p>
 
-          <ul className="space-y-2 text-xs text-gray-400 mb-4">
-            <li className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <Gamepad2 className="h-3.5 w-3.5" /> Level
-              </span>
-              <span className="text-gray-200">{a.level}</span>
-            </li>
-            <li className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <Coins className="h-3.5 w-3.5" /> AC/Coins
-              </span>
-              <span className="text-gray-200">{a.coins.toLocaleString("id-ID")}</span>
-            </li>
-            <li className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5" /> Skin Legendary
-              </span>
-              <span className="text-gray-200">{a.legendarySkins}</span>
-            </li>
-          </ul>
+          {/* Price — marketplace signature */}
+          <p className="text-lg font-bold text-brand-red">
+            {formatPrice(a.price, locale, rate)}
+          </p>
 
-          <div className="mt-auto border-t border-white/5 pt-5 flex items-center justify-between">
-            <span className="text-lg font-bold text-[#f0f2f5]">
-              {formatPrice(a.price, locale, rate)}
-            </span>
-            <span className={`rounded-full px-4 py-1.5 text-xs font-semibold tracking-wide transition ${
-              a.sold
-                ? "cursor-not-allowed bg-white/10 text-gray-400"
-                : "bg-brand-red text-white hover:bg-brand-red/80"
-            }`}>
-              {a.sold ? "Sold Out" : "Beli"}
-            </span>
-          </div>
+          {/* Specs — one dense line */}
+          <p className="truncate text-xs text-gray-400">
+            Lv {a.level} · {a.legendarySkins} Skin Legendary · {a.coins.toLocaleString(locale === "en" ? "en-US" : "id-ID")} Coins
+          </p>
+
+          {/* Platform — like location on marketplace cards */}
+          {a.platform && (
+            <p className="mt-auto flex items-center gap-1 pt-1 text-[11px] text-gray-500">
+              <Gamepad2 className="h-3 w-3" />
+              {a.platform}
+            </p>
+          )}
         </div>
       </article>
     </Link>

@@ -1,44 +1,36 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { ChevronDown, ChevronUp, Filter, Search, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Check, ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
 import type { Account } from "@/lib/supabase/accounts";
 import { ProductCard } from "@/components/ui/product-card";
 import { useTranslations, useLocale } from "next-intl";
 
-const RANKS = ["Apex Predator", "Master", "Diamond", "Platinum", "Gold"];
-const HEIRLOOMS = ["Wraith", "Bloodhound", "Gibraltar", "Lifeline", "Pathfinder", "Octane", "Mirage", "Caustic", "Bangalore", "Wattson", "Crypto", "Revenant", "Loba", "Rampart", "Horizon", "Fuse", "Valkyrie", "Seer", "Ash", "Mad Maggie", "Newcastle", "Vantage", "Catalyst", "Ballistic"];
+const RANKS = ["Apex Predator", "Master", "Diamond", "Platinum", "Gold", "Silver", "Bronze"];
+/* Only legends that actually own an heirloom */
+const HEIRLOOMS: { legend: string; weapon: string }[] = [
+  { legend: "Wraith", weapon: "Kunai" },
+  { legend: "Bloodhound", weapon: "Axe" },
+  { legend: "Lifeline", weapon: "Shock Sticks" },
+  { legend: "Pathfinder", weapon: "Boxing Gloves" },
+  { legend: "Octane", weapon: "Butterfly Knife" },
+  { legend: "Mirage", weapon: "Statue" },
+  { legend: "Caustic", weapon: "Sledgehammer" },
+  { legend: "Gibraltar", weapon: "War Club" },
+  { legend: "Bangalore", weapon: "Kukri" },
+  { legend: "Revenant", weapon: "Scythe" },
+  { legend: "Rampart", weapon: "Wrench" },
+  { legend: "Wattson", weapon: "Energy Reader" },
+  { legend: "Crypto", weapon: "Jikdo/Sword" },
+  { legend: "Loba", weapon: "Folding Fan" },
+  { legend: "Seer", weapon: "Sickles" },
+  { legend: "Valkyrie", weapon: "Spear/Yari" },
+  { legend: "Ash", weapon: "Nunchaku" },
+  { legend: "Horizon", weapon: "Gravity Mace" },
+  { legend: "Fuse", weapon: "Guitar" },
+];
 const PLATFORMS = ["PC", "PlayStation 4", "Xbox One"];
 const SORT_KEYS = ["recommended", "lowestPrice", "highestPrice", "newest"] as const;
-
-/* ─── Collapsible filter section ─── */
-function FilterSection({
-  title,
-  children,
-  defaultOpen = false,
-}: {
-  title: string;
-  children: React.ReactNode;
-  defaultOpen?: boolean;
-}) {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <div className="border-b border-white/8 py-4">
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between text-sm font-semibold text-white tracking-wide hover:text-brand-cyan transition-colors"
-      >
-        {title}
-        {open ? (
-          <ChevronUp className="h-4 w-4 text-gray-400" />
-        ) : (
-          <ChevronDown className="h-4 w-4 text-gray-400" />
-        )}
-      </button>
-      {open && <div className="mt-3 space-y-2">{children}</div>}
-    </div>
-  );
-}
 
 /* ─── Checkbox row ─── */
 function CheckboxItem({
@@ -51,17 +43,17 @@ function CheckboxItem({
   onToggle: () => void;
 }) {
   return (
-    <label className="flex items-center gap-3 cursor-pointer group">
+    <label className="group flex cursor-pointer items-center gap-2.5">
       <span
-        className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${
+        className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
           checked
-            ? "bg-brand-cyan border-brand-cyan"
-            : "border-white/25 bg-white/5 group-hover:border-brand-cyan/60"
+            ? "border-brand-red bg-brand-red"
+            : "border-white/25 bg-white/5 group-hover:border-brand-red/60"
         }`}
         onClick={onToggle}
       >
         {checked && (
-          <svg viewBox="0 0 10 8" className="w-2.5 h-2.5 text-brand-dark fill-current">
+          <svg viewBox="0 0 10 8" className="h-2.5 w-2.5 fill-current text-white">
             <path d="M1 4l2.5 2.5L9 1" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         )}
@@ -76,22 +68,69 @@ function CheckboxItem({
   );
 }
 
-/* ─── Active filter chip ─── */
-function FilterChip({ label, onRemove }: { label: string; onRemove: () => void }) {
+/* ─── Heirloom multi-select dropdown ─── */
+function HeirloomDropdown({
+  selected,
+  onToggle,
+}: {
+  selected: string[];
+  onToggle: (h: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   return (
-    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-brand-cyan/30 bg-brand-cyan/10 text-xs text-brand-cyan font-medium">
-      {label}
-      <button onClick={onRemove} className="hover:text-white transition-colors">
-        <X className="h-3 w-3" />
+    <div className="border-b border-white/8 py-4" ref={ref}>
+      <button
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between text-sm font-semibold text-white transition hover:text-gray-200"
+      >
+        <span className="flex items-center gap-2">
+          Heirloom
+          {selected.length > 0 && (
+            <span className="flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-brand-red px-1 text-[10px] font-bold text-white">
+              {selected.length}
+            </span>
+          )}
+        </span>
+        <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
-    </span>
+
+      {open && (
+        <div className="mt-3 max-h-60 space-y-2.5 overflow-y-auto rounded-lg border border-white/10 bg-black/30 p-3">
+          {HEIRLOOMS.map(({ legend, weapon }) => (
+            <CheckboxItem
+              key={legend}
+              label={`${legend} · ${weapon}`}
+              checked={selected.includes(legend)}
+              onToggle={() => onToggle(legend)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
 /* ─── Sidebar Filter Panel ─── */
 function FilterPanel({
-  ranks,
-  setRanks,
   heirlooms,
   setHeirlooms,
   platforms,
@@ -101,8 +140,6 @@ function FilterPanel({
   maxPrice,
   onClear,
 }: {
-  ranks: string[];
-  setRanks: (v: string[]) => void;
   heirlooms: string[];
   setHeirlooms: (v: string[]) => void;
   platforms: string[];
@@ -113,87 +150,66 @@ function FilterPanel({
   onClear: () => void;
 }) {
   const locale = useLocale();
+  const t = useTranslations("catalog");
   const numberLocale = locale === "en" ? "en-US" : "id-ID";
-  const toggleRank = (r: string) =>
-    setRanks(ranks.includes(r) ? ranks.filter((x) => x !== r) : [...ranks, r]);
   const toggleHeirloom = (h: string) =>
     setHeirlooms(heirlooms.includes(h) ? heirlooms.filter((x) => x !== h) : [...heirlooms, h]);
   const togglePlatform = (p: string) =>
     setPlatforms(platforms.includes(p) ? platforms.filter((x) => x !== p) : [...platforms, p]);
 
-  const hasFilters = ranks.length > 0 || heirlooms.length > 0 || platforms.length > 0 || budget > 0;
+  const hasFilters = heirlooms.length > 0 || platforms.length > 0 || budget > 0;
 
   return (
-    <div className="space-y-0">
-      <div className="flex items-center justify-between mb-2">
-        <h3 className="text-base font-bold text-white tracking-tight">Filter</h3>
+    <div>
+      <div className="mb-1 flex items-center justify-between">
+        <h3 className="text-sm font-bold text-white">Filter</h3>
         {hasFilters && (
           <button
             onClick={onClear}
-            className="text-xs text-brand-cyan hover:text-white transition-colors"
+            className="text-xs font-medium text-brand-cyan transition-colors hover:text-white"
           >
-            Clear all
+            {t("reset")}
           </button>
         )}
       </div>
 
-      {/* Rank */}
-      <FilterSection title="Rank">
-        {RANKS.map((r) => (
-          <CheckboxItem
-            key={r}
-            label={r}
-            checked={ranks.includes(r)}
-            onToggle={() => toggleRank(r)}
-          />
-        ))}
-      </FilterSection>
-
-      {/* Heirloom */}
-      <FilterSection title="Heirloom">
-        {HEIRLOOMS.map((h) => (
-          <CheckboxItem
-            key={h}
-            label={h}
-            checked={heirlooms.includes(h)}
-            onToggle={() => toggleHeirloom(h)}
-          />
-        ))}
-      </FilterSection>
+      {/* Heirloom — dropdown */}
+      <HeirloomDropdown selected={heirlooms} onToggle={toggleHeirloom} />
 
       {/* Platform */}
-      <FilterSection title="Platform">
-        {PLATFORMS.map((p) => (
-          <CheckboxItem
-            key={p}
-            label={p}
-            checked={platforms.includes(p)}
-            onToggle={() => togglePlatform(p)}
-          />
-        ))}
-      </FilterSection>
+      <div className="border-b border-white/8 py-4">
+        <div className="mb-3 text-sm font-semibold text-white">Platform</div>
+        <div className="space-y-2.5">
+          {PLATFORMS.map((p) => (
+            <CheckboxItem
+              key={p}
+              label={p}
+              checked={platforms.includes(p)}
+              onToggle={() => togglePlatform(p)}
+            />
+          ))}
+        </div>
+      </div>
 
       {/* Budget */}
-      <div className="py-4 border-b border-white/8">
-        <div className="text-sm font-semibold text-white tracking-wide mb-3">Budget</div>
-        <div className="space-y-3">
-          <input
-            type="range"
-            min="0"
-            max={maxPrice}
-            value={budget}
-            onChange={(e) => setBudget(parseInt(e.target.value))}
-            className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-brand-red"
-            style={{
-              background: `linear-gradient(to right, #ef4444 0%, #ef4444 ${(budget / maxPrice) * 100}%, rgba(255,255,255,0.1) ${(budget / maxPrice) * 100}%, rgba(255,255,255,0.1) 100%)`,
-            }}
-          />
-          <div className="flex items-center justify-between text-xs text-gray-400">
-            <span>Rp 0</span>
-            <span className="text-brand-red font-semibold">
-              Rp {budget.toLocaleString(numberLocale)}
-            </span>
-          </div>
+      <div className="py-4">
+        <div className="mb-3 text-sm font-semibold text-white">{t("priceRange")}</div>
+        <input
+          type="range"
+          min="0"
+          max={maxPrice}
+          value={budget}
+          onChange={(e) => setBudget(parseInt(e.target.value))}
+          className="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-white/10 accent-brand-red"
+          style={{
+            background: `linear-gradient(to right, #FF2A44 0%, #FF2A44 ${(budget / maxPrice) * 100}%, rgba(255,255,255,0.1) ${(budget / maxPrice) * 100}%, rgba(255,255,255,0.1) 100%)`,
+          }}
+        />
+        <div className="mt-2 flex items-center justify-between text-xs text-gray-400">
+          <span>Rp 0</span>
+          <span className="font-semibold text-brand-red">
+            {budget > 0 ? `Rp ${budget.toLocaleString(numberLocale)}` : t("all")}
+          </span>
         </div>
       </div>
     </div>
@@ -206,7 +222,7 @@ export function CatalogGrid({ list }: { list: Account[] }) {
   const locale = useLocale();
   const numberLocale = locale === "en" ? "en-US" : "id-ID";
   const [q, setQ] = useState("");
-  const [selectedRanks, setSelectedRanks] = useState<string[]>([]);
+  const [selectedRank, setSelectedRank] = useState<string | null>(null);
   const [selectedHeirlooms, setSelectedHeirlooms] = useState<string[]>([]);
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const maxPrice = Math.max(...list.map((a) => a.price));
@@ -214,9 +230,27 @@ export function CatalogGrid({ list }: { list: Account[] }) {
   const [sort, setSort] = useState<(typeof SORT_KEYS)[number]>("recommended");
   const [openSort, setOpenSort] = useState(false);
   const [showMobileFilter, setShowMobileFilter] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
+
+  /* Close sort dropdown on outside click / Escape */
+  useEffect(() => {
+    if (!openSort) return;
+    const onDown = (e: MouseEvent) => {
+      if (!sortRef.current?.contains(e.target as Node)) setOpenSort(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpenSort(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [openSort]);
 
   const clearAll = () => {
-    setSelectedRanks([]);
+    setSelectedRank(null);
     setSelectedHeirlooms([]);
     setSelectedPlatforms([]);
     setBudget(0);
@@ -227,8 +261,8 @@ export function CatalogGrid({ list }: { list: Account[] }) {
       const hay = `${a.rank} ${a.badge}`.toLowerCase();
       const okQ = hay.includes(q.toLowerCase());
       const okRank =
-        selectedRanks.length === 0 ||
-        selectedRanks.some((r) => a.rank.toLowerCase().includes(r.toLowerCase()));
+        !selectedRank ||
+        a.rank.toLowerCase().includes(selectedRank.toLowerCase());
       const okHeirloom =
         selectedHeirlooms.length === 0 ||
         selectedHeirlooms.some((h) => a.badge.toLowerCase().includes(h.toLowerCase()));
@@ -240,7 +274,7 @@ export function CatalogGrid({ list }: { list: Account[] }) {
         );
       return okQ && okRank && okHeirloom && okBudget && okPlatform;
     });
-  }, [q, selectedRanks, selectedHeirlooms, selectedPlatforms, budget, list]);
+  }, [q, selectedRank, selectedHeirlooms, selectedPlatforms, budget, list]);
 
   const sorted = useMemo(() => {
     const arr = [...filtered];
@@ -251,10 +285,7 @@ export function CatalogGrid({ list }: { list: Account[] }) {
   }, [filtered, sort]);
 
   const activeChips = [
-    ...selectedRanks.map((r) => ({
-      label: r,
-      remove: () => setSelectedRanks((prev) => prev.filter((x) => x !== r)),
-    })),
+    ...(selectedRank ? [{ label: selectedRank, remove: () => setSelectedRank(null) }] : []),
     ...selectedHeirlooms.map((h) => ({
       label: h,
       remove: () => setSelectedHeirlooms((prev) => prev.filter((x) => x !== h)),
@@ -269,8 +300,6 @@ export function CatalogGrid({ list }: { list: Account[] }) {
   ];
 
   const sidebarProps = {
-    ranks: selectedRanks,
-    setRanks: setSelectedRanks,
     heirlooms: selectedHeirlooms,
     setHeirlooms: setSelectedHeirlooms,
     platforms: selectedPlatforms,
@@ -282,120 +311,193 @@ export function CatalogGrid({ list }: { list: Account[] }) {
   };
 
   return (
-    <div className="flex gap-8">
-      {/* ── Mobile filter drawer ── */}
-      {showMobileFilter && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-            onClick={() => setShowMobileFilter(false)}
-          />
-          <div className="absolute left-0 top-0 bottom-0 w-full max-w-sm bg-[#0c0c10] border-r border-white/10 overflow-y-auto">
-            <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
-              <span className="text-base font-bold text-white">Filter</span>
+    <div>
+      {/* ── Search bar besar ala marketplace ── */}
+      <div className="relative mb-4">
+        <Search className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-500" />
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder={t("searchPlaceholder")}
+          className="w-full rounded-full border border-white/10 bg-brand-surface py-3.5 pl-12 pr-12 text-sm text-gray-200 transition placeholder:text-gray-600 focus:border-brand-red/50 focus:outline-none focus:ring-2 focus:ring-brand-red/20"
+        />
+        {q && (
+          <button
+            onClick={() => setQ("")}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-white"
+            aria-label="Clear search"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+
+      {/* ── Tab kategori rank ── */}
+      <div className="scrollbar-none -mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
+        {[null, ...RANKS].map((r) => {
+          const active = selectedRank === r;
+          return (
+            <button
+              key={r ?? "all"}
+              onClick={() => setSelectedRank(r)}
+              className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition ${
+                active
+                  ? "bg-brand-red text-white shadow-[0_0_16px_-4px_rgba(255,42,68,0.6)]"
+                  : "border border-white/10 bg-brand-surface text-gray-300 hover:border-white/25 hover:text-white"
+              }`}
+            >
+              {r ?? t("all")}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="flex gap-6">
+        {/* ── Mobile filter drawer ── */}
+        {showMobileFilter && (
+          <div className="fixed inset-0 z-50 lg:hidden">
+            <div
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+              onClick={() => setShowMobileFilter(false)}
+            />
+            <div className="absolute bottom-0 left-0 top-0 w-full max-w-xs overflow-y-auto border-r border-white/10 bg-[#0c0c10] p-5">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-base font-bold text-white">Filter</span>
+                <button
+                  onClick={() => setShowMobileFilter(false)}
+                  className="text-gray-400 transition-colors hover:text-white"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              <FilterPanel {...sidebarProps} />
               <button
                 onClick={() => setShowMobileFilter(false)}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="mt-4 w-full rounded-xl bg-brand-red py-3 text-sm font-semibold text-white transition hover:bg-brand-red/90"
               >
-                <X className="h-5 w-5" />
+                {t("apply")}
               </button>
             </div>
-            <div className="px-6 py-4">
-              <FilterPanel {...sidebarProps} />
+          </div>
+        )}
+
+        {/* ── Desktop sidebar ── */}
+        <aside className="hidden w-60 shrink-0 lg:block">
+          <div className="sticky top-6 rounded-2xl border border-white/10 bg-brand-surface/60 px-5 py-4">
+            <FilterPanel {...sidebarProps} />
+          </div>
+        </aside>
+
+        {/* ── Main content ── */}
+        <div className="min-w-0 flex-1">
+          {/* Toolbar */}
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            {/* Mobile filter button */}
+            <button
+              onClick={() => setShowMobileFilter(true)}
+              className="flex shrink-0 items-center gap-2 rounded-lg border border-white/10 bg-brand-surface px-3.5 py-2 text-sm text-gray-300 transition hover:border-white/25 hover:text-white lg:hidden"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+              Filter
+              {(selectedHeirlooms.length > 0 || selectedPlatforms.length > 0 || budget > 0) && (
+                <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-brand-red text-[10px] font-bold text-white">
+                  {selectedHeirlooms.length + selectedPlatforms.length + (budget > 0 ? 1 : 0)}
+                </span>
+              )}
+            </button>
+
+            {/* Result count */}
+            <p className="hidden text-sm text-gray-400 sm:block">
+              {t("results.prefix")}{" "}
+              <span className="font-semibold text-white">{sorted.length.toLocaleString()}</span>{" "}
+              {t("results.suffix")}
+            </p>
+
+            {/* Sort dropdown */}
+            <div className="relative ml-auto shrink-0" ref={sortRef}>
+              <button
+                onClick={() => setOpenSort(!openSort)}
+                aria-expanded={openSort}
+                className="flex items-center gap-2 rounded-lg border border-white/10 bg-brand-surface px-3.5 py-2 text-sm text-gray-300 transition hover:border-white/25 hover:text-white"
+              >
+                <span className="hidden sm:inline">{t("sort.sortBy")}</span>
+                <span className="font-semibold text-white">{t(`sort.${sort}`)}</span>
+                <ChevronDown className={`h-4 w-4 transition-transform ${openSort ? "rotate-180" : ""}`} />
+              </button>
+              {openSort && (
+                <div className="absolute right-0 z-50 mt-2 w-52 overflow-hidden rounded-xl border border-white/10 bg-[#12131a] shadow-2xl">
+                  {SORT_KEYS.map((opt) => (
+                    <button
+                      key={opt}
+                      onClick={() => {
+                        setSort(opt);
+                        setOpenSort(false);
+                      }}
+                      className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-sm transition ${
+                        sort === opt
+                          ? "bg-brand-red/10 text-brand-red"
+                          : "text-gray-300 hover:bg-white/5 hover:text-white"
+                      }`}
+                    >
+                      {t(`sort.${opt}`)}
+                      {sort === opt && <Check className="h-3.5 w-3.5" />}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      )}
-
-      {/* ── Desktop sidebar ── */}
-      <aside className="hidden lg:block w-64 shrink-0">
-        <div className="sticky top-24 border border-white/10 rounded-2xl px-5 py-4 bg-gradient-to-b from-white/[0.04] to-transparent backdrop-blur-sm shadow-lg">
-          <FilterPanel {...sidebarProps} />
-        </div>
-      </aside>
-
-      {/* ── Main content ── */}
-      <div className="flex-1 min-w-0">
-        {/* Top bar */}
-        <div className="flex items-center gap-3 mb-4 flex-wrap">
-          {/* Mobile filter button */}
-          <button
-            onClick={() => setShowMobileFilter(true)}
-            className="lg:hidden flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/10 bg-brand-surface text-sm text-gray-300 hover:text-white hover:border-brand-cyan/40 transition shrink-0"
-          >
-            <Filter className="h-4 w-4" />
-            Filter
-          </button>
-
-          {/* Search */}
-          <div className="relative flex-1 min-w-48">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" />
-            <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder={t("searchPlaceholder")}
-              className="w-full rounded-full border border-white/10 bg-brand-surface py-2.5 pl-10 pr-4 text-sm text-gray-300 placeholder:text-gray-600 focus:outline-none focus:border-brand-cyan/40 focus:text-white transition"
-            />
-          </div>
-
-          {/* Sort dropdown */}
-          <div className="relative shrink-0">
-            <button
-              onClick={() => setOpenSort(!openSort)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/10 bg-brand-surface text-sm text-gray-300 hover:text-white hover:border-brand-cyan/40 transition"
-            >
-               {t("sort.sortBy")} <span className="font-semibold text-white">{t(`sort.${sort}`)}</span>
-              <ChevronDown className={`h-4 w-4 transition-transform ${openSort ? "rotate-180" : ""}`} />
-            </button>
-            {openSort && (
-              <div className="absolute right-0 mt-2 w-52 bg-[#0c0c10] border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden">
-                {SORT_KEYS.map((opt) => (
-                  <button
-                    key={opt}
-                    onClick={() => {
-                      setSort(opt);
-                      setOpenSort(false);
-                    }}
-                    className={`block w-full text-left px-4 py-2.5 text-sm transition ${
-                      sort === opt
-                        ? "bg-brand-cyan/10 text-brand-cyan"
-                        : "text-gray-300 hover:text-white hover:bg-white/5"
-                    }`}
-                  >
-                    {t(`sort.${opt}`)}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
 
           {/* Active filter chips */}
-        {activeChips.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
-            {activeChips.map((chip) => (
-              <FilterChip key={chip.label} label={chip.label} onRemove={chip.remove} />
-            ))}
-          </div>
-        )}
+          {activeChips.length > 0 && (
+            <div className="mb-4 flex flex-wrap gap-2">
+              {activeChips.map((chip) => (
+                <span
+                  key={chip.label}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-red/30 bg-brand-red/10 px-3 py-1 text-xs font-medium text-brand-red"
+                >
+                  {chip.label}
+                  <button onClick={chip.remove} className="transition-colors hover:text-white" aria-label={`Remove ${chip.label}`}>
+                    <X className="h-3 w-3" />
+                  </button>
+                </span>
+              ))}
+              <button
+                onClick={clearAll}
+                className="rounded-full px-2 py-1 text-xs text-gray-400 underline-offset-2 transition hover:text-white hover:underline"
+              >
+                Reset
+              </button>
+            </div>
+          )}
 
-        {/* Result count */}
-        <p className="mb-5 text-sm text-gray-400">
-          {t("results.prefix")} <span className="font-semibold text-white">{sorted.length.toLocaleString()}</span> {t("results.suffix")}
-        </p>
-
-        {/* Grid */}
-        {sorted.length === 0 ? (
-          <p className="mt-16 text-center text-sm text-gray-500">
-            {t("empty")}
+          {/* Result count mobile */}
+          <p className="mb-4 text-sm text-gray-400 sm:hidden">
+            {t("results.prefix")}{" "}
+            <span className="font-semibold text-white">{sorted.length.toLocaleString()}</span>{" "}
+            {t("results.suffix")}
           </p>
-        ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {sorted.map((a) => (
-              <ProductCard key={a.id} a={a} />
-            ))}
-          </div>
-        )}
+
+          {/* Grid */}
+          {sorted.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 py-20 text-center">
+              <Search className="mb-4 h-8 w-8 text-gray-600" />
+              <p className="max-w-xs text-sm text-gray-500">{t("empty")}</p>
+              <button
+                onClick={clearAll}
+                className="mt-4 rounded-full border border-brand-red/40 px-5 py-2 text-xs font-semibold text-brand-red transition hover:bg-brand-red/10"
+              >
+                {t("resetFilters")}
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {sorted.map((a) => (
+                <ProductCard key={a.id} a={a} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
