@@ -44,7 +44,7 @@ export function UserMenu() {
     return (
       <Link
         href={`/login?redirectTo=${encodeURIComponent(pathname)}`}
-        className="px-4 py-2 rounded-full border border-white/15 bg-white/5 text-xs font-semibold text-gray-200 hover:border-brand-cyan/50 hover:text-white transition whitespace-nowrap"
+        className="px-4 py-2 rounded-full border border-white/20 bg-white/5 text-xs font-semibold text-white hover:bg-white/15 hover:border-white/40 transition whitespace-nowrap"
       >
         {t("signInShort")}
       </Link>

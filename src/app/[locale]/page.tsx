@@ -8,6 +8,7 @@ import { Cta } from "@/components/sections/Cta";
 import { getTranslations } from "next-intl/server";
 import { getFeaturedAccounts } from "@/lib/supabase/accounts";
 import { LocaleSwitcherModal } from "@/components/ui/locale-switcher-modal";
+import { UserMenu } from "@/components/auth/user-menu";
 import { Link } from "@/i18n/routing";
 import { HowItWorks } from "@/components/ui/how-it-works";
 import { StickyFooter } from "@/components/ui/sticky-footer";
@@ -64,16 +65,10 @@ export default async function Home({
             </h1>
           </div>
 
-           {/* Right Nav — locale switcher */}
-           <div className="flex items-center gap-3 sm:gap-6 text-sm font-semibold tracking-wide text-white drop-shadow-md mt-1">
-             {/* Mobile */}
-             <div className="lg:hidden">
-               <LocaleSwitcherModal />
-             </div>
-             {/* Desktop */}
-             <div className="hidden lg:block">
-               <LocaleSwitcherModal />
-             </div>
+           {/* Right Nav — locale switcher + auth */}
+           <div className="flex items-center gap-3 sm:gap-4 text-sm font-semibold tracking-wide text-white drop-shadow-md mt-1">
+             <LocaleSwitcherModal />
+             <UserMenu />
            </div>
         </nav>
 
