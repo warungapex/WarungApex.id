@@ -17,7 +17,8 @@ export const metadata: Metadata = {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id" className={`${inter.variable} ${orbitron.variable} h-full antialiased`}>
-      <body className="min-h-full bg-[#08080c] text-white">
+      {/* suppressHydrationWarning: ekstensi browser (ColorZilla dkk.) menyuntik atribut ke <body> */}
+      <body suppressHydrationWarning className="min-h-full bg-[#08080c] text-white">
         {children}
       </body>
     </html>
