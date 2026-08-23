@@ -242,6 +242,10 @@
         }
       ]
     },
+    "specs": "Specifications",
+    "store": {
+      "verified": "Verified"
+    },
     "whatsapp": {
       "template": "Hello, I want to buy this account:\n\n• {badge} ({tierBadge})\n• Rank: {rank}\n• Level: {level}\n• Coins: {coins}\n• Legendary Skins: {legendarySkins}\n• Crafting Materials: {craftingMaterials}\n• Price: {price}\n\nIs this still available?"
     }

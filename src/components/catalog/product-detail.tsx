@@ -6,7 +6,7 @@ import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 import {
   ShieldCheck, Zap, Headphones, CheckCircle2,
-  ChevronDown, ChevronUp, CreditCard, Images,
+  ChevronDown, ChevronUp, CreditCard, Images, BadgeCheck, MessageCircle,
 } from "lucide-react";
 import type { Account } from "@/lib/supabase/accounts";
 import { formatPrice } from "@/lib/accounts";
@@ -49,119 +49,106 @@ const LOCAL_IMAGES: Record<string, string[]> = {
   ],
 };
 
-function ImageMosaic({ product }: { product: Account }) {
+const WHATSAPP_URL = "https://wa.me/6285167202134";
+const STORE_LOGO = "/logo/white/white warpex no background.svg";
+
+/* ── Marketplace gallery: main image + thumbnail strip ── */
+function Gallery({ product }: { product: Account }) {
+  const t = useTranslations("product");
   // Prefer images from DB, fallback to local filesystem mapping
   const images = (product.images && product.images.length > 0)
     ? product.images
     : (LOCAL_IMAGES[product.id] ?? []);
+  const [current, setCurrent] = useState(0);
   const [lightbox, setLightbox] = useState<number | null>(null);
 
   if (!images.length) {
     return (
-      <div className="w-full h-64 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+      <div className="flex aspect-video w-full items-center justify-center rounded-2xl border border-white/10 bg-white/5">
         <span className="text-5xl font-black text-white/20">{product.tierBadge}</span>
       </div>
     );
   }
 
-  const main = images[0];
-  const side = images.slice(1, 3); // 2 stacked on the right
-  const remaining = images.length - 3; // how many hidden
-
   return (
     <>
-      {/* Mosaic grid */}
-      <div className="grid grid-cols-[1fr_180px] sm:grid-cols-[1fr_220px] gap-1.5 rounded-2xl overflow-hidden h-64 sm:h-80 lg:h-[360px]">
-        {/* Main large image */}
-        <button
-          onClick={() => setLightbox(0)}
-          className="relative overflow-hidden bg-black group"
-        >
-          <Image
-            src={main}
-            alt={product.badge}
-            fill
-            sizes="(max-width: 640px) 100vw, 60vw"
-            className="object-cover group-hover:scale-105 transition duration-500"
-            unoptimized
-          />
-        </button>
+      {/* Main image */}
+      <button
+        onClick={() => setLightbox(current)}
+        className="group relative block aspect-video w-full overflow-hidden rounded-2xl border border-white/10 bg-black"
+        aria-label={t("description")}
+      >
+        <Image
+          src={images[current]}
+          alt={product.badge}
+          fill
+          sizes="(max-width: 1024px) 100vw, 60vw"
+          className={`object-cover transition duration-500 group-hover:scale-[1.03] ${product.sold ? "opacity-40 grayscale" : ""}`}
+          priority
+          unoptimized
+        />
+        {/* expand hint */}
+        <span className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white opacity-0 backdrop-blur-sm transition group-hover:opacity-100">
+          <Images className="h-3.5 w-3.5" />
+          {images.length}
+        </span>
+        {product.sold && (
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-black/70 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-gray-200 ring-1 ring-white/20 backdrop-blur">
+            Sold Out
+          </span>
+        )}
+      </button>
 
-        {/* Two stacked thumbnails */}
-        <div className="flex flex-col gap-1.5">
-          {side.map((src, i) => {
-            const isLast = i === side.length - 1 && remaining > 0;
-            return (
-              <button
-                key={i}
-                onClick={() => setLightbox(i + 1)}
-                className="relative flex-1 overflow-hidden bg-black group"
-              >
-                <Image
-                  src={src}
-                  alt=""
-                  fill
-                  sizes="(max-width: 640px) 100vw, 180px"
-                  className="object-cover group-hover:scale-105 transition duration-500"
-                  unoptimized
-                />
-                {isLast && remaining > 0 && (
-                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center gap-2 text-white text-sm font-semibold">
-                    <Images className="w-4 h-4" />
-                    +{remaining} image{remaining > 1 ? "s" : ""}
-                  </div>
-                )}
-              </button>
-            );
-          })}
+      {/* Thumbnail strip */}
+      {images.length > 1 && (
+        <div className="scrollbar-none mt-3 flex gap-2 overflow-x-auto pb-1">
+          {images.map((src, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              className={`relative aspect-video w-20 shrink-0 overflow-hidden rounded-lg border-2 transition sm:w-24 ${
+                i === current
+                  ? "border-brand-red"
+                  : "border-transparent opacity-60 hover:opacity-100"
+              }`}
+            >
+              <Image src={src} alt="" fill sizes="96px" className="object-cover" unoptimized />
+            </button>
+          ))}
         </div>
-      </div>
+      )}
 
       {/* Lightbox */}
       {lightbox !== null && (
         <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/90 p-4 flex items-center justify-center"
           onClick={() => setLightbox(null)}
         >
-          <div className="relative max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
+          <div className="relative w-full max-w-4xl" onClick={(e) => e.stopPropagation()}>
             <Image
               src={images[lightbox]}
               alt=""
               sizes="(max-width: 1280px) 100vw, 60vw"
               width={1200}
               height={800}
-              className="w-full max-h-[80vh] object-contain rounded-xl"
+              className="max-h-[80vh] w-full rounded-xl object-contain"
               unoptimized
             />
             {/* nav */}
             <button
               onClick={() => setLightbox((l) => (l! > 0 ? l! - 1 : images.length - 1))}
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80"
+              className="absolute left-3 top-1/2 h-10 w-10 -translate-y-1/2 rounded-full bg-black/60 text-white transition hover:bg-black/80"
             >‹</button>
             <button
               onClick={() => setLightbox((l) => (l! < images.length - 1 ? l! + 1 : 0))}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80"
+              className="absolute right-3 top-1/2 h-10 w-10 -translate-y-1/2 rounded-full bg-black/60 text-white transition hover:bg-black/80"
             >›</button>
             <button
               onClick={() => setLightbox(null)}
-              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 text-lg leading-none"
+              className="absolute right-3 top-3 h-8 w-8 rounded-full bg-black/60 text-lg leading-none text-white transition hover:bg-black/80"
             >×</button>
-            <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-black/60 text-xs text-white">
+            <div className="absolute bottom-3 right-3 rounded-full bg-black/60 px-2.5 py-1 text-xs text-white">
               {lightbox + 1}/{images.length}
-            </div>
-            {/* thumbnail strip */}
-            <div className="flex gap-2 overflow-x-auto mt-3 pb-1 justify-center">
-              {images.map((src, i) => (
-                <button
-                  key={i}
-                  onClick={() => setLightbox(i)}
-                  className={`relative shrink-0 w-14 h-10 rounded-md overflow-hidden border-2 transition ${
-                    i === lightbox ? "border-brand-cyan" : "border-white/20 hover:border-white/50"
-                  }`}
-                >
-                  <Image src={src} alt="" fill sizes="56px" className="object-cover" unoptimized />
-                </button>
-              ))}
             </div>
           </div>
         </div>
@@ -170,12 +157,12 @@ function ImageMosaic({ product }: { product: Account }) {
   );
 }
 
-/* ── Stat cell ── */
-function StatCell({ label, value }: { label: string; value: string | number }) {
+/* ── Spec table row ── */
+function SpecRow({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="py-3">
-      <div className="text-xs text-gray-500 mb-0.5">{label}</div>
-      <div className="text-sm font-semibold text-white">{value}</div>
+    <div className="flex items-center justify-between gap-4 px-5 py-3">
+      <span className="text-xs text-gray-500">{label}</span>
+      <span className="text-right text-sm font-semibold text-white">{value}</span>
     </div>
   );
 }
@@ -190,27 +177,27 @@ function ProtectionPanel() {
     { title: t("items.2.title"), desc: t("items.2.desc") },
   ];
   return (
-    <div className="border border-white/10 rounded-2xl overflow-hidden bg-white/[0.03]">
+    <div className="overflow-hidden rounded-xl border border-white/10 bg-brand-surface/60">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-5 py-4 text-sm font-semibold text-white hover:bg-white/5 transition"
+        className="flex w-full items-center justify-between px-5 py-4 text-sm font-semibold text-white transition hover:bg-white/5"
       >
         <div className="flex items-center gap-2.5">
-          <ShieldCheck className="w-4 h-4 text-brand-cyan" />
+          <ShieldCheck className="h-4 w-4 text-brand-cyan" />
           {t("title")}
         </div>
         {open
-          ? <ChevronUp className="w-4 h-4 text-gray-400" />
-          : <ChevronDown className="w-4 h-4 text-gray-400" />}
+          ? <ChevronUp className="h-4 w-4 text-gray-400" />
+          : <ChevronDown className="h-4 w-4 text-gray-400" />}
       </button>
       {open && (
-        <div className="px-5 pb-5 space-y-4 border-t border-white/8">
+        <div className="space-y-4 border-t border-white/8 px-5 pb-5">
           {items.map((item) => (
             <div key={item.title} className="flex gap-3 pt-4">
-              <CheckCircle2 className="w-4 h-4 text-brand-cyan shrink-0 mt-0.5" />
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-cyan" />
               <div>
                 <p className="text-sm font-semibold text-white">{item.title}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{item.desc}</p>
+                <p className="mt-0.5 text-xs text-gray-400">{item.desc}</p>
               </div>
             </div>
           ))}
@@ -236,6 +223,7 @@ export function ProductDetail({
   const locale = useLocale();
   const t = useTranslations("product");
   const tc = useTranslations("checkout");
+  const tcat = useTranslations("catalog");
   const rate = useUsdIdrRate();
   const router = useRouter();
   const pathname = usePathname();
@@ -362,127 +350,199 @@ export function ProductDetail({
     }
   }
 
-  const heirloomTags = (product.tags ?? []).filter((t) =>
-    t.toLowerCase().includes("heirloom"),
+  const heirloomTags = (product.tags ?? []).filter((tag) =>
+    tag.toLowerCase().includes("heirloom"),
+  );
+
+  /* ── Buy box (dipakai di kolom kanan desktop & inline mobile) ── */
+  const buyBox = (
+    <div className="space-y-4 rounded-2xl border border-white/10 bg-brand-surface/60 p-5 sm:p-6">
+      {/* Price */}
+      <div>
+        <p className="text-xs uppercase tracking-widest text-gray-500">
+          {tcat("title2")}
+        </p>
+        <p className="mt-1 text-3xl font-bold text-brand-red">
+          {formatPrice(product.price, locale, rate)}
+        </p>
+        <p className={`mt-2 inline-flex items-center gap-1.5 text-xs font-semibold ${product.sold ? "text-gray-500" : "text-emerald-400"}`}>
+          {!product.sold && <span className="dot-pulse inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />}
+          {product.sold ? t("cta.soldOut") : tcat("inStock")}
+        </p>
+      </div>
+
+      <button
+        onClick={handleBuy}
+        disabled={product.sold}
+        className={`flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-base font-bold transition ${
+          product.sold
+            ? "cursor-not-allowed bg-white/10 text-gray-400"
+            : "bg-brand-red text-white hover:bg-brand-red/90 hover:shadow-[0_0_28px_-6px_rgba(255,42,68,0.7)]"
+        }`}
+      >
+        <CreditCard className="h-5 w-5" />
+        {product.sold ? t("cta.soldOut") : buying ? tc("processing") : tc("buyNow")}
+      </button>
+
+      {/* Trust row */}
+      <div className="space-y-3 border-t border-white/8 pt-4">
+        {[
+          { icon: <ShieldCheck className="h-4 w-4 text-brand-cyan" />, title: t("trust.moneyBackGuarantee"), sub: t("trust.moneyBackSub") },
+          { icon: <Zap className="h-4 w-4 text-yellow-400" />, title: t("trust.quickCheckout"), sub: t("trust.quickCheckoutSub") },
+          { icon: <Headphones className="h-4 w-4 text-brand-cyan" />, title: t("trust.support247"), sub: t("trust.support247Sub") },
+        ].map((item) => (
+          <div key={item.title} className="flex items-center gap-3">
+            <span className="shrink-0">{item.icon}</span>
+            <p className="text-xs">
+              <span className="font-semibold text-white">{item.title}</span>
+              <span className="text-gray-400"> {item.sub}</span>
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 
   return (
-    <div className="space-y-6">
-      {/* ── Full-width image mosaic ── */}
-      <ImageMosaic product={product} />
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px] lg:gap-8 xl:grid-cols-[1fr_380px]">
+      {/* ── Gallery — mobile pertama, desktop kiri atas ── */}
+      <div className="order-1 lg:col-start-1 lg:row-start-1">
+        <Gallery product={product} />
 
-      {/* ── Below mosaic: 2-col layout ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 xl:gap-10 items-start">
+        {/* Mobile: title langsung di bawah galeri */}
+        <h1 className="mt-4 text-xl font-bold leading-snug text-white md:text-2xl lg:hidden">
+          {product.badge}
+        </h1>
 
-        {/* LEFT — info */}
-        <div className="space-y-6">
-          {/* Title */}
-          <h1 className="text-xl md:text-2xl font-bold text-white leading-snug">
-            {product.badge}
-          </h1>
+        {/* Mobile: buy box langsung bisa diakses */}
+        <div className="mt-4 lg:hidden">{buyBox}</div>
 
-          {/* Stats table */}
-          <div className="border border-white/10 rounded-2xl overflow-hidden divide-y divide-white/8">
-            <div className="grid grid-cols-3 divide-x divide-white/8">
-              <div className="px-5"><StatCell label={t("stats.platform")} value={product.platform ?? "PC / PS4 / Xbox"} /></div>
-              <div className="px-5"><StatCell label={t("stats.heirloom")} value={heirloomTags.length > 0 ? String(heirloomTags.length) : "—"} /></div>
-              <div className="px-5"><StatCell label={t("stats.rank")} value={product.rank} /></div>
+        {/* Mobile: kartu toko */}
+        <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-brand-surface/60 p-4 lg:hidden">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-black ring-1 ring-white/15">
+              <Image src={STORE_LOGO} alt="Warung Apex" fill sizes="40px" className="object-cover p-1.5" />
             </div>
-            <div className="grid grid-cols-3 divide-x divide-white/8">
-              <div className="px-5"><StatCell label={t("stats.legendarySkins")} value={product.legendarySkins} /></div>
-              <div className="px-5"><StatCell label={t("stats.level")} value={product.level} /></div>
-              <div className="px-5"><StatCell label={t("stats.apexCoins")} value={formatStat(product.coins)} /></div>
-            </div>
-            <div className="grid grid-cols-2 divide-x divide-white/8">
-              <div className="px-5"><StatCell label={t("stats.craftingMaterials")} value={formatStat(product.craftingMaterials ?? 0)} /></div>
-              <div className="px-5"><StatCell label={t("stats.greenShard")} value={formatStat(product.craftingMaterialsLegends ?? 0)} /></div>
-            </div>
-          </div>
-
-          {/* Feature badges */}
-          <div className="flex flex-wrap gap-3">
-            {[
-              { icon: <CheckCircle2 className="w-4 h-4" />, label: t("badges.fullEmailAccess") },
-              { icon: <ShieldCheck className="w-4 h-4" />, label: t("badges.warranty5Days") },
-              { icon: <Zap className="w-4 h-4" />, label: t("badges.fastDelivery") },
-            ].map((b) => (
-              <span
-                key={b.label}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/[0.04] text-xs font-semibold text-gray-200"
-              >
-                <span className="text-brand-cyan">{b.icon}</span>
-                {b.label}
-              </span>
-            ))}
-          </div>
-
-          {/* Description */}
-          {product.description && (
-            <div className="space-y-2">
-              <h2 className="text-sm font-bold text-white">{t("description")}</h2>
-              <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-line">
-                {product.description}
+            <div className="min-w-0">
+              <p className="truncate text-sm font-bold text-white">Warung Apex</p>
+              <p className="flex items-center gap-1 text-xs text-emerald-400">
+                <BadgeCheck className="h-3 w-3" /> {t("store.verified")}
               </p>
             </div>
-          )}
-
-          {/* Tags */}
-          {product.tags && product.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {product.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="px-3 py-1 rounded-full border border-white/10 bg-white/5 text-xs text-gray-300"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
+          </div>
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 rounded-full border border-emerald-400/40 bg-emerald-400/10 px-4 py-2 text-xs font-semibold text-emerald-300 transition hover:bg-emerald-400/20"
+          >
+            WhatsApp
+          </a>
         </div>
+      </div>
 
-        {/* RIGHT — buy card */}
-        <div className="sticky top-24 space-y-4">
-          {/* Price + CTA */}
-          <div className="border border-white/10 rounded-2xl p-6 bg-white/[0.03] space-y-5">
-            <div className="text-3xl font-bold text-white">
-              {formatPrice(product.price, locale, rate)}
+      {/* ── Buy column — mobile kedua, desktop kanan sticky ── */}
+      <div className="order-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
+        <div className="space-y-4 lg:sticky lg:top-6">
+          <div className="hidden lg:block">{buyBox}</div>
+
+          {/* Store card — desktop */}
+          <div className="hidden space-y-3 rounded-2xl border border-white/10 bg-brand-surface/60 p-5 lg:block">
+            <div className="flex items-center gap-3">
+              <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-black ring-1 ring-white/15">
+                <Image src={STORE_LOGO} alt="Warung Apex" fill sizes="48px" className="object-cover p-2" />
+              </div>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-bold text-white">Warung Apex</p>
+                <p className="flex items-center gap-1 text-xs text-emerald-400">
+                  <BadgeCheck className="h-3 w-3" /> {t("store.verified")}
+                  <span className="ml-1.5 flex items-center gap-1 text-gray-500">
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                    Online
+                  </span>
+                </p>
+              </div>
             </div>
-
-            <button
-              onClick={handleBuy}
-              disabled={product.sold}
-              className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-base transition ${
-                product.sold
-                  ? "bg-white/10 text-gray-400 cursor-not-allowed"
-                  : "bg-brand-cyan text-black hover:bg-brand-cyan/80 hover:shadow-[0_0_24px_rgba(0,240,255,0.35)]"
-              }`}
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-400/40 bg-emerald-400/10 py-2.5 text-sm font-semibold text-emerald-300 transition hover:bg-emerald-400/20"
             >
-              <CreditCard className="w-5 h-5" />
-              {product.sold ? t("cta.soldOut") : buying ? tc("processing") : tc("buyNow")}
-            </button>
-
-            {/* Trust row */}
-            <div className="space-y-3 pt-1 border-t border-white/8">
-              {[
-                { icon: <ShieldCheck className="w-4 h-4 text-brand-cyan" />, title: t("trust.moneyBackGuarantee"), sub: t("trust.moneyBackSub") },
-                { icon: <Zap className="w-4 h-4 text-yellow-400" />, title: t("trust.quickCheckout"), sub: t("trust.quickCheckoutSub") },
-                { icon: <Headphones className="w-4 h-4 text-brand-cyan" />, title: t("trust.support247"), sub: t("trust.support247Sub") },
-              ].map((item) => (
-                <div key={item.title} className="flex items-center gap-3">
-                  <span className="shrink-0">{item.icon}</span>
-                  <p className="text-xs">
-                    <span className="font-semibold text-white">{item.title}</span>
-                    <span className="text-gray-400"> {item.sub}</span>
-                  </p>
-                </div>
-              ))}
-            </div>
+              <MessageCircle className="h-4 w-4" />
+              {t("cta.buyViaWhatsApp")}
+            </a>
           </div>
 
           {/* Protection panel */}
           <ProtectionPanel />
         </div>
+      </div>
+
+      {/* ── Info — mobile ketiga, desktop kiri bawah ── */}
+      <div className="order-3 space-y-6 lg:col-start-1 lg:row-start-2">
+        {/* Desktop: title */}
+        <h1 className="hidden text-2xl font-bold leading-snug text-white lg:block">
+          {product.badge}
+        </h1>
+
+        {/* Spec table ala marketplace */}
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-brand-surface/60">
+          <div className="border-b border-white/8 px-5 py-3.5 text-sm font-bold text-white">
+            {t("specs")}
+          </div>
+          <div className="divide-y divide-white/8">
+            <SpecRow label={t("stats.rank")} value={product.rank} />
+            <SpecRow label={t("stats.level")} value={product.level} />
+            <SpecRow label={t("stats.legendarySkins")} value={product.legendarySkins} />
+            <SpecRow label={t("stats.heirloom")} value={heirloomTags.length > 0 ? String(heirloomTags.length) : "—"} />
+            <SpecRow label={t("stats.apexCoins")} value={formatStat(product.coins)} />
+            <SpecRow label={t("stats.craftingMaterials")} value={formatStat(product.craftingMaterials ?? 0)} />
+            <SpecRow label={t("stats.greenShard")} value={formatStat(product.craftingMaterialsLegends ?? 0)} />
+            <SpecRow label={t("stats.platform")} value={product.platform ?? "PC / PS4 / Xbox"} />
+          </div>
+        </div>
+
+        {/* Feature badges */}
+        <div className="flex flex-wrap gap-2.5">
+          {[
+            { icon: <CheckCircle2 className="h-4 w-4" />, label: t("badges.fullEmailAccess") },
+            { icon: <ShieldCheck className="h-4 w-4" />, label: t("badges.warranty5Days") },
+            { icon: <Zap className="h-4 w-4" />, label: t("badges.fastDelivery") },
+          ].map((b) => (
+            <span
+              key={b.label}
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-2 text-xs font-semibold text-gray-200"
+            >
+              <span className="text-brand-cyan">{b.icon}</span>
+              {b.label}
+            </span>
+          ))}
+        </div>
+
+        {/* Description */}
+        {product.description && (
+          <div className="rounded-2xl border border-white/10 bg-brand-surface/60 p-5 sm:p-6">
+            <h2 className="mb-3 text-sm font-bold text-white">{t("description")}</h2>
+            <p className="whitespace-pre-line text-sm leading-relaxed text-gray-300">
+              {product.description}
+            </p>
+          </div>
+        )}
+
+        {/* Tags */}
+        {product.tags && product.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {product.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-gray-300"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Midtrans Snap embed */}
@@ -493,30 +553,30 @@ export function ProductDetail({
       {/* Checkout modal — Snap embed dengan frame brand Warung Apex */}
       {checkout && (
         <div
-          className="fixed inset-0 z-[60] overflow-y-auto bg-black/85 flex items-center justify-center p-4"
+          className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-black/85 p-4"
           onClick={(e) => {
             if (e.target === e.currentTarget) closeCheckout();
           }}
         >
-          <div className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#101018] shadow-[0_0_60px_rgba(0,240,255,0.08)] overflow-hidden">
+          <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-[#101018] shadow-[0_0_60px_rgba(255,42,68,0.08)]">
             {/* Header branded */}
-            <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-white/8 bg-gradient-to-r from-brand-cyan/10 via-transparent to-transparent">
+            <div className="flex items-center justify-between gap-3 border-b border-white/8 bg-gradient-to-r from-brand-red/10 via-transparent to-transparent px-5 py-4">
               <div className="min-w-0">
-                <p className="text-xs font-bold uppercase tracking-widest text-brand-cyan">
+                <p className="text-xs font-bold uppercase tracking-widest text-brand-red">
                   {tc("modalTitle")}
                 </p>
-                <p className="text-sm font-semibold text-white truncate mt-0.5">
+                <p className="mt-0.5 truncate text-sm font-semibold text-white">
                   {product.badge}
                 </p>
               </div>
-              <div className="flex items-center gap-3 shrink-0">
-                <span className="text-sm font-bold text-white whitespace-nowrap">
+              <div className="flex shrink-0 items-center gap-3">
+                <span className="whitespace-nowrap text-sm font-bold text-white">
                   {formatPrice(product.price, locale, rate)}
                 </span>
                 <button
                   onClick={closeCheckout}
                   aria-label={tc("close")}
-                  className="w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition flex items-center justify-center text-lg leading-none"
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-lg leading-none text-gray-400 transition hover:bg-white/10 hover:text-white"
                 >
                   ×
                 </button>
@@ -526,7 +586,7 @@ export function ProductDetail({
             {/* Snap iframe container */}
             <div
               id="wa-snap-embed"
-              className="relative w-full h-[70vh] min-h-[520px] bg-white [&_iframe]:h-full [&_iframe]:w-full [&_iframe]:border-0"
+              className="relative h-[70vh] min-h-[520px] w-full bg-white [&_iframe]:h-full [&_iframe]:w-full [&_iframe]:border-0"
             />
           </div>
         </div>
@@ -535,12 +595,12 @@ export function ProductDetail({
       {/* Toast notification */}
       {toast && (
         <div
-          className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] px-5 py-3 rounded-xl border text-sm font-semibold shadow-2xl ${
+          className={`fixed bottom-6 left-1/2 z-[60] -translate-x-1/2 rounded-xl border px-5 py-3 text-sm font-semibold shadow-2xl ${
             toast.kind === "error"
-              ? "bg-red-500/15 border-red-400/40 text-red-200"
+              ? "border-red-400/40 bg-red-500/15 text-red-200"
               : toast.kind === "success"
-                ? "bg-emerald-500/15 border-emerald-400/40 text-emerald-200"
-                : "bg-cyan-500/15 border-cyan-400/40 text-cyan-100"
+                ? "border-emerald-400/40 bg-emerald-500/15 text-emerald-200"
+                : "border-cyan-400/40 bg-cyan-500/15 text-cyan-100"
           }`}
         >
           {toast.msg}

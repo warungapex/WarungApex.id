@@ -242,6 +242,10 @@
         }
       ]
     },
+    "specs": "Spesifikasi",
+    "store": {
+      "verified": "Terverifikasi"
+    },
     "whatsapp": {
       "template": "Halo, saya ingin membeli akun:\n\n• {badge} ({tierBadge})\n• Rank: {rank}\n• Level: {level}\n• Coins: {coins}\n• Legendary Skins: {legendarySkins}\n• Crafting Materials: {craftingMaterials}\n• Harga: {price}\n\nApakah masih available?"
     }
