@@ -64,30 +64,38 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 403 });
   }
 
-  // 2. Cari order
-  const admin = createAdminClient();
-  const { data: order } = await admin
-    .from("orders")
-    .select("id, status")
-    .eq("order_id_midtrans", order_id)
-    .single();
-
-  if (!order) {
-    return NextResponse.json({ error: "Order not found" }, { status: 404 });
-  }
-
-  // 3. Update status bila berbeda; trigger SQL menyinkronkan accounts.sold
-  const newStatus = mapStatus(body.transaction_status ?? "", body.fraud_status);
-  if (newStatus && newStatus !== order.status) {
-    const { error } = await admin
+  // 2-3. Cari order, update status; trigger SQL menyinkronkan accounts.sold.
+  // Catch-all: kegagalan infrastruktur (Supabase down dkk.) dibalas JSON 500
+  // agar Midtrans mengulang pengiriman notifikasi, bukan halaman error HTML.
+  try {
+    const admin = createAdminClient();
+    const { data: order } = await admin
       .from("orders")
-      .update({ status: newStatus })
-      .eq("id", order.id);
-    if (error) {
-      console.error("[webhook] update failed:", error);
-      return NextResponse.json({ error: "Update failed" }, { status: 500 });
-    }
-  }
+      .select("id, status")
+      .eq("order_id_midtrans", order_id)
+      .single();
 
-  return NextResponse.json({ received: true });
+    if (!order) {
+      // 404 = Midtrans akan retry — penting saat notifikasi datang lebih cepat
+      // daripada replikasi insert order yang baru saja dibuat.
+      return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    }
+
+    const newStatus = mapStatus(body.transaction_status ?? "", body.fraud_status);
+    if (newStatus && newStatus !== order.status) {
+      const { error } = await admin
+        .from("orders")
+        .update({ status: newStatus })
+        .eq("id", order.id);
+      if (error) {
+        console.error("[webhook] update failed:", error);
+        return NextResponse.json({ error: "Update failed" }, { status: 500 });
+      }
+    }
+
+    return NextResponse.json({ received: true });
+  } catch (err) {
+    console.error("[webhook] unexpected error:", err);
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  }
 }
