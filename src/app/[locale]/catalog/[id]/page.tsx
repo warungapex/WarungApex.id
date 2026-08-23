@@ -1,10 +1,9 @@
-import { getAccount, getAccountIds } from "@/lib/supabase/accounts";
+import { getAccount } from "@/lib/supabase/accounts";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { ProductDetail } from "@/components/catalog/product-detail";
 import { UserMenu } from "@/components/auth/user-menu";
 import { notFound } from "next/navigation";
-import { routing } from "@/i18n/routing";
 import { LocaleSwitcherModal } from "@/components/ui/locale-switcher-modal";
 import type { Metadata } from "next";
 
@@ -31,16 +30,9 @@ export async function generateMetadata({
   };
 }
 
-export async function generateStaticParams() {
-  const ids = await getAccountIds();
-  const params = [];
-  for (const locale of routing.locales) {
-    for (const id of ids) {
-      params.push({ locale, id });
-    }
-  }
-  return params;
-}
+// ponytail: render dinamis penuh — cookies() dari client Supabase bikin route ini
+// tidak bisa di-prerender; memaksa SSG hanya menghasilkan 500 static-to-dynamic.
+export const dynamic = "force-dynamic";
 
 export default async function ProductPage({
   params,
