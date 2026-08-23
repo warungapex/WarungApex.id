@@ -250,7 +250,27 @@
       "template": "Hello, I want to buy this account:\n\n• {badge} ({tierBadge})\n• Rank: {rank}\n• Level: {level}\n• Coins: {coins}\n• Legendary Skins: {legendarySkins}\n• Crafting Materials: {craftingMaterials}\n• Price: {price}\n\nIs this still available?"
     }
   },
-  "auth": {
+    "settings": {
+    "title": "Profile Settings",
+    "subtitle": "Manage your account information",
+    "photo": "Profile Photo",
+    "changePhoto": "Change Photo",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "emailHint": "Email cannot be changed",
+    "save": "Save Changes",
+    "saved": "Profile updated!",
+    "passwordTitle": "Change Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm New Password",
+    "updatePassword": "Update Password",
+    "passwordUpdated": "Password updated!",
+    "passwordMismatch": "Passwords do not match.",
+    "googleAccount": "You signed in with Google. Password is managed by your Google account.",
+    "profile": "Profile"
+  },
+"auth": {
     "loginTitle": "Sign In",
     "registerTitle": "Create Account",
     "subtitle": "Shop Apex Legends accounts safely",
@@ -265,8 +285,10 @@
     "goLogin": "Sign In",
     "checkEmail": "Registration successful! Check your email to verify before signing in.",
     "signInShort": "SIGN IN / UP",
-    "myOrders": "My Orders",
-    "signOut": "Sign Out",
+    "helpCenter": "Help Center",
+  "myOrders": "My Orders",
+  "profile": "Profile",
+      "signOut": "Sign Out",
     "panelTitle": "Get Started with Us",
     "panelSubtitle": "Complete these easy steps to buy your dream Apex Legends account.",
     "step1Label": "Create your account",

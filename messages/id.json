@@ -250,7 +250,27 @@
       "template": "Halo, saya ingin membeli akun:\n\n• {badge} ({tierBadge})\n• Rank: {rank}\n• Level: {level}\n• Coins: {coins}\n• Legendary Skins: {legendarySkins}\n• Crafting Materials: {craftingMaterials}\n• Harga: {price}\n\nApakah masih available?"
     }
   },
-  "auth": {
+    "settings": {
+    "title": "Pengaturan Profil",
+    "subtitle": "Kelola informasi akunmu",
+    "photo": "Foto Profil",
+    "changePhoto": "Ganti Foto",
+    "firstName": "Nama Depan",
+    "lastName": "Nama Belakang",
+    "email": "Email",
+    "emailHint": "Email tidak dapat diubah",
+    "save": "Simpan Perubahan",
+    "saved": "Profil diperbarui!",
+    "passwordTitle": "Ganti Password",
+    "newPassword": "Password Baru",
+    "confirmPassword": "Konfirmasi Password Baru",
+    "updatePassword": "Perbarui Password",
+    "passwordUpdated": "Password diperbarui!",
+    "passwordMismatch": "Password tidak sama.",
+    "googleAccount": "Kamu masuk dengan Google. Password dikelola oleh akun Google-mu.",
+    "profile": "Profil"
+  },
+"auth": {
     "loginTitle": "Masuk ke Akun",
     "registerTitle": "Daftar Akun Baru",
     "subtitle": "Belanja akun Apex Legends dengan aman",
@@ -265,8 +285,10 @@
     "goLogin": "Masuk",
     "checkEmail": "Pendaftaran berhasil! Silakan cek email untuk verifikasi sebelum login.",
     "signInShort": "MASUK / DAFTAR",
-    "myOrders": "Pesanan Saya",
-    "signOut": "Keluar",
+    "helpCenter": "Pusat Bantuan",
+  "myOrders": "Pesanan Saya",
+  "profile": "Profil",
+      "signOut": "Keluar",
     "panelTitle": "Mulai Bersama Kami",
     "panelSubtitle": "Selesaikan langkah mudah ini untuk mulai membeli akun Apex Legends impianmu.",
     "step1Label": "Buat akunmu",

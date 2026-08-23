@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import type { User } from "@supabase/supabase-js";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { createClient } from "@/lib/supabase/client";
-import { ChevronDown, LogOut, Package } from "lucide-react";
+import { ChevronDown, LogOut, MessageCircle, Package, UserCircle2 } from "lucide-react";
 
 export function UserMenu() {
   const t = useTranslations("auth");
@@ -79,22 +79,63 @@ export function UserMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-52 rounded-xl border border-white/10 bg-[#101018] shadow-2xl overflow-hidden z-50">
-          <Link
-            href="/dashboard/orders"
-            onClick={() => setOpen(false)}
-            className="flex items-center gap-2.5 px-4 py-3 text-xs text-gray-200 hover:bg-white/5 hover:text-white transition"
-          >
-            <Package className="w-4 h-4 text-brand-cyan" />
-            {t("myOrders")}
-          </Link>
-          <button
-            onClick={signOut}
-            className="w-full flex items-center gap-2.5 px-4 py-3 text-xs text-gray-200 hover:bg-white/5 hover:text-white transition border-t border-white/5"
-          >
-            <LogOut className="w-4 h-4 text-red-400" />
-            {t("signOut")}
-          </button>
+        <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-white/10 bg-[#101018] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.8)] overflow-hidden z-50">
+          {/* Header profil */}
+          <div className="flex items-center gap-3 px-4 py-4 border-b border-white/8">
+            {avatar ? (
+              // eslint-disable-next-line @next/next/no-img-element -- avatar eksternal (Google), tanpa optimasi
+              <img src={avatar} alt="" className="h-11 w-11 shrink-0 rounded-xl object-cover ring-1 ring-white/15" referrerPolicy="no-referrer" />
+            ) : (
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-cyan/15 text-brand-cyan text-base font-bold ring-1 ring-white/15">
+                {initial}
+              </span>
+            )}
+            <div className="min-w-0">
+              <p className="truncate text-sm font-bold text-white">{name}</p>
+              <p className="truncate text-xs text-gray-500">{user.email}</p>
+            </div>
+          </div>
+
+          {/* Menu */}
+          <div className="p-1.5">
+            <Link
+              href="/dashboard/profile"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-200 hover:bg-white/5 hover:text-white transition"
+            >
+              <UserCircle2 className="h-4 w-4 text-gray-400" />
+              {t("profile")}
+            </Link>
+            <Link
+              href="/dashboard/orders"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-200 hover:bg-white/5 hover:text-white transition"
+            >
+              <Package className="h-4 w-4 text-gray-400" />
+              {t("myOrders")}
+            </Link>
+            <a
+              href="https://wa.me/6285167202134"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-200 hover:bg-white/5 hover:text-white transition"
+            >
+              <MessageCircle className="h-4 w-4 text-gray-400" />
+              {t("helpCenter")}
+            </a>
+          </div>
+
+          {/* Keluar */}
+          <div className="border-t border-white/8 p-1.5">
+            <button
+              onClick={signOut}
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-400 hover:bg-red-400/10 hover:text-red-300 transition"
+            >
+              <LogOut className="h-4 w-4" />
+              {t("signOut")}
+            </button>
+          </div>
         </div>
       )}
     </div>
