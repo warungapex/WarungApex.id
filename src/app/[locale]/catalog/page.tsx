@@ -4,6 +4,7 @@ import { CatalogGrid } from "@/components/catalog/catalog-grid";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { LocaleSwitcherModal } from "@/components/ui/locale-switcher-modal";
+import { UserMenu } from "@/components/auth/user-menu";
 
 export async function generateMetadata({
   params,
@@ -48,7 +49,10 @@ export default async function CatalogPage({
             <span className="mx-2">/</span>
             <span className="text-gray-300">{t("catalog")}</span>
           </nav>
-          <LocaleSwitcherModal />
+          <div className="flex items-center gap-3">
+            <LocaleSwitcherModal />
+            <UserMenu />
+          </div>
         </div>
         <div className="mb-10">
           <h1 className="text-3xl md:text-5xl font-[var(--font-display)] font-bold tracking-widest text-[#f0f2f5]">

@@ -38,7 +38,7 @@ export function VerifyEmailView({ email }: { email: string }) {
       type: "signup",
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/${locale}/auth/callback?next=${encodeURIComponent("/dashboard/orders")}`,
+        emailRedirectTo: `${window.location.origin}/${locale}/auth/callback?next=${encodeURIComponent("/catalog")}`,
       },
     });
     setLoading(false);

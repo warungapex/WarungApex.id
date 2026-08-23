@@ -58,7 +58,7 @@ export function AuthForm({
   async function handleGoogle() {
     setError("");
     setGoogleLoading(true);
-    const target = encodeURIComponent(next === "/" ? "/dashboard/orders" : next);
+    const target = encodeURIComponent(next === "/" ? "/catalog" : next);
     const { error } = await createClient().auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -103,7 +103,7 @@ export function AuthForm({
       password,
       options: {
         data: { first_name: firstName || null, last_name: lastName || null, full_name: fullName },
-        emailRedirectTo: `${window.location.origin}/${locale}/auth/callback?next=${encodeURIComponent("/dashboard/orders")}`,
+        emailRedirectTo: `${window.location.origin}/${locale}/auth/callback?next=${encodeURIComponent("/catalog")}`,
       },
     });
     if (error) {

@@ -75,8 +75,8 @@ export default async function ProductPage({
             <span className="text-gray-300">{product.badge}</span>
           </nav>
           <div className="flex items-center gap-3">
-            <UserMenu />
             <LocaleSwitcherModal />
+            <UserMenu />
           </div>
         </div>
 

@@ -120,7 +120,7 @@ export function UpdatePasswordForm() {
       setLoading(false);
       return;
     }
-    router.replace("/dashboard/orders");
+    router.replace("/catalog");
     router.refresh();
   }
 

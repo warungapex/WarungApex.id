@@ -9,16 +9,20 @@ export const metadata: Metadata = {
 };
 
 export default async function RegisterPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{ redirectTo?: string }>;
 }) {
-  const next = safeNext((await searchParams).redirectTo, "/");
+  const { locale } = await params;
+  // redirectTo SELALU locale-relative (mis. "/catalog") — server yang menambah prefix
+  const next = safeNext((await searchParams).redirectTo, "/catalog");
 
   // Sudah login — langsung ke tujuan
   const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (user) redirect(next === "/" ? "/dashboard/orders" : next);
+  if (user) redirect(`/${locale}${next}`);
 
   return <RegisterFlow redirectTo={next} />;
 }

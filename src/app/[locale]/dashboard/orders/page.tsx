@@ -17,7 +17,7 @@ export default async function OrdersPage({
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(`/${locale}/login?redirectTo=/${locale}/dashboard/orders`);
+    redirect(`/${locale}/login?redirectTo=/dashboard/orders`);
   }
 
   // Join nama akun untuk ditampilkan di daftar pesanan
@@ -54,8 +54,8 @@ export default async function OrdersPage({
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-xl md:text-2xl font-bold text-white">{t("title")}</h1>
           <div className="flex items-center gap-3">
-            <UserMenu />
             <LocaleSwitcherModal />
+            <UserMenu />
           </div>
         </div>
 
