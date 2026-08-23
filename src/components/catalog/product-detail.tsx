@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Script from "next/script";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ShieldCheck, Zap, Headphones, CheckCircle2,
   ChevronDown, ChevronUp, CreditCard, Images,
@@ -243,6 +243,9 @@ export function ProductDetail({
   const [buying, setBuying] = useState(false);
   const [toast, setToast] = useState<Toast>(null);
   const [checkout, setCheckout] = useState<{ token: string } | null>(null);
+  // true begitu Snap mengembalikan hasil final (sukses/pending/error) —
+  // dipakai agar onClose yang menyusul tidak salah melepas klaim akun.
+  const snapResolvedRef = useRef(false);
 
   const numberLocale = locale === "en" ? "en-US" : "id-ID";
   const formatStat = (n: number) =>
@@ -265,24 +268,45 @@ export function ProductDetail({
   // Render Snap embed ke dalam modal begitu token tersedia
   useEffect(() => {
     if (!checkout || !window.snap) return;
+    snapResolvedRef.current = false;
+
+    /** Buyer keluar dari Snap tanpa menyelesaikan pembayaran —
+     *  batalkan order pending supaya akun tidak nyangkut "terjual". */
+    async function releaseClaim() {
+      try {
+        await fetch("/api/checkout", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ account_id: product.id }),
+        });
+      } catch {
+        // gagal jaring — klaim tetap lepas sendiri via expiry 30 menit + webhook expire
+      }
+      router.refresh();
+    }
+
     window.snap.embed(checkout.token, {
       embedId: "wa-snap-embed",
       onSuccess: () => {
+        snapResolvedRef.current = true;
         closeCheckout();
         showToast(tc("success"), "success");
         router.push("/dashboard/orders");
       },
       onPending: () => {
+        snapResolvedRef.current = true;
         closeCheckout();
         showToast(tc("pending"), "info");
       },
       onError: () => {
+        snapResolvedRef.current = true;
         closeCheckout();
         showToast(tc("error"), "error");
       },
       onClose: () => {
         setCheckout(null);
         showToast(tc("closed"), "info");
+        if (!snapResolvedRef.current) releaseClaim();
       },
     });
     return () => {

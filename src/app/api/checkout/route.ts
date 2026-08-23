@@ -62,6 +62,9 @@ export async function POST(request: Request) {
             (user.user_metadata?.name as string | undefined) ??
             user.email.split("@")[0],
         },
+        // Jaring pengaman: kalau buyer tutup tab/browser total (onClose tidak
+        // terkirim), klaim lepas otomatis lewat webhook expire maksimal 30 menit.
+        expiry: { unit: "minutes", duration: 30 },
       });
 
       const { error: insertError } = await admin.from("orders").insert({
@@ -94,5 +97,49 @@ export async function POST(request: Request) {
   } catch (err) {
     console.error("[checkout] error:", err);
     return NextResponse.json({ error: "Checkout gagal" }, { status: 500 });
+  }
+}
+
+/** Buyer keluar dari Snap tanpa membayar — batalkan order pending miliknya.
+ *  Trigger SQL sync_account_on_order_status otomatis melepas accounts.sold. */
+export async function DELETE(request: Request) {
+  try {
+    const supabase = await createServerSupabaseClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { account_id } = await request.json();
+    if (!account_id || typeof account_id !== "string") {
+      return NextResponse.json({ error: "account_id is required" }, { status: 400 });
+    }
+
+    const admin = createAdminClient();
+    const { data: order } = await admin
+      .from("orders")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("account_id", account_id)
+      .eq("status", "pending")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    // Tidak ada order pending (sudah dibayar / memang tidak ada) — tidak ada yang dilepas
+    if (!order) {
+      return NextResponse.json({ released: false });
+    }
+
+    const { error } = await admin
+      .from("orders")
+      .update({ status: "cancel" })
+      .eq("id", order.id);
+    if (error) throw error;
+
+    return NextResponse.json({ released: true });
+  } catch (err) {
+    console.error("[checkout/close] error:", err);
+    return NextResponse.json({ error: "Gagal melepas klaim" }, { status: 500 });
   }
 }
