@@ -20,7 +20,6 @@ export default async function OrdersPage({
     redirect(`/${locale}/login?redirectTo=/dashboard/orders`);
   }
 
-  // Join nama akun untuk ditampilkan di daftar pesanan
   const { data: rows } = await supabase
     .from("orders")
     .select(
@@ -49,28 +48,35 @@ export default async function OrdersPage({
   }));
 
   return (
-    <main className="min-h-screen bg-brand-dark">
-      <div className="max-w-5xl mx-auto px-6 py-16">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-xl md:text-2xl font-bold text-white">{t("title")}</h1>
-          <div className="flex items-center gap-3">
+    <main className="relative min-h-screen bg-brand-dark overflow-hidden">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 60% 90% at 90% 0%, rgba(0,240,255,0.06), transparent 60%), radial-gradient(ellipse 60% 90% at 5% 100%, rgba(255,42,68,0.06), transparent 60%)",
+        }}
+      />
+
+      <div className="relative z-10 mx-auto max-w-5xl px-6 py-16">
+        <div className="mb-10 flex items-start justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.4em] text-brand-cyan">
+              <span className="h-px w-8 bg-brand-cyan/50" />
+              Warung Apex
+              <span className="h-px w-8 bg-brand-cyan/50" />
+            </div>
+            <h1 className="mt-3 font-[var(--font-display)] text-2xl md:text-4xl font-black tracking-widest text-[#f0f2f5]">
+              {t("title")}
+            </h1>
+            <p className="mt-2 text-sm text-gray-400">{t("subtitle")}</p>
+          </div>
+          <div className="flex shrink-0 items-center gap-3 pt-1">
             <LocaleSwitcherModal />
             <UserMenu />
           </div>
         </div>
 
-        <OrderList
-          orders={orders}
-          labels={{
-            empty: t("empty"),
-            colOrder: t("colOrder"),
-            colAccount: t("colAccount"),
-            colDate: t("colDate"),
-            colTotal: t("colTotal"),
-            colStatus: t("colStatus"),
-            claim: t("claim"),
-          }}
-        />
+        <OrderList orders={orders} />
       </div>
     </main>
   );

@@ -312,7 +312,10 @@
   },
   "orders": {
     "title": "Pesanan Saya",
+    "subtitle": "Riwayat pembelian dan kredensial akun Apex-mu.",
     "empty": "Belum ada pesanan. Jelajahi katalog untuk memulai.",
+    "filterAll": "Semua",
+    "browseCatalog": "Jelajahi Katalog",
     "colOrder": "ID Pesanan",
     "colAccount": "Nama Akun",
     "colDate": "Tanggal",

@@ -312,7 +312,10 @@
   },
   "orders": {
     "title": "My Orders",
+    "subtitle": "Your Apex account purchase history and credentials.",
     "empty": "No orders yet. Browse the catalog to get started.",
+    "filterAll": "All",
+    "browseCatalog": "Browse Catalog",
     "colOrder": "Order ID",
     "colAccount": "Account Name",
     "colDate": "Date",
