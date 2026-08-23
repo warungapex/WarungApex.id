@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Stagger, StaggerItem } from "@/components/ui/reveal";
 import { useTranslations } from "next-intl";
 
 function easeOutExpo(t: number) {
@@ -75,18 +74,27 @@ export function Stats() {
   const t = useTranslations("stats");
 
   return (
-    <section className="w-full bg-brand-dark py-24 border-t border-white/5">
-      <Stagger className="max-w-4xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-3 gap-12">
-        {stats.map((s, i) => (
-          <StaggerItem key={s.key} className="relative text-center">
-            {i < stats.length - 1 && <div className="hidden sm:block absolute inset-y-0 right-0 w-px bg-white/5" />}
-            <div className="inline-block bg-gradient-to-r from-brand-red to-brand-cyan bg-clip-text text-transparent text-4xl md:text-6xl font-[var(--font-display)] font-bold">
+    <section className="relative w-full bg-brand-dark py-20">
+      <div data-reveal-group className="glass relative mx-auto max-w-4xl grid grid-cols-1 gap-10 rounded-3xl px-8 py-12 sm:grid-cols-3 sm:gap-6 sm:px-6">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-brand-cyan/50 to-transparent"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 rounded-3xl bg-grid-sm opacity-40 mask-radial-fade"
+        />
+        {stats.map((s) => (
+          <div key={s.key} data-reveal className="relative text-center">
+            <div className="font-display text-gradient text-5xl font-bold md:text-6xl">
               <AnimatedNumber end={s.end} decimals={s.decimals} suffix={s.suffix} />
             </div>
-            <div className="mt-3 text-xs sm:text-sm uppercase tracking-[0.25em] text-gray-400">{t(s.key)}</div>
-          </StaggerItem>
+            <div className="font-mono2 mt-3 text-[11px] uppercase tracking-[0.3em] text-white/45">
+              {t(s.key)}
+            </div>
+          </div>
         ))}
-      </Stagger>
+      </div>
     </section>
   );
 }

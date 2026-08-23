@@ -7,10 +7,8 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { Reveal } from "@/components/ui/reveal";
 import { useUsdIdrRate } from "@/components/rate-provider";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
-import ReactLenis from "lenis/react";
 import { useRef } from "react";
 
 export function Catalog({ spot }: { spot: Account[] }) {
@@ -23,25 +21,25 @@ export function Catalog({ spot }: { spot: Account[] }) {
   });
 
   return (
-    <ReactLenis root>
-      <section
-        id="katalog"
-        ref={container}
-        className="relative w-full bg-brand-dark pb-[10vh]"
-      >
-        <div className="absolute top-0 right-0 w-[500px] h-[300px] bg-brand-red/10 blur-[130px] rounded-full pointer-events-none" />
+    <section
+      id="katalog"
+      ref={container}
+      className="relative w-full bg-brand-dark pb-[10vh]"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 top-24 h-[300px] w-[500px] rounded-full bg-brand-cyan/[0.06] blur-[130px]"
+      />
 
-        {/* Header */}
-        <div className="relative max-w-6xl mx-auto px-6 pt-32 pb-8">
-          <Reveal>
-            <SectionHeading title={t("title1")} accent={t("latest")} />
-          </Reveal>
-        </div>
+      {/* Header */}
+      <div data-reveal className="relative mx-auto max-w-6xl px-6 pt-32 pb-8">
+        <SectionHeading title={t("title1")} accent={t("latest")} />
+      </div>
 
         {/* Stacking Cards */}
-        <div className="relative w-full flex flex-col items-center">
+        <div className="relative flex w-full flex-col items-center">
           {spot.length === 0 ? (
-            <div className="text-center text-gray-500 py-20 text-sm">
+            <div className="py-20 text-center text-sm text-white/40">
               Belum ada akun tersedia.
             </div>
           ) : (
@@ -66,13 +64,12 @@ export function Catalog({ spot }: { spot: Account[] }) {
         <div className="py-24 text-center">
           <Link
             href="/catalog"
-            className="inline-block border border-brand-cyan/40 text-brand-cyan px-10 py-3.5 rounded-full text-sm font-semibold tracking-wide hover:bg-brand-cyan/10 transition"
+            className="glass inline-block rounded-full px-10 py-3.5 text-sm font-semibold tracking-wide text-brand-cyan transition hover:bg-brand-cyan/10"
           >
             {t("viewAll")}
           </Link>
         </div>
       </section>
-    </ReactLenis>
   );
 }
 
@@ -100,13 +97,17 @@ function StickyCard({
     <div className="sticky top-0 flex h-screen w-full items-center justify-center px-4 sm:px-6">
       <motion.div
         style={{ scale, top: `calc(${i * 20}px)` }}
-        className="relative origin-top flex flex-col md:flex-row overflow-hidden rounded-[2rem] bg-[#0c0c10] border border-white/10 shadow-[0_30px_100px_-20px_rgba(0,0,0,1)] w-full max-w-5xl md:h-[500px]"
+        className="glass relative flex origin-top flex-col overflow-hidden rounded-[2rem] bg-[#0a0c12] shadow-[0_30px_100px_-20px_rgba(0,0,0,1)] w-full max-w-5xl md:h-[500px]"
       >
+        {/* corner ticks */}
+        <span aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-10 h-4 w-4 border-l-2 border-t-2 border-brand-cyan/50" />
+        <span aria-hidden="true" className="pointer-events-none absolute right-0 top-0 z-10 h-4 w-4 border-r-2 border-t-2 border-brand-cyan/50" />
+
         {/* Left: Image */}
-        <div className="w-full md:w-[40%] bg-gradient-to-br from-[#13131a] to-[#0a0a0c] relative flex items-center justify-center p-6 md:p-12 border-b md:border-b-0 md:border-r border-white/5 overflow-hidden min-h-[220px] md:min-h-0">
-          <div className="absolute inset-0 opacity-10 mix-blend-overlay" style={{backgroundImage:"url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"}} />
+        <div className="relative w-full overflow-hidden border-b border-white/5 bg-gradient-to-br from-[#10121b] to-[#08090e] md:w-[40%] md:border-b-0 md:border-r md:min-h-0 flex min-h-[220px] items-center justify-center p-6 md:p-12">
+          <div aria-hidden="true" className="absolute inset-0 bg-grid-sm opacity-60 mask-radial-fade" />
           {a.mainImage ? (
-            <div className="relative z-10 w-full h-full min-h-[180px] md:min-h-0 rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(255,42,68,0.15)]">
+            <div className="relative z-10 h-full min-h-[180px] w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_0_80px_rgba(0,240,255,0.12)] md:min-h-0">
               <Image
                 src={a.mainImage}
                 alt={`${a.rank} Account`}
@@ -118,8 +119,8 @@ function StickyCard({
               />
             </div>
           ) : (
-            <div className="relative z-10 w-36 h-36 md:w-56 md:h-56 rounded-[2rem] bg-gradient-to-br from-brand-red/20 to-brand-cyan/20 flex items-center justify-center border border-white/10">
-              <span className="font-[var(--font-display)] text-5xl md:text-8xl font-black text-brand-red drop-shadow-lg">
+            <div className="relative z-10 flex h-36 w-36 items-center justify-center rounded-[2rem] border border-white/10 bg-gradient-to-br from-brand-red/20 to-brand-cyan/20 md:h-56 md:w-56">
+              <span className="font-display text-5xl font-black text-brand-red drop-shadow-lg md:text-8xl">
                 {a.tierBadge}
               </span>
             </div>
@@ -127,12 +128,12 @@ function StickyCard({
         </div>
 
         {/* Right: Content */}
-        <div className="w-full md:w-[60%] p-8 md:p-16 flex flex-col justify-center bg-[#0a0a0c]">
-          <h3 className="font-[var(--font-display)] text-2xl md:text-4xl font-black text-white tracking-wide mb-4 md:mb-6">
+        <div className="flex w-full flex-col justify-center p-8 md:w-[60%] md:p-16">
+          <h3 className="font-display mb-4 text-2xl font-black tracking-wide text-white md:mb-6 md:text-4xl">
             {a.badge}
           </h3>
 
-          <p className="text-gray-400 text-sm md:text-lg leading-relaxed mb-8 md:mb-10 max-lg">
+          <p className="mb-8 text-sm leading-relaxed text-white/50 md:mb-10 md:text-lg">
             {t("cardDesc", {
               level: a.level,
               skins: a.legendarySkins,
@@ -140,15 +141,15 @@ function StickyCard({
             })}
           </p>
 
-          <div className="flex flex-wrap gap-2 md:gap-3 mb-8 md:mb-12">
+          <div className="mb-8 flex flex-wrap gap-2 md:mb-12 md:gap-3">
             {(a.tags?.length ? a.tags : [a.badge, `Level ${a.level}`, t("fullAccess")]).map(
               (tag, idx) => (
                 <span
                   key={idx}
-                  className={`px-4 py-1.5 md:px-5 md:py-2 rounded-full border text-xs font-medium ${
+                  className={`rounded-full px-4 py-1.5 text-xs font-medium ${
                     idx === 2 && !a.tags?.length
-                      ? "bg-brand-cyan/10 border-brand-cyan/20 text-brand-cyan"
-                      : "bg-white/5 border-white/10 text-gray-300"
+                      ? "border border-brand-cyan/25 bg-brand-cyan/10 text-brand-cyan"
+                      : "border border-white/10 bg-white/[0.04] text-white/60"
                   }`}
                 >
                   {tag}
@@ -157,16 +158,16 @@ function StickyCard({
             )}
           </div>
 
-          <div className="flex items-center justify-between mt-auto pt-6 md:pt-8 border-t border-white/5">
-            <div className="font-[var(--font-display)] text-2xl md:text-4xl font-bold text-white">
+          <div className="mt-auto flex items-center justify-between border-t border-white/5 pt-6 md:pt-8">
+            <div className="font-display text-2xl font-bold text-white md:text-4xl">
               {formatPrice(a.price, locale, rate)}
             </div>
             <Link
               href={`/catalog/${a.id}`}
-              className="group flex items-center gap-2 md:gap-3 text-sm md:text-base font-semibold text-brand-cyan hover:text-white transition-colors"
+              className="group flex items-center gap-2 text-sm font-semibold text-brand-cyan transition-colors hover:text-white md:gap-3 md:text-base"
             >
               {t("viewDetails")}
-              <ChevronRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
+              <ChevronRight className="size-4 transition-transform group-hover:translate-x-1 md:size-5" />
             </Link>
           </div>
         </div>

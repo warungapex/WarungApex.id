@@ -2,14 +2,18 @@ export function SectionHeading({ eyebrow, title, accent }: { eyebrow?: string; t
   return (
     <div className="text-center">
       {eyebrow && (
-        <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-brand-cyan/80">
-          <span className="h-px w-6 bg-brand-cyan/50" />
-          {eyebrow}
-          <span className="h-px w-6 bg-brand-cyan/50" />
+        <div className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5">
+          <span className="dot-pulse inline-block size-1 rounded-full bg-brand-cyan text-brand-cyan" />
+          <span className="font-mono2 text-[10px] font-medium uppercase tracking-[0.35em] text-brand-cyan/90">
+            {eyebrow}
+          </span>
         </div>
       )}
-      <h2 className="mt-4 text-2xl md:text-4xl font-[var(--font-display)] font-bold tracking-widest text-[#f0f2f5]">
-        {title} <span className="text-brand-red">{accent}</span>
+      <h2
+        data-reveal
+        className={`font-display text-3xl font-bold tracking-tight text-white md:text-5xl ${eyebrow ? "mt-6" : ""}`}
+      >
+        {title} <span className="text-gradient">{accent}</span>
       </h2>
     </div>
   );

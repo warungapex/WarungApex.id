@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Orbitron } from "next/font/google";
+import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "../globals.css";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { RateProvider } from "@/components/rate-provider";
@@ -16,8 +16,13 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const orbitron = Orbitron({
+const spaceGrotesk = Space_Grotesk({
   variable: "--font-display",
+  subsets: ["latin"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
@@ -56,7 +61,7 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className={`${inter.variable} ${orbitron.variable} h-full antialiased`}
+      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       {/* suppressHydrationWarning: ekstensi browser (ColorZilla dkk.) menyuntik atribut ke <body> */}
       <body
