@@ -281,6 +281,12 @@
     "updatePwSubtitle": "Buat password baru untuk akunmu.",
     "newPassword": "Password Baru",
     "savePassword": "Simpan Password",
+    "verifyTitle": "Verifikasi email kamu.",
+    "verifySubtitle": "Kami mengirim tautan verifikasi ke {email}. Silakan cek inbox dan klik tombol di email untuk mengaktifkan akunmu.",
+    "openGmail": "Buka Gmail",
+    "resendEmail": "Kirim ulang email",
+    "resendSent": "Email verifikasi sudah dikirim ulang. Cek inbox atau folder spam.",
+    "resendCooldown": "Kirim ulang dalam {seconds} dtk",
     "errors": {
       "invalid_credentials": "Email atau password salah.",
       "email_not_confirmed": "Email belum diverifikasi. Silakan cek inbox kamu.",

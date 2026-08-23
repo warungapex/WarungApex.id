@@ -32,9 +32,12 @@ const GOOGLE_G_SVG = (
 export function AuthForm({
   mode,
   redirectTo,
+  onNeedVerification,
 }: {
   mode: "login" | "register";
   redirectTo: string;
+  /** Dipanggil saat signUp sukses tapi konfirmasi email aktif (tidak ada sesi). */
+  onNeedVerification?: (email: string) => void;
 }) {
   const t = useTranslations("auth");
   const locale = useLocale();
@@ -100,6 +103,7 @@ export function AuthForm({
       password,
       options: {
         data: { first_name: firstName || null, last_name: lastName || null, full_name: fullName },
+        emailRedirectTo: `${window.location.origin}/${locale}/auth/callback?next=${encodeURIComponent("/dashboard/orders")}`,
       },
     });
     if (error) {
@@ -111,9 +115,13 @@ export function AuthForm({
       done();
       return;
     }
+    setLoading(false);
+    if (onNeedVerification) {
+      onNeedVerification(email);
+      return;
+    }
     // konfirmasi email diaktifkan — user harus verifikasi dulu
     setInfo(t("checkEmail"));
-    setLoading(false);
   }
 
   return (

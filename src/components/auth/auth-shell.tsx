@@ -10,8 +10,15 @@ const NOISE_BG = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 /**
  * Shell dua kolom untuk halaman auth.
  * Kiri: branding + stepper (hidden di mobile). Kanan: form (children).
+ * activeStep: index step aktif di stepper kiri (0-based).
  */
-export function AuthShell({ children }: { children: React.ReactNode }) {
+export function AuthShell({
+  children,
+  activeStep = 0,
+}: {
+  children: React.ReactNode;
+  activeStep?: number;
+}) {
   const t = useTranslations("auth");
   const steps = [t("step1Label"), t("step2Label"), t("step3Label")];
 
@@ -50,7 +57,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
 
           <ol className="mt-10 space-y-3">
             {steps.map((label, i) => {
-              const active = i === 0;
+              const active = i === activeStep;
               return (
                 <li
                   key={label}

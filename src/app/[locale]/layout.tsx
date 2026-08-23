@@ -58,7 +58,11 @@ export default async function RootLayout({
       lang={locale}
       className={`${inter.variable} ${orbitron.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-brand-dark text-[#f0f2f5]">
+      {/* suppressHydrationWarning: ekstensi browser (ColorZilla dkk.) menyuntik atribut ke <body> */}
+      <body
+        suppressHydrationWarning
+        className="min-h-full flex flex-col bg-brand-dark text-[#f0f2f5]"
+      >
         <NextIntlClientProvider messages={messages}>
           <SmoothScroll />
           <RateProvider rate={rate}>{children}</RateProvider>

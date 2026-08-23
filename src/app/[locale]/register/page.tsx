@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
-import { AuthShell } from "@/components/auth/auth-shell";
-import { AuthForm } from "@/components/auth/auth-form";
+import { RegisterFlow } from "@/components/auth/register-flow";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { safeNext } from "@/lib/safe-next";
 import type { Metadata } from "next";
@@ -21,9 +20,5 @@ export default async function RegisterPage({
   const { data: { user } } = await supabase.auth.getUser();
   if (user) redirect(next === "/" ? "/dashboard/orders" : next);
 
-  return (
-    <AuthShell>
-      <AuthForm mode="register" redirectTo={next} />
-    </AuthShell>
-  );
+  return <RegisterFlow redirectTo={next} />;
 }
