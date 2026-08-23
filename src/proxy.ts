@@ -40,9 +40,20 @@ export async function proxy(request: NextRequest) {
       },
     );
 
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    // getUser memverifikasi JWT ke server Supabase — getSession hanya baca cookie
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
+    }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.role !== "admin") {
+      return NextResponse.redirect(new URL("/", request.url));
     }
 
     return response;
